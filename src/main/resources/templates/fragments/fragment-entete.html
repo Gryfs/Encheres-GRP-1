@@ -1,0 +1,21 @@
+
+<header th:fragment="entete">
+	<nav>
+		
+			 <div class="navbar-brand">
+			<span class="brand-text">Enchere</span>
+			
+			<div th:if="${membreSession != null && membreSession.id != 0}">
+			<p th:text="${membreSession.prenom}"> </p>
+			</div>
+			 
+			 <div class="navbar-links">
+			<a th:href="@{/articles}">Liste Articles</a>
+			<a th:href="@{/creer}">Créer</a>
+
+
+			</div>
+			</div>
+		
+	</nav>
+</header>
