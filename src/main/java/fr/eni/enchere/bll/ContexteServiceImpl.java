@@ -1,5 +1,6 @@
 package fr.eni.enchere.bll;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,6 +13,7 @@ import fr.eni.enchere.dal.UtilisateurDAO;
 public class ContexteServiceImpl implements ContexteService {
 	private final UtilisateurDAO utilisateurDAO;
 
+	@Autowired
 	public ContexteServiceImpl(UtilisateurDAO utilisateurDAO) {
 		this.utilisateurDAO = utilisateurDAO;
 	}
@@ -28,6 +30,16 @@ public class ContexteServiceImpl implements ContexteService {
 			utilisateurDAO.create(utilisateur);
 		}
 	}
+
+	@Override
+    public void updateUtilisateur(Utilisateur utilisateur) {
+        // Si le mot de passe est vide, charger l'ancien mot de passe
+        if (utilisateur.getMotDePasse() == null || utilisateur.getMotDePasse().isEmpty()) {
+            Utilisateur ancienUtilisateur = utilisateurDAO.read(utilisateur.getEmail());
+            utilisateur.setMotDePasse(ancienUtilisateur.getMotDePasse());
+        }
+        utilisateurDAO.update(utilisateur);
+    }
 
 	private boolean validerEmailInexistant(String email) {
 		int nbGenre = utilisateurDAO.countByEmail(email);

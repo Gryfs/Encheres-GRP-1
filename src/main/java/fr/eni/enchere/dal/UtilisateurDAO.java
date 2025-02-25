@@ -12,4 +12,6 @@ public interface UtilisateurDAO {
 
 	int countByEmail(String email);
 
+	void update(Utilisateur utilisateur);
+
 }

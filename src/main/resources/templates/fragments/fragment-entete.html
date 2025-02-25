@@ -1,25 +1,44 @@
-
-<header th:fragment="entete">
-	<nav>
-		
-			 <div class="navbar-brand">
-			<span class="brand-text">Enchere</span>
-			<div th:if="${utilisateurSession != null && utilisateurSession.id != 0}">
-                <p th:text="${utilisateurSession.prenom}"> </p>
+<header th:fragment="entete" class="bg-white shadow-lg sticky top-0 z-50">
+    <nav class="container mx-auto px-4">
+        <div class="flex items-center justify-between h-16">
+            <div class="flex items-center space-x-4">
+                <a href="/" class="flex items-center space-x-2">
+                    <svg class="w-8 h-8 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M2 6a2 2 0 012-2h12a2 2 0 012 2v8a2 2 0 01-2 2H4a2 2 0 01-2-2V6z"/>
+                    </svg>
+                    <span class="text-xl font-bold text-gray-900">ENI-Enchères</span>
+                </a>
             </div>
-			<div th:if="${utilisateurSession != null && utilisateurSession.id != 0}">
-			<p th:text="${utilisateurSession.prenom}"> </p>
-			</div>
-			 
-			 <div class="navbar-links">
-			<a th:href="@{/articles}">Liste Articles</a>
-			<a sec:authorize="isAuthenticated()" th:href="@{/creer}">Créer</a>
-			<a sec:authorize="!isAuthenticated()" th:href="@{/login}">Connexion</a>
-			<a sec:authorize="!isAuthenticated()" th:href="@{/register}">Inscription</a>
-			<a sec:authorize="isAuthenticated()" th:href="@{/logout}">Déconnexion</a>
 
-			</div>
-			</div>
-		
-	</nav>
+            <div class="flex items-center space-x-6">
+                <a th:href="@{/articles}" class="nav-link">
+                    <i class="fas fa-list mr-2"></i>Articles
+                </a>
+                
+                <a sec:authorize="isAuthenticated()" th:href="@{/creer}" class="nav-link">
+                    <i class="fas fa-plus mr-2"></i>Créer
+                </a>
+                
+                <a sec:authorize="isAuthenticated()" th:href="@{/profile}" class="nav-link">
+                    <i class="fas fa-user mr-2"></i>Profil
+                </a>
+
+                <div sec:authorize="!isAuthenticated()" class="flex items-center space-x-4">
+                    <a th:href="@{/login}" class="px-4 py-2 text-gray-700 bg-gray-200 rounded-lg hover:bg-gray-300 transition duration-300 flex items-center shadow-sm">
+                        <i class="fas fa-sign-in-alt mr-2"></i>
+                        Connexion
+                    </a>
+                    <a th:href="@{/register}" class="px-4 py-2 text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition duration-300 flex items-center shadow-sm">
+                        <i class="fas fa-user-plus mr-2"></i>
+                        Inscription
+                    </a>
+                </div>
+
+                <a sec:authorize="isAuthenticated()" th:href="@{/logout}" 
+                   class="btn btn-secondary">
+                    <i class="fas fa-sign-out-alt mr-2"></i>Déconnexion
+                </a>
+            </div>
+        </div>
+    </nav>
 </header>
