@@ -14,4 +14,5 @@ public interface UtilisateurDAO {
 
 	void update(Utilisateur utilisateur);
 
+	void delete(long id);
 }

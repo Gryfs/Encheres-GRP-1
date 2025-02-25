@@ -10,4 +10,6 @@ public interface ContexteService {
 
 	void updateUtilisateur(Utilisateur utilisateur);
 
+	void deleteUtilisateur(long id);
+
 }

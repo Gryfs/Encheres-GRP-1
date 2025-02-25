@@ -45,4 +45,10 @@ public class ContexteServiceImpl implements ContexteService {
 		int nbGenre = utilisateurDAO.countByEmail(email);
 		return nbGenre != 1;
 	}
+
+	@Override
+    @Transactional
+    public void deleteUtilisateur(long id) {
+        utilisateurDAO.delete(id);
+    }
 }

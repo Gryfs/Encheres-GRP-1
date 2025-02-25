@@ -16,7 +16,7 @@ public class UtilisateurDAOImpl implements UtilisateurDAO {
 	private final static String CREATE = "INSERT INTO UTILISATEURS (pseudo, nom, prenom, email, telephone, rue, code_postal, ville, mot_de_passe, credit, administrateur) VALUES (:pseudo, :nom, :prenom, :email, :telephone, :rue, :codePostal, :ville, :motDePasse, :credit, :administrateur)";
 	private final static String COUNT_BY_EMAIL = "SELECT count(*) FROM UTILISATEURS WHERE email = :email";
 	private final static String UPDATE = "UPDATE UTILISATEURS SET pseudo=:pseudo, nom=:nom, prenom=:prenom, email=:email, telephone=:telephone, rue=:rue, code_postal=:codePostal, ville=:ville, mot_de_passe=:motDePasse WHERE no_utilisateur=:noUtilisateur";
-
+    private final static String DELETE = "DELETE FROM UTILISATEURS WHERE no_utilisateur = :id";
 
 	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 	
@@ -89,6 +89,13 @@ public class UtilisateurDAOImpl implements UtilisateurDAO {
         namedParameters.addValue("motDePasse", utilisateur.getMotDePasse());
         
         namedParameterJdbcTemplate.update(UPDATE, namedParameters);
+    }
+
+	@Override
+    public void delete(long id) {
+        MapSqlParameterSource namedParameters = new MapSqlParameterSource();
+        namedParameters.addValue("id", id);
+        namedParameterJdbcTemplate.update(DELETE, namedParameters);
     }
 
 }
