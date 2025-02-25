@@ -4,15 +4,19 @@
 		
 			 <div class="navbar-brand">
 			<span class="brand-text">Enchere</span>
-			
-			<div th:if="${membreSession != null && membreSession.id != 0}">
-			<p th:text="${membreSession.prenom}"> </p>
+			<div th:if="${utilisateurSession != null && utilisateurSession.id != 0}">
+                <p th:text="${utilisateurSession.prenom}"> </p>
+            </div>
+			<div th:if="${utilisateurSession != null && utilisateurSession.id != 0}">
+			<p th:text="${utilisateurSession.prenom}"> </p>
 			</div>
 			 
 			 <div class="navbar-links">
 			<a th:href="@{/articles}">Liste Articles</a>
-			<a th:href="@{/creer}">Créer</a>
-
+			<a sec:authorize="isAuthenticated()" th:href="@{/creer}">Créer</a>
+			<a sec:authorize="!isAuthenticated()" th:href="@{/login}">Connexion</a>
+			<a sec:authorize="!isAuthenticated()" th:href="@{/register}">Inscription</a>
+			<a sec:authorize="isAuthenticated()" th:href="@{/logout}">Déconnexion</a>
 
 			</div>
 			</div>
