@@ -8,4 +8,8 @@ public interface ContexteService {
 	
 	void creerUtilisateur(Utilisateur utilisateur);
 
+	void updateUtilisateur(Utilisateur utilisateur);
+
+	void deleteUtilisateur(long id);
+
 }

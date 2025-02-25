@@ -15,14 +15,14 @@ public class UtilisateurDAOImpl implements UtilisateurDAO {
 	private final static String SELECT_BY_EMAIL = "SELECT no_utilisateur, pseudo, nom, prenom, email, telephone, rue, code_postal as codePostal, ville, mot_de_passe as motDePasse, credit, administrateur as admin FROM UTILISATEURS WHERE email=:email";
 	private final static String CREATE = "INSERT INTO UTILISATEURS (pseudo, nom, prenom, email, telephone, rue, code_postal, ville, mot_de_passe, credit, administrateur) VALUES (:pseudo, :nom, :prenom, :email, :telephone, :rue, :codePostal, :ville, :motDePasse, :credit, :administrateur)";
 	private final static String COUNT_BY_EMAIL = "SELECT count(*) FROM UTILISATEURS WHERE email = :email";
-
+	private final static String UPDATE = "UPDATE UTILISATEURS SET pseudo=:pseudo, nom=:nom, prenom=:prenom, email=:email, telephone=:telephone, rue=:rue, code_postal=:codePostal, ville=:ville, mot_de_passe=:motDePasse WHERE no_utilisateur=:noUtilisateur";
+    private final static String DELETE = "DELETE FROM UTILISATEURS WHERE no_utilisateur = :id";
 
 	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 	
-	
 	public UtilisateurDAOImpl(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
-		this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
-	}
+        this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
+    }
 
 	@Override
 	public Utilisateur read(long id) {
@@ -43,28 +43,28 @@ public class UtilisateurDAOImpl implements UtilisateurDAO {
 	}
 
 	@Override
-public void create(Utilisateur utilisateur) {
-    MapSqlParameterSource namedParameters = new MapSqlParameterSource();
-    namedParameters.addValue("pseudo", utilisateur.getPseudo());
-    namedParameters.addValue("nom", utilisateur.getNom());
-    namedParameters.addValue("prenom", utilisateur.getPrenom());
-    namedParameters.addValue("email", utilisateur.getEmail());
-    namedParameters.addValue("telephone", utilisateur.getTelephone());
-    namedParameters.addValue("rue", utilisateur.getRue());
-    namedParameters.addValue("codePostal", utilisateur.getCodePostal());
-    namedParameters.addValue("ville", utilisateur.getVille());
-    namedParameters.addValue("motDePasse", utilisateur.getMotDePasse());
-    namedParameters.addValue("credit", 0);
-    namedParameters.addValue("administrateur", false);
+	public void create(Utilisateur utilisateur) {
+		MapSqlParameterSource namedParameters = new MapSqlParameterSource();
+		namedParameters.addValue("pseudo", utilisateur.getPseudo());
+		namedParameters.addValue("nom", utilisateur.getNom());
+		namedParameters.addValue("prenom", utilisateur.getPrenom());
+		namedParameters.addValue("email", utilisateur.getEmail());
+		namedParameters.addValue("telephone", utilisateur.getTelephone());
+		namedParameters.addValue("rue", utilisateur.getRue());
+		namedParameters.addValue("codePostal", utilisateur.getCodePostal());
+		namedParameters.addValue("ville", utilisateur.getVille());
+		namedParameters.addValue("motDePasse", utilisateur.getMotDePasse());
+		namedParameters.addValue("credit", 0);
+		namedParameters.addValue("administrateur", false);
 
-    KeyHolder keyHolder = new GeneratedKeyHolder();
-    namedParameterJdbcTemplate.update(CREATE, namedParameters, keyHolder);
+		KeyHolder keyHolder = new GeneratedKeyHolder();
+		namedParameterJdbcTemplate.update(CREATE, namedParameters, keyHolder);
 
-    // Extraire la clé générée de manière appropriée
-    if (keyHolder.getKeys() != null) {
-        utilisateur.setNoUtilisateur(((Number) keyHolder.getKeys().get("no_utilisateur")).longValue());
-    }
-}
+		// Extraire la clé générée de manière appropriée
+		if (keyHolder.getKeys() != null) {
+			utilisateur.setNoUtilisateur(((Number) keyHolder.getKeys().get("no_utilisateur")).longValue());
+		}
+	}
 	
 	@Override
 	public int countByEmail(String email) {
@@ -73,5 +73,29 @@ public void create(Utilisateur utilisateur) {
 
 		return namedParameterJdbcTemplate.queryForObject(COUNT_BY_EMAIL, namedParameters, Integer.class);
 	}
+
+	@Override
+    public void update(Utilisateur utilisateur) {
+        MapSqlParameterSource namedParameters = new MapSqlParameterSource();
+        namedParameters.addValue("noUtilisateur", utilisateur.getNoUtilisateur());
+        namedParameters.addValue("pseudo", utilisateur.getPseudo());
+        namedParameters.addValue("nom", utilisateur.getNom());
+        namedParameters.addValue("prenom", utilisateur.getPrenom());
+        namedParameters.addValue("email", utilisateur.getEmail());
+        namedParameters.addValue("telephone", utilisateur.getTelephone());
+        namedParameters.addValue("rue", utilisateur.getRue());
+        namedParameters.addValue("codePostal", utilisateur.getCodePostal());
+        namedParameters.addValue("ville", utilisateur.getVille());
+        namedParameters.addValue("motDePasse", utilisateur.getMotDePasse());
+        
+        namedParameterJdbcTemplate.update(UPDATE, namedParameters);
+    }
+
+	@Override
+    public void delete(long id) {
+        MapSqlParameterSource namedParameters = new MapSqlParameterSource();
+        namedParameters.addValue("id", id);
+        namedParameterJdbcTemplate.update(DELETE, namedParameters);
+    }
 
 }

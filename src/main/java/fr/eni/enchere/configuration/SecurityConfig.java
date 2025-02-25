@@ -30,35 +30,38 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
             .authorizeHttpRequests((authorize) -> authorize
-                .requestMatchers("/*").permitAll()
-                .requestMatchers("/css/*").permitAll()
-                .requestMatchers("/img/*").permitAll()
-                .requestMatchers("/articles").permitAll()
-                .requestMatchers("/login").permitAll()
-                .requestMatchers("/logout").permitAll()
-                .requestMatchers("/register").permitAll()
-                .requestMatchers("/session").authenticated()
-                .requestMatchers("/creer").authenticated()
-                .requestMatchers(HttpMethod.GET, "/creer").authenticated()
-                .requestMatchers(HttpMethod.POST, "/creer").authenticated()
-                .anyRequest().denyAll()
+            .requestMatchers("/*").permitAll()
+            .requestMatchers("/css/*").permitAll()
+            .requestMatchers("/img/*").permitAll()
+            .requestMatchers("/articles").permitAll()
+            .requestMatchers("/login").permitAll()
+            .requestMatchers("/logout").permitAll()
+            .requestMatchers("/register").permitAll()
+            .requestMatchers("/session").authenticated()
+            .requestMatchers("/creer").authenticated()
+            .requestMatchers("/profile").authenticated()
+            .requestMatchers("/profile/edit").authenticated()
+            
+            .requestMatchers(HttpMethod.GET, "/creer").authenticated()
+            .requestMatchers(HttpMethod.POST, "/creer").authenticated()
+            .anyRequest().denyAll()
             )
-            .userDetailsService(userDetailsService()) // Ajoutez cette ligne
-            .csrf(csrf -> csrf.disable()) // Désactivez CSRF temporairement
+            .userDetailsService(userDetailsService())
+            .csrf(csrf -> csrf.disable())
             .formLogin(form -> form
-                .loginPage("/login")
-                .usernameParameter("username") // correspondre au name="username" dans le formulaire
-                .passwordParameter("password") // correspondre au name="password" dans le formulaire
-                .defaultSuccessUrl("/session", true)
-                .failureUrl("/login?error=true")
-                .permitAll()
+            .loginPage("/login")
+            .usernameParameter("username")
+            .passwordParameter("password")
+            .defaultSuccessUrl("/session", true)
+            .failureUrl("/login?error=true")
+            .permitAll()
             )
             .logout(logout -> logout
-                .logoutUrl("/logout")
-                .logoutSuccessUrl("/")
-                .invalidateHttpSession(true)
-                .deleteCookies("JSESSIONID")
-                .permitAll()
+            .logoutUrl("/logout")
+            .logoutSuccessUrl("/")
+            .invalidateHttpSession(true)
+            .deleteCookies("JSESSIONID")
+            .permitAll()
             );
 
         return http.build();
