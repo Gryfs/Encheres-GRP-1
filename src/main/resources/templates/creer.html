@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Enchere Eni</title>
+
+
+<link rel="stylesheet" th:href="@{/css/general.css}" />
+</head>
+<body>
+	<div th:replace="~{fragments/fragment-entete :: entete}"></div>
+
+
+	<form th:action="@{/creer}" method="POST" th:object="${article}">
+		<h1>Création d'une encheres</h1>
+
+
+		<ul class="flex-outer">
+			<li><label for="titre">Nom</label> <input id="nomArticle"
+				type="text" th:field="*{nomArticle}">
+				
+				<li><label for="description">Description</label> <input id="description"
+				type="text" th:field="*{description}" minlength="5" maxlength="250"
+				required></li>
+
+
+
+
+			<li><label for="categorie">Catégorie : </label> <select id="categorie"
+				th:field="*{categorie}" required>
+					
+					<option th:each="c : ${categorieSession}" th:value="${c.numCategorie}"
+						th:text="${c.titre}"></option>
+
+
+			<li><label for="prix">Prix</label> <input id="prixInitial"
+				type="number" th:field="*{prixInitial}" min="1" required></li>
+				
+				<li><label for="date">Date d'ouverture</label> <input id="dateDebutEncheres"
+				type="date" th:field="*{dateDebutEncheres}" required></li>
+				
+				<li><label for="date">Date de Fermeture</label> <input id="dateFinEncheres"
+				type="date" th:field="*{dateFinEncheres}" required></li>
+				
+				<li><label for="retrait">Adresse de retrait</label> <input id="retrait"
+				type="text" th:field="*{retrait}" required></li>
+
+			
+
+
+
+
+			<li>
+				<button type="submit">Enregistrer</button>
+			</li>
+		</ul>
+
+	</form>
+
+
+	<div th:replace="~{fragments/fragment-piedpage :: footer}"></div>
+
+</body>
+</html>

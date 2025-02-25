@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link rel="stylesheet" th:href="@{/css/general.css}" />
+<link rel="stylesheet" th:href="@{/css/demo-table.css}" />
+</head>
+<body>
+	<div class="page-container">
+		<div th:replace="~{fragments/fragment-entete :: entete}"></div>
+		<main class="main-content">
+
+			<h1>Les articles à vendre</h1>
+
+			<table>
+				<thead>
+					<tr>
+						<th>N°</th>
+						<th>Nom</th>
+						<th>Description</th>
+						<th>Date de début</th>
+						<th>Date de fin</th>
+						<th>Prix initial</th>
+						<th>Prix de vente</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="item : ${articles}">
+						<td th:text="${item.noArticle}"></td>
+						<td th:text="${item.nomArticle}"></td>
+						<td th:text="${item.description}"></td>
+						<td th:text="${item.dateDebutEncheres}"></td>
+						<td th:text="${item.dateFinEncheres}"></td>
+						<td th:text="${item.prixInitial}"></td>
+						<td th:text="${item.prixVente}"></td>
+						
+						
+
+					</tr>
+				</tbody>
+			</table>
+
+			<a th:href="@{/index}">Page principale</a>
+		</main>
+
+
+		<div th:replace="~{fragments/fragment-piedpage :: footer}"></div>
+	</div>
+</body>
+</html>
