@@ -4,8 +4,12 @@ import java.util.List;
 
 import fr.eni.enchere.bo.Categories;
 
+
+
 public interface CategorieDAO {
 
 	List<Categories> findAll();
+	
+	Categories read(long id);
 
 }

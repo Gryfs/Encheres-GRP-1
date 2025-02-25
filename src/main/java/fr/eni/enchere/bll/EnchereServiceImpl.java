@@ -24,13 +24,32 @@ public class EnchereServiceImpl implements EnchereService {
 	@Override
 	public List<ArticleVendu> consulterArticle() {
 
-		return articleVenduDAO.findAll();
+		List<ArticleVendu> listeArticle = articleVenduDAO.findAll();
+		for (ArticleVendu article : listeArticle) {
+			int idCategorie = article.getCategorie().getId();
+			article.setCategorie(categorieDAO.read(article.getCategorie().getId()));
+
+		}
+		return listeArticle;
 	}
 
 	@Override
 	public List<Categories> consulterCategories() {
-		
+
 		return categorieDAO.findAll();
+	}
+
+	@Override
+	public void creerArticle(ArticleVendu article) {
+		articleVenduDAO.create(article);
+
+	}
+
+	@Override
+	public Categories consulterCategorieparId(long id) {
+
+		return categorieDAO.read(id);
+
 	}
 
 }
