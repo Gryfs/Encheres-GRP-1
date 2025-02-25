@@ -18,17 +18,20 @@
 					<tr>
 						<th>N°</th>
 						<th>Nom</th>
+						<th>Catégorie</th>
 						<th>Description</th>
 						<th>Date de début</th>
 						<th>Date de fin</th>
 						<th>Prix initial</th>
 						<th>Prix de vente</th>
+						
 					</tr>
 				</thead>
 				<tbody>
 					<tr th:each="item : ${articles}">
 						<td th:text="${item.noArticle}"></td>
 						<td th:text="${item.nomArticle}"></td>
+						<td th:text="${item.categorie.libelle}"></td>
 						<td th:text="${item.description}"></td>
 						<td th:text="${item.dateDebutEncheres}"></td>
 						<td th:text="${item.dateFinEncheres}"></td>

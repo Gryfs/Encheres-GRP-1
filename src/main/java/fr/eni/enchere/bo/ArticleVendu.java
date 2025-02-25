@@ -1,6 +1,7 @@
 package fr.eni.enchere.bo;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -10,12 +11,12 @@ public class ArticleVendu implements Serializable {
 	private long noArticle;
 	private String nomArticle;
 	private String description;
-	private Date dateDebutEncheres;
-	private Date dateFinEncheres;
-	private float prixInitial;
-	private float prixVente;
+	private LocalDate dateDebutEncheres;
+	private LocalDate dateFinEncheres;
+	private Float prixInitial;
+	private Float prixVente;
 	private String etatVente;
-	private Utilisateur vendeur;
+	private Utilisateur utilisateur;
 	private List<Enchere> encheres = new ArrayList<>();
 	private Categories categorie;
 	private Retrait retrait;
@@ -24,8 +25,8 @@ public class ArticleVendu implements Serializable {
 
 	}
 
-	public ArticleVendu(long noArticle, String nomArticle, String description, Date dateDebutEncheres,
-			Date dateFinEncheres, int miseAPrix, int prixVente, String etatVente, Categories categorie) {
+	public ArticleVendu(long noArticle, String nomArticle, String description, LocalDate dateDebutEncheres,
+			LocalDate dateFinEncheres, Float miseAPrix, Float prixVente, String etatVente) {
 
 		this.noArticle = noArticle;
 		this.nomArticle = nomArticle;
@@ -35,7 +36,6 @@ public class ArticleVendu implements Serializable {
 		this.prixInitial = miseAPrix;
 		this.prixVente = prixVente;
 		this.etatVente = etatVente;
-		this.categorie = categorie;
 	}
 
 	public long getNoArticle() {
@@ -62,35 +62,35 @@ public class ArticleVendu implements Serializable {
 		this.description = description;
 	}
 
-	public Date getDateDebutEncheres() {
+	public LocalDate getDateDebutEncheres() {
 		return dateDebutEncheres;
 	}
 
-	public void setDateDebutEncheres(Date dateDebutEncheres) {
+	public void setDateDebutEncheres(LocalDate dateDebutEncheres) {
 		this.dateDebutEncheres = dateDebutEncheres;
 	}
 
-	public Date getDateFinEncheres() {
+	public LocalDate getDateFinEncheres() {
 		return dateFinEncheres;
 	}
 
-	public void setDateFinEncheres(Date dateFinEncheres) {
+	public void setDateFinEncheres(LocalDate dateFinEncheres) {
 		this.dateFinEncheres = dateFinEncheres;
 	}
 
-	public float getPrixInitial() {
+	public Float getPrixInitial() {
 		return prixInitial;
 	}
 
-	public void setPrixInitial(float prixInitial) {
+	public void setPrixInitial(Float prixInitial) {
 		this.prixInitial = prixInitial;
 	}
 
-	public float getPrixVente() {
+	public Float getPrixVente() {
 		return prixVente;
 	}
 
-	public void setPrixVente(float prixVente) {
+	public void setPrixVente(Float prixVente) {
 		this.prixVente = prixVente;
 	}
 
@@ -110,12 +110,12 @@ public class ArticleVendu implements Serializable {
 		this.categorie = categorie;
 	}
 
-	public Utilisateur getVendeur() {
-		return vendeur;
+	public Utilisateur getUtilisateur() {
+		return utilisateur;
 	}
 
-	public void setVendeur(Utilisateur vendeur) {
-		this.vendeur = vendeur;
+	public void setUtilisateur(Utilisateur vendeur) {
+		this.utilisateur = vendeur;
 	}
 
 	public Retrait getRetrait() {
