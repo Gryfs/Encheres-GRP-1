@@ -5,7 +5,6 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.List;
 
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -15,8 +14,6 @@ import org.springframework.stereotype.Repository;
 
 import fr.eni.enchere.bo.ArticleVendu;
 import fr.eni.enchere.bo.Categories;
-import fr.eni.enchere.bo.Utilisateur;
-import fr.eni.tp.filmotheque.bo.Genre;
 
 @Repository
 public class ArticleVenduDAOImpl implements ArticleVenduDAO {
