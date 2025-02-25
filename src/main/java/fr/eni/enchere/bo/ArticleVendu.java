@@ -1,7 +1,9 @@
 package fr.eni.enchere.bo;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class ArticleVendu implements Serializable {
 
@@ -10,16 +12,20 @@ public class ArticleVendu implements Serializable {
 	private String description;
 	private Date dateDebutEncheres;
 	private Date dateFinEncheres;
-	private int prixInitial;
-	private int prixVente;
+	private float prixInitial;
+	private float prixVente;
 	private String etatVente;
+	private Utilisateur vendeur;
+	private List<Enchere> encheres = new ArrayList<>();
+	private Categories categorie;
+	private Retrait retrait;
 
 	public ArticleVendu() {
 
 	}
 
 	public ArticleVendu(long noArticle, String nomArticle, String description, Date dateDebutEncheres,
-			Date dateFinEncheres, int miseAPrix, int prixVente, String etatVente) {
+			Date dateFinEncheres, int miseAPrix, int prixVente, String etatVente, Categories categorie) {
 
 		this.noArticle = noArticle;
 		this.nomArticle = nomArticle;
@@ -29,6 +35,7 @@ public class ArticleVendu implements Serializable {
 		this.prixInitial = miseAPrix;
 		this.prixVente = prixVente;
 		this.etatVente = etatVente;
+		this.categorie = categorie;
 	}
 
 	public long getNoArticle() {
@@ -71,19 +78,19 @@ public class ArticleVendu implements Serializable {
 		this.dateFinEncheres = dateFinEncheres;
 	}
 
-	public int getPrixInitial() {
+	public float getPrixInitial() {
 		return prixInitial;
 	}
 
-	public void setPrixInitial(int prixInitial) {
+	public void setPrixInitial(float prixInitial) {
 		this.prixInitial = prixInitial;
 	}
 
-	public int getPrixVente() {
+	public float getPrixVente() {
 		return prixVente;
 	}
 
-	public void setPrixVente(int prixVente) {
+	public void setPrixVente(float prixVente) {
 		this.prixVente = prixVente;
 	}
 
@@ -95,11 +102,44 @@ public class ArticleVendu implements Serializable {
 		this.etatVente = etatVente;
 	}
 
+	public Categories getCategorie() {
+		return categorie;
+	}
+
+	public void setCategorie(Categories categorie) {
+		this.categorie = categorie;
+	}
+
+	public Utilisateur getVendeur() {
+		return vendeur;
+	}
+
+	public void setVendeur(Utilisateur vendeur) {
+		this.vendeur = vendeur;
+	}
+
+	public Retrait getRetrait() {
+		return retrait;
+	}
+
+	public void setRetrait(Retrait retrait) {
+		this.retrait = retrait;
+	}
+
+	public List<Enchere> getEncheres() {
+		return encheres;
+	}
+
+	public void setEncheres(List<Enchere> encheres) {
+		this.encheres = encheres;
+	}
+
 	@Override
 	public String toString() {
 		return "ArticleVendu [noArticle=" + noArticle + ", nomArticle=" + nomArticle + ", description=" + description
-				+ ", dateDebutEncheres=" + dateDebutEncheres + ", dateFinEncheres=" + dateFinEncheres + ", miseAPrix="
-				+ prixInitial + ", prixVente=" + prixVente + "]";
+				+ ", dateDebutEncheres=" + dateDebutEncheres + ", dateFinEncheres=" + dateFinEncheres + ", prixInitial="
+				+ prixInitial + ", prixVente=" + prixVente + ", etatVente=" + etatVente + ", categorie=" + categorie
+				+ "]";
 	}
 
 }
