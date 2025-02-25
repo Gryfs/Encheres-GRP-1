@@ -31,8 +31,7 @@ public class ArticleVenduDAOImpl implements ArticleVenduDAO {
 	@Override
 	public List<ArticleVendu> findAll() {
 
-		return namedParameterJdbcTemplate.query(SELECT_ALL,
-				new ArticleRowMapper());
+		return namedParameterJdbcTemplate.query(SELECT_ALL, new ArticleRowMapper());
 	}
 
 	@Override
@@ -48,7 +47,6 @@ public class ArticleVenduDAOImpl implements ArticleVenduDAO {
 		namedParameters.addValue("prix_vente", article.getPrixInitial());
 		namedParameters.addValue("no_utilisateur", 1);
 
-
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 		namedParameterJdbcTemplate.update(CREATE, namedParameters);
 
@@ -57,31 +55,30 @@ public class ArticleVenduDAOImpl implements ArticleVenduDAO {
 		}
 
 	}
-	
+
 	class ArticleRowMapper implements RowMapper<ArticleVendu> {
 
 		@Override
-	    public ArticleVendu mapRow(ResultSet rs, int rowNum) throws SQLException {
-	        ArticleVendu article = new ArticleVendu();
+		public ArticleVendu mapRow(ResultSet rs, int rowNum) throws SQLException {
+			ArticleVendu article = new ArticleVendu();
 
-	        article.setNoArticle(rs.getInt("no_article"));
-	        article.setNomArticle(rs.getString("nom_article"));
-	        article.setDescription(rs.getString("description"));
+			article.setNoArticle(rs.getInt("no_article"));
+			article.setNomArticle(rs.getString("nom_article"));
+			article.setDescription(rs.getString("description"));
 
-	        // ✅ Gestion du LocalDate
-	        article.setDateDebutEncheres(rs.getObject("date_debut_encheres", LocalDate.class));
-	        article.setDateFinEncheres(rs.getObject("date_fin_encheres", LocalDate.class));
+			// ✅ Gestion du LocalDate
+			article.setDateDebutEncheres(rs.getObject("date_debut_encheres", LocalDate.class));
+			article.setDateFinEncheres(rs.getObject("date_fin_encheres", LocalDate.class));
 
-	        article.setPrixInitial(rs.getFloat("prix_initial"));
-	        article.setPrixVente(rs.getFloat("prix_vente"));
+			article.setPrixInitial(rs.getFloat("prix_initial"));
+			article.setPrixVente(rs.getFloat("prix_vente"));
 
-	        Categories categorie = new Categories();
-	        categorie.setId(rs.getInt("no_categorie"));
-	        article.setCategorie(categorie);
+			Categories categorie = new Categories();
+			categorie.setId(rs.getInt("no_categorie"));
+			article.setCategorie(categorie);
 
-
-	        return article;
-	    }
+			return article;
+		}
 	}
 
 }
