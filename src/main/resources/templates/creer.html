@@ -1,63 +1,158 @@
 <!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>Enchere Eni</title>
+<html xmlns:th="http://www.thymeleaf.org" class="h-full">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Nouvelle enchère - ENI-Enchères</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="/css/style.css" rel="stylesheet" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
+  </head>
+  <body class="h-full flex flex-col bg-gradient-to-br from-gray-50 to-gray-100">
+    <div th:replace="~{fragments/fragment-entete :: entete}"></div>
 
+    <main class="flex-grow container mx-auto px-4 py-8">
+      <div class="max-w-2xl mx-auto bg-white rounded-xl shadow-lg p-6">
+        <h1 class="text-3xl font-bold text-gray-800 mb-8">
+          <i class="fas fa-gavel mr-3"></i>Nouvelle enchère
+        </h1>
 
-<link rel="stylesheet" th:href="@{/css/general.css}" />
-</head>
-<body>
-	<div th:replace="~{fragments/fragment-entete :: entete}"></div>
+        <form
+          th:action="@{/creer}"
+          method="POST"
+          th:object="${article}"
+          class="space-y-6"
+        >
+          <div class="space-y-4">
+            <div>
+              <label
+                for="nomArticle"
+                class="block text-sm font-medium text-gray-700"
+                >Nom de l'article</label
+              >
+              <input
+                id="nomArticle"
+                type="text"
+                th:field="*{nomArticle}"
+                required
+                class="p-2 mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+              />
+            </div>
 
+            <div>
+              <label
+                for="description"
+                class="block text-sm font-medium text-gray-700"
+                >Description</label
+              >
+              <textarea
+                id="description"
+                th:field="*{description}"
+                rows="3"
+                minlength="5"
+                maxlength="250"
+                required
+                class="p-2 mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+              ></textarea>
+            </div>
 
-	<form th:action="@{/creer}" method="POST" th:object="${article}">
-		<h1>Création d'une encheres</h1>
+			<div>
+			  <label
+				for="categorie"
+				class="block text-sm font-medium text-gray-700"
+				>Catégorie</label
+			  >
+			  <div class="relative">
+				<select
+				  id="categorie"
+				  th:field="*{categorie}"
+				  required
+				  class="appearance-none p-2 mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 bg-white pr-10"
+				>
+				  <option
+					th:each="c : ${categorieSession}"
+					th:value="${c.id}"
+					th:text="${c.libelle}"
+				  ></option>
+				</select>
+				<div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+				  <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+					<path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"/>
+				  </svg>
+				</div>
+			  </div>
+			</div></svg></div>
 
+            <div>
+              <label
+                for="prixInitial"
+                class="block text-sm font-medium text-gray-700"
+                >Prix initial (€)</label
+              >
+              <input
+                id="prixInitial"
+                type="number"
+                th:field="*{prixInitial}"
+                min="1"
+                step="any"
+                required
+                class="p-2 mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+              />
+            </div>
 
-		<ul class="flex-outer">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label
+                  for="dateDebutEncheres"
+                  class="block text-sm font-medium text-gray-700"
+                  >Date d'ouverture</label
+                >
+                <input
+                  id="dateDebutEncheres"
+                  type="date"
+                  th:field="*{dateDebutEncheres}"
+                  required
+                  class="p-2 mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                />
+              </div>
 
-			<li><label for="titre">Nom</label> <input id="nomArticle"
-				type="text" th:field="*{nomArticle}">
-			<li><label for="description">Description</label> <input
-				id="description" type="text" th:field="*{description}" minlength="5"
-				maxlength="250" required></li>
+              <div>
+                <label
+                  for="dateFinEncheres"
+                  class="block text-sm font-medium text-gray-700"
+                  >Date de fermeture</label
+                >
+                <input
+                  id="dateFinEncheres"
+                  type="date"
+                  th:field="*{dateFinEncheres}"
+                  required
+                  class="p-2 mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                />
+              </div>
+            </div>
+          </div>
 
-			<li><label for="categorie">Catégorie : </label> <select
-				id="categorie" th:field="*{categorie}" required>
+          <div class="flex justify-end space-x-3">
+            <a
+              href="/articles"
+              class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200"
+            >
+              Annuler
+            </a>
+            <button
+              type="submit"
+              class="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700"
+            >
+              <i class="fas fa-save mr-2"></i>Enregistrer
+            </button>
+          </div>
+        </form>
+      </div>
+    </main>
 
-					<option th:each="c : ${categorieSession}"
-						th:value="${c.noCategorie}" th:text="${c.libelle}"></option>
-			</select>
-			
-			
-			<li><label for="prix">Prix</label> <input id="prixInitial"
-				type="number" th:field="*{prixInitial}" min="1" step="any" required></li>
-
-			<li><label for="date">Date d'ouverture</label> <input
-				id="dateDebutEncheres" type="date" th:field="*{dateDebutEncheres}"
-				required></li>
-
-			<li><label for="date">Date de Fermeture</label> <input
-				id="dateFinEncheres" type="date" th:field="*{dateFinEncheres}"
-				required></li>
-
-
-
-
-
-
-
-
-			<li>
-				<button type="submit">Enregistrer</button>
-			</li>
-		</ul>
-
-	</form>
-
-
-	<div th:replace="~{fragments/fragment-piedpage :: footer}"></div>
-
-</body>
+    <div th:replace="~{fragments/fragment-piedpage :: footer}"></div>
+  </body>
 </html>

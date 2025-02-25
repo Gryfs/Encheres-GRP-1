@@ -41,6 +41,7 @@ public class SecurityConfig {
             .requestMatchers("/creer").authenticated()
             .requestMatchers("/profile").authenticated()
             .requestMatchers("/profile/edit").authenticated()
+            .requestMatchers("/profile/delete").authenticated()
             
             .requestMatchers(HttpMethod.GET, "/creer").authenticated()
             .requestMatchers(HttpMethod.POST, "/creer").authenticated()
