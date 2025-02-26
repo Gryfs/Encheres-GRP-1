@@ -1,128 +1,124 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" class="h-full">
-  <head>
-    <meta charset="UTF-8" />
-    <title>Articles - ENI-Enchères</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="/css/style.css" rel="stylesheet" />
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
-    />
-  </head>
-  <body class="h-full flex flex-col bg-gradient-to-br from-gray-50 to-gray-100">
-    <div th:replace="~{fragments/fragment-entete :: entete}"></div>
+<head>
+<meta charset="UTF-8" />
+<title>Articles - ENI-Enchères</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="/css/style.css" rel="stylesheet" />
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+</head>
+<body
+	class="h-full flex flex-col bg-gradient-to-br from-gray-50 to-gray-100">
+	<div th:replace="~{fragments/fragment-entete :: entete}"></div>
 
-    <main class="flex-grow container mx-auto px-4 py-8">
-      <div class="bg-white rounded-xl shadow-lg p-6">
-        <h1 class="text-3xl font-bold text-gray-800 mb-8">
-          <i class="fas fa-gavel mr-3"></i>Articles à vendre
-        </h1>
+	<main class="flex-grow container mx-auto px-4 py-8">
+		<div class="bg-white rounded-xl shadow-lg p-6">
+			<h1 class="text-3xl font-bold text-gray-800 mb-8">
+				<i class="fas fa-gavel mr-3"></i>Articles à vendre
+			</h1>
 
-        <div class="overflow-x-auto">
-          <table class="min-w-full divide-y divide-gray-200">
-            <thead class="bg-gray-50">
-              <tr>
-                <th
-                  scope="col"
-                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                >
-                  N°
-                </th>
-                <th
-                  scope="col"
-                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                >
-                  Nom
-                </th>
-                <th
-                  scope="col"
-                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                >
-                  Catégorie
-                </th>
-                <th
-                  scope="col"
-                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                >
-                  Description
-                </th>
-                <th
-                  scope="col"
-                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                >
-                  Date de début
-                </th>
-                <th
-                  scope="col"
-                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                >
-                  Date de fin
-                </th>
-                <th
-                  scope="col"
-                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                >
-                  Prix initial
-                </th>
-                <th
-                  scope="col"
-                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                >
-                  Prix de vente
-                </th>
-              </tr>
-            </thead>
-            <tbody class="bg-white divide-y divide-gray-200">
-              <tr th:each="item : ${articles}" class="hover:bg-gray-50">
-                <td
-                  class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"
-                  th:text="${item.noArticle}"
-                ></td>
-                <td
-                  class="px-6 py-4 whitespace-nowrap text-sm font-medium text-blue-600"
-                  th:text="${item.nomArticle}"
-                ></td>
-                <td
-                  class="px-6 py-4 whitespace-nowrap text-sm text-gray-600"
-                  th:text="${item.categorie.libelle}"
-                ></td>
-                <td
-                  class="px-6 py-4 text-sm text-gray-900"
-                  th:text="${item.description}"
-                ></td>
-                <td
-                  class="px-6 py-4 whitespace-nowrap text-sm text-gray-600"
-                  th:text="${item.dateDebutEncheres}"
-                ></td>
-                <td
-                  class="px-6 py-4 whitespace-nowrap text-sm text-gray-600"
-                  th:text="${item.dateFinEncheres}"
-                ></td>
-                <td
-                  class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"
-                  th:text="${item.prixInitial} + '€'"
-                ></td>
-                <td
-                  class="px-6 py-4 whitespace-nowrap text-sm font-medium text-green-600"
-                  th:text="${item.prixVente} + '€'"
-                ></td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
 
-        <div class="mt-6">
-          <a
-            th:href="@{/}"
-            class="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200"
-          >
-            <i class="fas fa-home mr-2"></i>Page principale
-          </a>
-        </div>
-      </div>
-    </main>
+			<form method="GET" action="/articles">
+				<div class="mb-4">
+					<label for="search" class="block text-gray-700">Rechercher
+						par nom :</label> <input type="text" id="search" name="search"
+						class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+						placeholder="Entrez un nom d'article..." th:value="${search}">
+				</div>
 
-    <div th:replace="~{fragments/fragment-piedpage :: footer}"></div>
-  </body>
+				<div class="mb-4">
+					<label for="categorie" class="block text-gray-700">Filtrer
+						par catégorie :</label> <select id="id" name="id"
+						class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+						<option value="0">Toutes les catégories</option>
+						<option th:each="c : ${categorieSession}" th:value="${c.id}"
+							th:text="${c.libelle}"></option>
+					</select>
+				</div>
+
+				<button type="submit"
+					class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+					Filtrer</button>
+			</form>
+
+
+
+
+
+			<div class="overflow-x-auto">
+				<table class="min-w-full divide-y divide-gray-200">
+					<thead class="bg-gray-50">
+						<tr>
+							<th scope="col"
+								class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+								N°</th>
+							<th scope="col"
+								class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+								Nom</th>
+							<th scope="col"
+								class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+								Catégorie</th>
+							<th scope="col"
+								class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+								Description</th>
+							<th scope="col"
+								class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+								Date de début</th>
+							<th scope="col"
+								class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+								Date de fin</th>
+							<th scope="col"
+								class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+								Prix initial</th>
+							<th scope="col"
+								class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+								Prix de vente</th>
+							<th scope="col"
+								class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+								Utilisateur</th>
+						</tr>
+					</thead>
+					<tbody class="bg-white divide-y divide-gray-200">
+						<tr th:each="item : ${articles}" class="hover:bg-gray-50">
+							<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"
+								th:text="${item.noArticle}"></td>
+							<td
+								class="px-6 py-4 whitespace-nowrap text-sm font-medium text-blue-600"
+								th:text="${item.nomArticle}"></td>
+							<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600"
+								th:text="${item.categorie.libelle}"></td>
+							<td class="px-6 py-4 text-sm text-gray-900"
+								th:text="${item.description}"></td>
+							<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600"
+								th:text="${item.dateDebutEncheres}"></td>
+							<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600"
+								th:text="${item.dateFinEncheres}"></td>
+							<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"
+								th:text="${item.prixInitial} + '€'"></td>
+							<td
+								class="px-6 py-4 whitespace-nowrap text-sm font-medium text-green-600"
+								th:text="${item.prixVente} + '€'"></td>
+							<td
+								class="px-6 py-4 whitespace-nowrap text-sm font-medium text-green-600"
+								th:text="${item.utilisateur.pseudo}"></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+
+			<div class="mt-6">
+				<a th:href="@{/}"
+					class="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200">
+					<i class="fas fa-home mr-2"></i>Page principale
+				</a>
+			</div>
+		</div>
+	</main>
+
+	<div th:replace="~{fragments/fragment-piedpage :: footer}"></div>
+
+
+
+</body>
 </html>

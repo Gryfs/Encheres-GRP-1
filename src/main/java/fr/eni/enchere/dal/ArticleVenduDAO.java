@@ -10,5 +10,10 @@ public interface ArticleVenduDAO {
 	List<ArticleVendu> findAll();
 	
 	void create(ArticleVendu article);
+	
+	List<ArticleVendu> findAllByCategorie(Integer id);
+	
+	List<ArticleVendu> rechercherArticlesParNom(String search);
+
 
 }

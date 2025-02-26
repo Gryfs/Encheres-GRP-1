@@ -24,6 +24,13 @@ public class ContexteServiceImpl implements ContexteService {
 	public Utilisateur charger(String email) {
 		return utilisateurDAO.read(email);
 	}
+	
+	@Override
+	public Utilisateur chargerAvecId(long id) {
+		
+		return utilisateurDAO.read(id);
+	}
+	
 
 	@Override
 	@Transactional()
@@ -54,6 +61,7 @@ public class ContexteServiceImpl implements ContexteService {
         utilisateurDAO.delete(id);
     }
 
+
  	@Override
     public List<Utilisateur> getAllUtilisateurs() {
         return utilisateurDAO.findAll();
@@ -67,5 +75,6 @@ public class ContexteServiceImpl implements ContexteService {
 		}
 		return utilisateur;
 	}
+
 
 }

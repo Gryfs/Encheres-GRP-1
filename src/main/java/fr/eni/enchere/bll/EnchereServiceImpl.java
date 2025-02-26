@@ -8,17 +8,20 @@ import fr.eni.enchere.bo.ArticleVendu;
 import fr.eni.enchere.bo.Categories;
 import fr.eni.enchere.dal.ArticleVenduDAO;
 import fr.eni.enchere.dal.CategorieDAO;
+import fr.eni.enchere.dal.UtilisateurDAO;
 
 @Service
 public class EnchereServiceImpl implements EnchereService {
 
 	private ArticleVenduDAO articleVenduDAO;
 	private CategorieDAO categorieDAO;
+	private UtilisateurDAO utilisateurDAO;
 
-	public EnchereServiceImpl(ArticleVenduDAO articleVenduDAO, CategorieDAO categorieDAO) {
+	public EnchereServiceImpl(ArticleVenduDAO articleVenduDAO, CategorieDAO categorieDAO, UtilisateurDAO utilisateurDAO) {
 
 		this.articleVenduDAO = articleVenduDAO;
 		this.categorieDAO = categorieDAO;
+		this.utilisateurDAO = utilisateurDAO;
 	}
 
 	@Override
@@ -28,6 +31,7 @@ public class EnchereServiceImpl implements EnchereService {
 		for (ArticleVendu article : listeArticle) {
 			int idCategorie = article.getCategorie().getId();
 			article.setCategorie(categorieDAO.read(article.getCategorie().getId()));
+			article.setUtilisateur(utilisateurDAO.read(article.getUtilisateur().getNoUtilisateur()));
 
 		}
 		return listeArticle;
@@ -41,6 +45,8 @@ public class EnchereServiceImpl implements EnchereService {
 
 	@Override
 	public void creerArticle(ArticleVendu article) {
+		article.setUtilisateur(utilisateurDAO.read(article.getUtilisateur().getNoUtilisateur()));
+		article.setCategorie(categorieDAO.read(article.getCategorie().getId()));
 		articleVenduDAO.create(article);
 
 	}
@@ -50,6 +56,18 @@ public class EnchereServiceImpl implements EnchereService {
 
 		return categorieDAO.read(id);
 
+	}
+
+	@Override
+	public List<ArticleVendu> consulterArticleparCategorie(Integer id) {
+		
+		return articleVenduDAO.findAllByCategorie(id);
+	}
+
+	@Override
+	public List<ArticleVendu> rechercherArticlesParNom(String nom) {
+		
+		return articleVenduDAO.rechercherArticlesParNom(nom);
 	}
 
 }
