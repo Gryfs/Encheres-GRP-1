@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" class="h-full">
+  <head>
+    <title>Gestion des catégories - ENI-Enchères</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="/css/style.css" rel="stylesheet" />
+
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
+  </head>
+  <body class="h-full flex flex-col bg-gradient-to-br from-gray-50 to-gray-100">
+    <div th:replace="~{fragments/fragment-entete :: entete}"></div>
+
+    <main class="flex-grow container mx-auto px-4 py-8">
+      <div class="bg-white rounded-lg shadow p-6">
+        <h1 class="text-2xl font-bold mb-6">Gestion des catégories</h1>
+
+        <!-- Formulaire d'ajout -->
+        <form
+          th:action="@{/admin/categories/add}"
+          method="post"
+          th:object="${newCategorie}"
+          class="mb-8"
+        >
+          <div class="flex gap-4">
+            <input
+              type="text"
+              th:field="*{libelle}"
+              class="pl-2 flex-1 rounded-lg border-gray-300 focus:ring-blue-500 focus:border-blue-500"
+              placeholder="Nouvelle catégorie..."
+              required
+            />
+            <button
+              type="submit"
+              class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+            >
+              Ajouter
+            </button>
+          </div>
+        </form>
+
+        <!-- Liste des catégories -->
+        <div class="overflow-x-auto">
+          <table class="min-w-full divide-y divide-gray-200">
+            <thead class="bg-gray-50">
+              <tr>
+                <th
+                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                >
+                  ID
+                </th>
+                <th
+                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                >
+                  Libellé
+                </th>
+                <th
+                  class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider"
+                >
+                  Actions
+                </th>
+              </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200">
+              <tr th:each="categorie : ${categories}">
+                <td
+                  class="px-6 py-4 whitespace-nowrap"
+                  th:text="${categorie.id}"
+                ></td>
+
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <!-- Formulaire d'édition -->
+                  <form
+                    th:action="@{/admin/categories/edit/{id}(id=${categorie.id})}"
+                    method="post"
+                    class="hidden items-center gap-2"
+                    th:id="'editForm' + ${categorie.id}"
+                  >
+                    <input
+                      type="text"
+                      th:value="${categorie.libelle}"
+                      name="libelle"
+                      class="flex-1 px-2 py-1 rounded-md border border-blue-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    />
+                    <button
+                      type="submit"
+                      class="px-3 py-1 bg-green-500 text-white rounded-md hover:bg-green-600 transition-colors"
+                    >
+                      <i class="fas fa-check"></i>
+                    </button>
+                    <button
+                      type="button"
+                      th:onclick="'cancelEdit(' + ${categorie.id} + ')'"
+                      class="px-3 py-1 bg-gray-500 text-white rounded-md hover:bg-gray-600 transition-colors"
+                    >
+                      <i class="fas fa-times"></i>
+                    </button>
+                  </form>
+                  <!-- Label normal -->
+                  <span
+                    th:text="${categorie.libelle}"
+                    th:id="'label' + ${categorie.id}"
+                    class="block"
+                  ></span>
+                </td>
+                <td
+                  class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium"
+                >
+                  <button
+                    th:onclick="'toggleEdit(' + ${categorie.id} + ')'"
+                    class="inline-flex items-center px-3 py-1 bg-indigo-100 text-indigo-700 rounded-md hover:bg-indigo-200 transition-colors mr-3"
+                  >
+                    <i class="fas fa-edit mr-1"></i> Modifier
+                  </button>
+                  <form
+                    th:action="@{/admin/categories/delete/{id}(id=${categorie.id})}"
+                    method="post"
+                    class="inline-block"
+                    onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette catégorie ?')"
+                  >
+                    <button
+                      type="submit"
+                      class="inline-flex items-center px-3 py-1 bg-red-100 text-red-700 rounded-md hover:bg-red-200 transition-colors"
+                    >
+                      <i class="fas fa-trash-alt mr-1"></i> Supprimer
+                    </button>
+                  </form>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </main>
+
+    <div th:replace="~{fragments/fragment-piedpage :: footer}"></div>
+
+    <script>
+      function toggleEdit(id) {
+        const form = document.getElementById("editForm" + id);
+        const label = document.getElementById("label" + id);
+
+        if (form.classList.contains("hidden")) {
+          form.classList.remove("hidden");
+          form.classList.add("flex");
+          label.classList.add("hidden");
+
+          // Focus sur l'input
+          const input = form.querySelector("input");
+          input.focus();
+          input.select();
+        }
+      }
+
+      function cancelEdit(id) {
+        const form = document.getElementById("editForm" + id);
+        const label = document.getElementById("label" + id);
+
+        form.classList.remove("flex");
+        form.classList.add("hidden");
+        label.classList.remove("hidden");
+      }
+    </script>
+  </body>
+</html>
