@@ -19,4 +19,6 @@ public interface ContexteService {
 	List<Utilisateur> getAllUtilisateurs();
 
     Utilisateur chargerParId(Integer id);
+
+    Utilisateur findByResetToken(String token);
 }

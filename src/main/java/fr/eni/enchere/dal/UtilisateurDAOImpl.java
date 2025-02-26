@@ -18,8 +18,9 @@ public class UtilisateurDAOImpl implements UtilisateurDAO {
 	private final static String SELECT_BY_EMAIL = "SELECT no_utilisateur, pseudo, nom, prenom, email, telephone, rue, code_postal as codePostal, ville, mot_de_passe as motDePasse, credit, administrateur as admin, actif FROM UTILISATEURS WHERE email=:email";
 	private final static String CREATE = "INSERT INTO UTILISATEURS (pseudo, nom, prenom, email, telephone, rue, code_postal, ville, mot_de_passe, credit, administrateur) VALUES (:pseudo, :nom, :prenom, :email, :telephone, :rue, :codePostal, :ville, :motDePasse, :credit, :administrateur)";
 	private final static String COUNT_BY_EMAIL = "SELECT count(*) FROM UTILISATEURS WHERE email = :email";
-	private final static String UPDATE = "UPDATE UTILISATEURS SET pseudo=:pseudo, nom=:nom, prenom=:prenom, email=:email, telephone=:telephone, rue=:rue, code_postal=:codePostal, ville=:ville, mot_de_passe=:motDePasse, actif=CAST(:actif AS BIT) WHERE no_utilisateur=:noUtilisateur";
+	private final static String UPDATE = "UPDATE UTILISATEURS SET pseudo=:pseudo, nom=:nom, prenom=:prenom, email=:email, telephone=:telephone, rue=:rue, code_postal=:codePostal, ville=:ville, mot_de_passe=:motDePasse, actif=CAST(:actif AS BIT), reset_token=:resetToken, reset_token_expiry=:resetTokenExpiry WHERE no_utilisateur=:noUtilisateur";
     private final static String DELETE = "DELETE FROM UTILISATEURS WHERE no_utilisateur = :id";
+	private static final String FIND_BY_RESET_TOKEN = "SELECT no_utilisateur, pseudo, nom, prenom, email, telephone, rue, code_postal, ville, mot_de_passe, credit, administrateur, actif, reset_token, reset_token_expiry FROM UTILISATEURS WHERE reset_token = :token";
 
 	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 	
@@ -90,7 +91,9 @@ public class UtilisateurDAOImpl implements UtilisateurDAO {
         namedParameters.addValue("ville", utilisateur.getVille());
         namedParameters.addValue("motDePasse", utilisateur.getMotDePasse());
 		namedParameters.addValue("actif", utilisateur.isActif() ? 1 : 0);
-        
+        namedParameters.addValue("resetToken", utilisateur.getResetToken());
+		namedParameters.addValue("resetTokenExpiry", utilisateur.getResetTokenExpiry());
+
         namedParameterJdbcTemplate.update(UPDATE, namedParameters);
     }
 
@@ -124,5 +127,21 @@ public class UtilisateurDAOImpl implements UtilisateurDAO {
 		return namedParameterJdbcTemplate.query(SELECT_ALL, 
 				new BeanPropertyRowMapper<>(Utilisateur.class));
 	}
+
+	@Override
+    public Utilisateur findByResetToken(String token) {
+        try {
+            MapSqlParameterSource namedParameters = new MapSqlParameterSource();
+            namedParameters.addValue("token", token);
+            
+            return namedParameterJdbcTemplate.queryForObject(
+                FIND_BY_RESET_TOKEN,
+                namedParameters,
+                new BeanPropertyRowMapper<>(Utilisateur.class)
+            );
+        } catch (EmptyResultDataAccessException e) {
+            return null;
+        }
+    }
 
 }

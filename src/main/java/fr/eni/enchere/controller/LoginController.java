@@ -2,6 +2,7 @@ package fr.eni.enchere.controller;
 
 import java.security.Principal;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -12,18 +13,19 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
 import fr.eni.enchere.bll.ContexteService;
+import fr.eni.enchere.bll.PasswordResetService;
 import fr.eni.enchere.bo.Utilisateur;
 import jakarta.validation.Valid;
 
 @Controller
 @SessionAttributes({"utilisateurSession"})
 public class LoginController {
-	
-	private ContexteService contexteService;
 
-	public LoginController(ContexteService contexteService) {
-		this.contexteService = contexteService;
-	}
+	@Autowired
+    private PasswordResetService passwordResetService;
+	
+	@Autowired
+	private ContexteService contexteService;	
 
 	@GetMapping("/login")
 	public String login(@RequestParam(value = "error", required = false) String error, Model model) {
@@ -69,4 +71,35 @@ public class LoginController {
 	public Utilisateur chargerUtilisateurSession() {
 		return new Utilisateur();
 	}
+
+	@GetMapping("/forgot-password")
+    public String showForgotPasswordForm() {
+        return "forgot-password";
+    }
+    
+    @PostMapping("/forgot-password")
+    public String processForgotPassword(@RequestParam("email") String email, Model model) {
+        passwordResetService.createPasswordResetTokenForUser(email);
+        model.addAttribute("message", "Si un compte existe avec cet email, vous recevrez un lien de réinitialisation.");
+        return "forgot-password";
+    }
+    
+    @GetMapping("/reset-password")
+    public String showResetPasswordForm(@RequestParam("token") String token, Model model) {
+        model.addAttribute("token", token);
+        return "reset-password";
+    }
+    
+    @PostMapping("/reset-password")
+    public String processResetPassword(@RequestParam("token") String token,
+                                     @RequestParam("password") String password,
+                                     Model model) {
+        // Vérifier et mettre à jour le mot de passe
+        boolean result = passwordResetService.resetPassword(token, password);
+        if (result) {
+            return "redirect:/login?reset=success";
+        }
+        model.addAttribute("error", "Le lien de réinitialisation est invalide ou a expiré.");
+        return "reset-password";
+    }
 }
