@@ -16,6 +16,12 @@ public interface EnchereService {
 	
 	Categories consulterCategorieparId(long id);
 	
+	List<ArticleVendu> consulterArticleparCategorie(Integer id);
+	
+	List<ArticleVendu> rechercherArticlesParNom(String nom);
+	
+	
+	
 	
 
 }

@@ -6,6 +6,8 @@ public interface ContexteService {
 	
 	Utilisateur charger(String email);
 	
+	Utilisateur chargerAvecId(long id);
+	
 	void creerUtilisateur(Utilisateur utilisateur);
 
 	void updateUtilisateur(Utilisateur utilisateur);
