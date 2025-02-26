@@ -21,4 +21,7 @@ public interface UtilisateurDAO {
 	List<Utilisateur> findAll();
 
 	Utilisateur findById(Integer id);
+
+	Utilisateur findByResetToken(String token);
+
 }

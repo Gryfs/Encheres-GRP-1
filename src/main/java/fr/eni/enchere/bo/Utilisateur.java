@@ -1,5 +1,6 @@
 package fr.eni.enchere.bo;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,7 +21,9 @@ public class Utilisateur {
 	private boolean actif;
 	private List<ArticleVendu> articlesVendus = new ArrayList<>();
 	private List<Enchere> encheres = new ArrayList<>();
-
+	private String resetToken;
+    private LocalDateTime resetTokenExpiry;
+	
 	public Utilisateur() {
 	}
 
@@ -162,8 +165,22 @@ public class Utilisateur {
 		this.encheres = encheres;
 	}
 	
-	
+	public String getResetToken() {
+        return resetToken;
+    }
 
+    public void setResetToken(String resetToken) {
+        this.resetToken = resetToken;
+    }
+
+    public LocalDateTime getResetTokenExpiry() {
+        return resetTokenExpiry;
+    }
+
+    public void setResetTokenExpiry(LocalDateTime resetTokenExpiry) {
+        this.resetTokenExpiry = resetTokenExpiry;
+    }
+	
 	@Override
 	public String toString() {
 		return "Utilisateur [noUtilisateur=" + noUtilisateur + ", pseudo=" + pseudo + ", nom=" + nom + ", prenom="

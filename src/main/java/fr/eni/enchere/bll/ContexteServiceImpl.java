@@ -68,4 +68,9 @@ public class ContexteServiceImpl implements ContexteService {
 		return utilisateur;
 	}
 
+	@Override
+    public Utilisateur findByResetToken(String token) {
+        return utilisateurDAO.findByResetToken(token);
+    }
+
 }
