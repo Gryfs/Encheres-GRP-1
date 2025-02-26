@@ -12,4 +12,9 @@ public interface CategorieDAO {
 	
 	Categories read(long id);
 
+	void create(Categories categorie);
+
+    void update(Categories categorie);
+
+    void delete(long id);
 }
