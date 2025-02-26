@@ -1,5 +1,7 @@
 package fr.eni.enchere.bll;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
@@ -51,4 +53,19 @@ public class ContexteServiceImpl implements ContexteService {
     public void deleteUtilisateur(long id) {
         utilisateurDAO.delete(id);
     }
+
+ 	@Override
+    public List<Utilisateur> getAllUtilisateurs() {
+        return utilisateurDAO.findAll();
+    }
+
+	@Override
+	public Utilisateur chargerParId(Integer id) {
+		Utilisateur utilisateur = utilisateurDAO.findById(id);
+		if (utilisateur == null) {
+			throw new RuntimeException("Utilisateur non trouvé avec l'ID : " + id);
+		}
+		return utilisateur;
+	}
+
 }

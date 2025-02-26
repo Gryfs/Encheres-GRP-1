@@ -1,6 +1,8 @@
 package fr.eni.enchere.configuration;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.sql.DataSource;
 
@@ -10,7 +12,10 @@ import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.provisioning.JdbcUserDetailsManager;
@@ -18,6 +23,7 @@ import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.filter.GenericFilterBean;
+import fr.eni.enchere.security.CustomUserDetails;
 
 import fr.eni.enchere.bll.ContexteService;
 import fr.eni.enchere.bo.Utilisateur;
@@ -42,6 +48,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
             .authorizeHttpRequests((authorize) -> authorize
+                .requestMatchers("/admin/**").hasRole("ADMIN")
                 .requestMatchers("/*").permitAll()
                 .requestMatchers("/css/*").permitAll()
                 .requestMatchers("/img/*").permitAll()
@@ -54,7 +61,6 @@ public class SecurityConfig {
                 .requestMatchers("/profile").authenticated()
                 .requestMatchers("/profile/edit").authenticated()
                 .requestMatchers("/profile/delete").authenticated()
-                
                 .requestMatchers(HttpMethod.GET, "/creer").authenticated()
                 .requestMatchers(HttpMethod.POST, "/creer").authenticated()
                 .anyRequest().denyAll()
@@ -127,28 +133,42 @@ public class SecurityConfig {
     @Bean
     public UserDetailsService userDetailsService() {
         return username -> {
-            Utilisateur utilisateur = contexteService.charger(username);
-            if (utilisateur == null) {
-                throw new UsernameNotFoundException("Utilisateur non trouvé");
+            try {
+                Utilisateur utilisateur = contexteService.charger(username);
+                if (utilisateur == null) {
+                    throw new UsernameNotFoundException("Utilisateur non trouvé");
+                }
+    
+                List<GrantedAuthority> authorities = new ArrayList<>();
+                authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
+                if (utilisateur.isAdmin()) {
+                    authorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
+                }
+    
+                return new CustomUserDetails(
+                    utilisateur.getEmail(),
+                    "{noop}" + utilisateur.getMotDePasse(),
+                    authorities,
+                    utilisateur.getNom(),
+                    utilisateur.getPrenom()
+                );
+    
+            } catch (Exception e) {
+                e.printStackTrace();
+                throw e;
             }
-            return User.builder()
-                .username(utilisateur.getEmail())
-                .password("{noop}" + utilisateur.getMotDePasse()) // {noop} indique pas de chiffrement
-                .roles("USER")
-                .build();
         };
     }
+
 
     @Bean
     UserDetailsManager users(DataSource dataSource) {
         JdbcUserDetailsManager jdbcUserDetailsManager = new JdbcUserDetailsManager(dataSource);
     
-        // Update query to use UTILISATEURS table
         jdbcUserDetailsManager.setUsersByUsernameQuery(
             "select email, mot_de_passe, 'true' as enabled from UTILISATEURS where email = ?"
         );
         
-        // Update authorities query to use UTILISATEURS table
         jdbcUserDetailsManager.setAuthoritiesByUsernameQuery(
             "SELECT email, CASE WHEN administrateur = 1 THEN 'ROLE_ADMIN' ELSE 'ROLE_USER' END as role " +
             "FROM UTILISATEURS WHERE email = ?"

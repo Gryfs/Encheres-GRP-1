@@ -1,5 +1,7 @@
 package fr.eni.enchere.dal;
 
+import java.util.List;
+
 import fr.eni.enchere.bo.Utilisateur;
 
 public interface UtilisateurDAO {
@@ -15,4 +17,8 @@ public interface UtilisateurDAO {
 	void update(Utilisateur utilisateur);
 
 	void delete(long id);
+
+	List<Utilisateur> findAll();
+
+	Utilisateur findById(Integer id);
 }

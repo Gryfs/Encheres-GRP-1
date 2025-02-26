@@ -1,5 +1,8 @@
 package fr.eni.enchere.dal;
 
+import java.util.List;
+
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -11,11 +14,11 @@ import fr.eni.enchere.bo.Utilisateur;
 
 @Repository
 public class UtilisateurDAOImpl implements UtilisateurDAO {
-	private final static String SELECT_BY_ID = "SELECT no_utilisateur, pseudo, nom, prenom, email, telephone, rue, code_postal as codePostal, ville, mot_de_passe as motDePasse, credit, administrateur as admin FROM UTILISATEURS WHERE no_utilisateur=:id";
-	private final static String SELECT_BY_EMAIL = "SELECT no_utilisateur, pseudo, nom, prenom, email, telephone, rue, code_postal as codePostal, ville, mot_de_passe as motDePasse, credit, administrateur as admin FROM UTILISATEURS WHERE email=:email";
+	private final static String SELECT_BY_ID = "SELECT no_utilisateur, pseudo, nom, prenom, email, telephone, rue, code_postal as codePostal, ville, mot_de_passe as motDePasse, credit, administrateur as admin, actif FROM UTILISATEURS WHERE no_utilisateur=:id";
+	private final static String SELECT_BY_EMAIL = "SELECT no_utilisateur, pseudo, nom, prenom, email, telephone, rue, code_postal as codePostal, ville, mot_de_passe as motDePasse, credit, administrateur as admin, actif FROM UTILISATEURS WHERE email=:email";
 	private final static String CREATE = "INSERT INTO UTILISATEURS (pseudo, nom, prenom, email, telephone, rue, code_postal, ville, mot_de_passe, credit, administrateur) VALUES (:pseudo, :nom, :prenom, :email, :telephone, :rue, :codePostal, :ville, :motDePasse, :credit, :administrateur)";
 	private final static String COUNT_BY_EMAIL = "SELECT count(*) FROM UTILISATEURS WHERE email = :email";
-	private final static String UPDATE = "UPDATE UTILISATEURS SET pseudo=:pseudo, nom=:nom, prenom=:prenom, email=:email, telephone=:telephone, rue=:rue, code_postal=:codePostal, ville=:ville, mot_de_passe=:motDePasse WHERE no_utilisateur=:noUtilisateur";
+	private final static String UPDATE = "UPDATE UTILISATEURS SET pseudo=:pseudo, nom=:nom, prenom=:prenom, email=:email, telephone=:telephone, rue=:rue, code_postal=:codePostal, ville=:ville, mot_de_passe=:motDePasse, actif=CAST(:actif AS BIT) WHERE no_utilisateur=:noUtilisateur";
     private final static String DELETE = "DELETE FROM UTILISATEURS WHERE no_utilisateur = :id";
 
 	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
@@ -60,7 +63,6 @@ public class UtilisateurDAOImpl implements UtilisateurDAO {
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 		namedParameterJdbcTemplate.update(CREATE, namedParameters, keyHolder);
 
-		// Extraire la clé générée de manière appropriée
 		if (keyHolder.getKeys() != null) {
 			utilisateur.setNoUtilisateur(((Number) keyHolder.getKeys().get("no_utilisateur")).longValue());
 		}
@@ -87,6 +89,7 @@ public class UtilisateurDAOImpl implements UtilisateurDAO {
         namedParameters.addValue("codePostal", utilisateur.getCodePostal());
         namedParameters.addValue("ville", utilisateur.getVille());
         namedParameters.addValue("motDePasse", utilisateur.getMotDePasse());
+		namedParameters.addValue("actif", utilisateur.isActif() ? 1 : 0);
         
         namedParameterJdbcTemplate.update(UPDATE, namedParameters);
     }
@@ -97,5 +100,29 @@ public class UtilisateurDAOImpl implements UtilisateurDAO {
         namedParameters.addValue("id", id);
         namedParameterJdbcTemplate.update(DELETE, namedParameters);
     }
+
+	@Override
+	public Utilisateur findById(Integer id) {
+		if (id == null) {
+			return null;
+		}
+		MapSqlParameterSource namedParameters = new MapSqlParameterSource();
+		namedParameters.addValue("id", id);
+
+		try {
+			return namedParameterJdbcTemplate.queryForObject(SELECT_BY_ID, namedParameters,
+					new BeanPropertyRowMapper<>(Utilisateur.class));
+		} catch (EmptyResultDataAccessException e) {
+			return null;
+		}
+	}
+
+	@Override
+	public List<Utilisateur> findAll() {
+		final String SELECT_ALL = "SELECT no_utilisateur, pseudo, nom, prenom, email, telephone, rue, code_postal as codePostal, ville, mot_de_passe as motDePasse, credit, administrateur as admin, actif FROM UTILISATEURS";
+		
+		return namedParameterJdbcTemplate.query(SELECT_ALL, 
+				new BeanPropertyRowMapper<>(Utilisateur.class));
+	}
 
 }

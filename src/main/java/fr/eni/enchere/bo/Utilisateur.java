@@ -17,6 +17,7 @@ public class Utilisateur {
 	private String motDePasse;
 	private float credit;
 	private boolean admin;
+	private boolean actif;
 	private List<ArticleVendu> articlesVendus = new ArrayList<>();
 	private List<Enchere> encheres = new ArrayList<>();
 
@@ -24,7 +25,7 @@ public class Utilisateur {
 	}
 
 	public Utilisateur(long noUtilisateur, String pseudo, String nom, String prenom, String email, String telephone,
-			String rue, String codePostal, String ville, String motDePasse, float credit, boolean admin) {
+			String rue, String codePostal, String ville, String motDePasse, float credit, boolean admin, boolean actif) {
 
 		this.noUtilisateur = noUtilisateur;
 		this.pseudo = pseudo;
@@ -38,7 +39,7 @@ public class Utilisateur {
 		this.motDePasse = motDePasse;
 		this.credit = credit;
 		this.admin = admin;
-
+		this.actif = actif;
 	}
 
 	public long getNoUtilisateur() {
@@ -135,6 +136,14 @@ public class Utilisateur {
 
 	public void setAdmin(boolean admin) {
 		this.admin = admin;
+	}
+
+	public boolean isActif() {
+		return actif;
+	}
+	
+	public void setActif(boolean actif) {
+		this.actif = actif;
 	}
 
 	public List<ArticleVendu> getArticlesVendus() {
