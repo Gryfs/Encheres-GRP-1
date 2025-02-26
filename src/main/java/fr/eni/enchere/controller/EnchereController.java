@@ -30,8 +30,13 @@ public class EnchereController {
 		this.enchereService = enchereService;
 	}
 
+	@GetMapping
+	public String afficherAcceuil() {
+		
+		return "redirect:/encheres";
+	}
 	
-	@GetMapping("articles")
+	@GetMapping("encheres")
 	public String afficherArticles(Model model, 
 	                               @RequestParam(name = "id", required = false) Integer categoryId,
 	                               @RequestParam(name = "search", required = false) String search) {
@@ -54,14 +59,9 @@ public class EnchereController {
 	    model.addAttribute("articles", listeArticles);
 	    model.addAttribute("search", search); 
 
-	    return "articles";
+	    return "encheres";
 	}
 
-
-
-
-
-	
 
 
 	@GetMapping("/index")
@@ -93,7 +93,7 @@ public class EnchereController {
 	    System.out.println("creerarticle = " + article);
 	    this.enchereService.creerArticle(article);
 
-	    return "redirect:/articles";
+	    return "redirect:/encheres";
 	}
 
 
