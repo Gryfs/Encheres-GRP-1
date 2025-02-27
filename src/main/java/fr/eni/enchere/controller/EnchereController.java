@@ -5,7 +5,6 @@ import java.util.List;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -25,6 +24,8 @@ public class EnchereController {
 
 	private EnchereService enchereService;
 
+	private final int PAGE_SIZE = 10;
+
 	public EnchereController(EnchereService enchereService) {
 
 		this.enchereService = enchereService;
@@ -39,25 +40,40 @@ public class EnchereController {
 	@GetMapping("encheres")
 	public String afficherArticles(Model model, 
 	                               @RequestParam(name = "id", required = false) Integer categoryId,
-	                               @RequestParam(name = "search", required = false) String search) {
-	    List<ArticleVendu> listeArticles;
+	                               @RequestParam(name = "search", required = false) String search,
+								   @RequestParam(name = "page", defaultValue = "0") int page  
+								   ) {
+	    List<ArticleVendu> allArticles;
 
 	    System.out.println("Catégorie reçue : " + categoryId);
 	    System.out.println("Recherche reçue : " + search);
 
 	    if ((categoryId == null || categoryId == 0) && (search == null || search.isEmpty())) {
 	        // Si aucun filtre n'est appliqué
-	        listeArticles = enchereService.consulterArticle();
+	        allArticles = enchereService.consulterArticle();
 	    } else if (categoryId != null && categoryId != 0) {
 	        // Filtrer par catégorie
-	        listeArticles = enchereService.consulterArticleparCategorie(categoryId);
+	        allArticles = enchereService.consulterArticleparCategorie(categoryId);
 	    } else {
 	        // Filtrer par nom d'article
-	        listeArticles = enchereService.rechercherArticlesParNom(search);
+	        allArticles = enchereService.rechercherArticlesParNom(search);
 	    }
 
+		// Calcul de la pagination
+		int totalItems = allArticles.size();
+		int totalPages = (int) Math.ceil((double) totalItems / PAGE_SIZE);
+
+		// Extraction de la page courante
+		int startItem = page * PAGE_SIZE;
+		List<ArticleVendu> listeArticles = allArticles.subList(
+			startItem,
+			Math.min(startItem + PAGE_SIZE, allArticles.size())
+		);
+
 	    model.addAttribute("articles", listeArticles);
-	    model.addAttribute("search", search); 
+		model.addAttribute("currentPage", page);
+		model.addAttribute("totalPages", totalPages);
+		model.addAttribute("search", search);
 
 	    return "encheres";
 	}

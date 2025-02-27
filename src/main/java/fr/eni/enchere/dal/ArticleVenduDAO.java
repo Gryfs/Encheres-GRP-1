@@ -17,5 +17,7 @@ public interface ArticleVenduDAO {
 	
 	ArticleVendu rechercherArticleParId(long id);
 
+	
+
 
 }
