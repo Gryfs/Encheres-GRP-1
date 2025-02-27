@@ -19,5 +19,7 @@ public interface ArticleVenduDAO {
 	
 	void updatePrixVente(long id, Float nouveauPrix);
 
+	
+
 
 }
