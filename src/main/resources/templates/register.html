@@ -24,7 +24,7 @@
         >
           <div class="space-y-4">
             <div>
-              <label for="pseudo" class="block text-sm font-medium text-gray-700">Pseudo</label>
+              <label for="pseudo" class="block text-sm font-medium text-gray-700">Pseudo *</label>
               <input type="text" 
                      th:field="*{pseudo}" 
                      required
@@ -34,7 +34,7 @@
 
             <div class="grid grid-cols-2 gap-4">
               <div>
-                <label for="nom" class="block text-sm font-medium text-gray-700">Nom</label>
+                <label for="nom" class="block text-sm font-medium text-gray-700">Nom *</label>
                 <input type="text" 
                        th:field="*{nom}" 
                        required
@@ -42,7 +42,7 @@
                        class="mt-1 appearance-none rounded relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
               </div>
               <div>
-                <label for="prenom" class="block text-sm font-medium text-gray-700">Prénom</label>
+                <label for="prenom" class="block text-sm font-medium text-gray-700">Prénom *</label>
                 <input type="text" 
                        th:field="*{prenom}" 
                        required
@@ -52,7 +52,7 @@
             </div>
 
             <div>
-              <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
+              <label for="email" class="block text-sm font-medium text-gray-700">Email *</label>
               <input type="email" 
                      th:field="*{email}" 
                      required
@@ -61,7 +61,7 @@
             </div>
 
             <div>
-              <label for="telephone" class="block text-sm font-medium text-gray-700">Téléphone</label>
+              <label for="telephone" class="block text-sm font-medium text-gray-700">Téléphone *</label>
               <input type="tel" 
                      th:field="*{telephone}" 
                      pattern="[0-9]{2} [0-9]{2} [0-9]{2} [0-9]{2} [0-9]{2}"
@@ -72,7 +72,7 @@
             </div>
 
             <div>
-              <label for="rue" class="block text-sm font-medium text-gray-700">Rue</label>
+              <label for="rue" class="block text-sm font-medium text-gray-700">Rue *</label>
               <input type="text" 
                      th:field="*{rue}" 
                      required
@@ -82,7 +82,7 @@
 
             <div class="grid grid-cols-2 gap-4">
               <div>
-                <label for="codePostal" class="block text-sm font-medium text-gray-700">Code Postal</label>
+                <label for="codePostal" class="block text-sm font-medium text-gray-700">Code Postal *</label>
                 <input type="text" 
                        th:field="*{codePostal}" 
                        required
@@ -92,7 +92,7 @@
                        class="mt-1 appearance-none rounded relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
               </div>
               <div>
-                <label for="ville" class="block text-sm font-medium text-gray-700">Ville</label>
+                <label for="ville" class="block text-sm font-medium text-gray-700">Ville *</label>
                 <input type="text" 
                        th:field="*{ville}" 
                        required
@@ -102,7 +102,7 @@
             </div>
 
             <div>
-              <label for="motDePasse" class="block text-sm font-medium text-gray-700">Mot de passe</label>
+              <label for="motDePasse" class="block text-sm font-medium text-gray-700">Mot de passe *</label>
               <input type="password" 
                      th:field="*{motDePasse}" 
                      required

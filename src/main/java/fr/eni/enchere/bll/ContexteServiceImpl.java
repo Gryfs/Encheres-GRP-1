@@ -2,6 +2,8 @@ package fr.eni.enchere.bll;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
@@ -9,11 +11,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import fr.eni.enchere.bo.Utilisateur;
 import fr.eni.enchere.dal.UtilisateurDAO;
-
 @Service
 @Primary
 public class ContexteServiceImpl implements ContexteService {
 	private final UtilisateurDAO utilisateurDAO;
+    private static final Logger logger = LoggerFactory.getLogger(ContexteServiceImpl.class);
 
 	@Autowired
 	public ContexteServiceImpl(UtilisateurDAO utilisateurDAO) {
@@ -35,8 +37,14 @@ public class ContexteServiceImpl implements ContexteService {
 	@Override
 	@Transactional()
 	public void creerUtilisateur(Utilisateur utilisateur) {
+		logger.debug("Vérification de l'email: {}", utilisateur.getEmail());
+
 		if (validerEmailInexistant(utilisateur.getEmail())) {
 			utilisateurDAO.create(utilisateur);
+			logger.info("Utilisateur créé avec succès: {}", utilisateur.getEmail());
+		} else{
+			logger.warn("Tentative de création avec un email existant: {}", utilisateur.getEmail());
+
 		}
 	}
 
