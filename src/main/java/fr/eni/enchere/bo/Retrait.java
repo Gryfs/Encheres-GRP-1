@@ -5,18 +5,18 @@ public class Retrait {
 	private String rue;
 	private String codePostal;
 	private String ville;
-	private ArticleVendu article;
+	private long noArticle;
 
 	public Retrait() {
 
 	}
 
-	public Retrait(String rue, String codePostal, String ville, ArticleVendu article) {
+	public Retrait(String rue, String codePostal, String ville, long noArticle) {
 
 		this.rue = rue;
 		this.codePostal = codePostal;
 		this.ville = ville;
-		this.article = article;
+		this.noArticle = noArticle;
 	}
 
 	public String getRue() {
@@ -43,19 +43,18 @@ public class Retrait {
 		this.ville = ville;
 	}
 
-	public ArticleVendu getArticle() {
-		return article;
+	public long getNoArticle() {
+		return noArticle;
 	}
 
-	public void setArticle(ArticleVendu article) {
-		this.article = article;
+	public void setNoArticle(long noArticle) {
+		this.noArticle = noArticle;
 	}
 
 	@Override
 	public String toString() {
-		return "Retrait [rue=" + rue + ", codePostal=" + codePostal + ", ville=" + ville + ", article=" + article + "]";
+		return "Retrait [rue=" + rue + ", codePostal=" + codePostal + ", ville=" + ville + ", article=" + noArticle
+				+ "]";
 	}
-	
-	
 
 }

@@ -12,8 +12,8 @@ import fr.eni.enchere.bo.Categories;
 @Repository
 public class CategorieDAOImpl implements CategorieDAO {
 
-	private final static String SELECT_ALL = "SELECT no_categorie AS id, libelle FROM categories";
-	private final static String SELECT_BY_ID = "SELECT no_categorie AS id, libelle FROM categories WHERE no_categorie=:no_categorie";
+	private final static String SELECT_ALL = "SELECT no_categorie as id, libelle FROM categories";
+	private final static String SELECT_BY_ID = "SELECT no_categorie as id, libelle FROM categories WHERE no_categorie=:no_categorie";
 	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
 	public CategorieDAOImpl(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {

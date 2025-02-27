@@ -14,6 +14,8 @@ public interface ArticleVenduDAO {
 	List<ArticleVendu> findAllByCategorie(Integer id);
 	
 	List<ArticleVendu> rechercherArticlesParNom(String search);
+	
+	ArticleVendu rechercherArticleParId(long id);
 
 
 }

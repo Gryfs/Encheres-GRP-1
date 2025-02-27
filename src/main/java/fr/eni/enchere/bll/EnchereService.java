@@ -9,6 +9,8 @@ import fr.eni.enchere.bo.Categories;
 public interface EnchereService {
 
 	List<ArticleVendu> consulterArticle();
+	
+	ArticleVendu consulterArticleParId(long id);
 
 	List<Categories> consulterCategories();
 

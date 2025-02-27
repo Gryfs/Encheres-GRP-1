@@ -61,13 +61,17 @@ public class EnchereController {
 
 	    return "encheres";
 	}
+	
+	@GetMapping("/detail")
+	public String afficherDetail(@RequestParam(name = "id") int idArticle, Model model) {
 
+		ArticleVendu article = enchereService.consulterArticleParId(idArticle);
 
+		model.addAttribute("article", article);
 
-	@GetMapping("/index")
-	public String retourIndex() {
-		return "index";
+		return "detail";
 	}
+
 
 	@GetMapping("/creer")
 	public String afficherFormulaireCreation(Model model) {
