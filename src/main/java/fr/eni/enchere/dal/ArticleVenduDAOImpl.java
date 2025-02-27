@@ -25,7 +25,8 @@ public class ArticleVenduDAOImpl implements ArticleVenduDAO {
 	private final static String SELECT_ALL_BY_CATEGORIE = "SELECT no_article, nom_article, description, date_debut_encheres, date_fin_encheres, prix_initial, prix_vente, no_categorie, no_utilisateur FROM articles_vendus WHERE no_categorie = :no_categorie";
 	private final static String SELECT_BY_NOM = "SELECT no_article, nom_article, description, date_debut_encheres, date_fin_encheres, prix_initial, prix_vente, no_categorie, no_utilisateur FROM articles_vendus WHERE LOWER(nom_article) LIKE LOWER(:search)";
 	private final static String SELECT_BY_ID = "SELECT no_article, nom_article, description, date_debut_encheres, date_fin_encheres, prix_initial, prix_vente, no_categorie, no_utilisateur FROM articles_vendus WHERE no_article=:no_article";
-
+	private final static String UPDATE_PRIX = "UPDATE articles_vendus SET prix_vente = :nouveau_prix WHERE no_article = :no_article";
+	
 	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
 	public ArticleVenduDAOImpl(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
@@ -94,6 +95,18 @@ public class ArticleVenduDAOImpl implements ArticleVenduDAO {
 	        namedParameterJdbcTemplate.update(insertRetrait, retraitParameters);
 	    }
 	}
+
+	@Override
+	public void updatePrixVente(long id, Float nouveauPrix) {
+	    
+
+	    MapSqlParameterSource namedParameters = new MapSqlParameterSource();
+	    namedParameters.addValue("nouveau_prix", nouveauPrix);
+	    namedParameters.addValue("no_article", id);
+
+	    namedParameterJdbcTemplate.update(UPDATE_PRIX, namedParameters);
+	}
+
 
 
 }
