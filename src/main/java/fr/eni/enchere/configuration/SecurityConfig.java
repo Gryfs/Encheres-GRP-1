@@ -35,10 +35,13 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
     private final ContexteService contexteService;
+    private static final Logger logger = LoggerFactory.getLogger(SecurityConfig.class);
 
     public SecurityConfig(ContexteService contexteService) {
         this.contexteService = contexteService;
@@ -112,6 +115,8 @@ public class SecurityConfig {
         public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
                 throws IOException, ServletException {
             HttpServletRequest httpRequest = (HttpServletRequest) request;
+            logger.debug(String.format("Vérification timeout session pour: %s", httpRequest.getRequestURI()));
+
             HttpServletResponse httpResponse = (HttpServletResponse) response;
             HttpSession session = httpRequest.getSession(false);
 
@@ -122,6 +127,7 @@ public class SecurityConfig {
 
                 if (elapsedTime > MAX_INACTIVE_INTERVAL) {
                     session.invalidate();
+                    logger.info(String.format("Session expirée pour: %s", httpRequest.getRequestURI()));
                     ((HttpServletResponse) response).sendRedirect("/login?timeout=true");
                     return;
                 }

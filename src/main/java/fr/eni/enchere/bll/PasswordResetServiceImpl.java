@@ -5,7 +5,6 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
@@ -14,9 +13,12 @@ import fr.eni.enchere.bo.Utilisateur;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 @Service
 public class PasswordResetServiceImpl implements PasswordResetService {
-    
+    private static final Logger logger = LoggerFactory.getLogger(PasswordResetServiceImpl.class);
+
     @Autowired
     private JavaMailSender mailSender;
     
@@ -25,14 +27,23 @@ public class PasswordResetServiceImpl implements PasswordResetService {
     
     @Override
     public void createPasswordResetTokenForUser(String email) {
-        Utilisateur utilisateur = contexteService.charger(email);
-        if (utilisateur != null) {
-            String token = UUID.randomUUID().toString();
-            utilisateur.setResetToken(token);
-            utilisateur.setResetTokenExpiry(LocalDateTime.now().plusHours(24));
-            contexteService.updateUtilisateur(utilisateur);
-            
-            sendPasswordResetEmail(utilisateur.getEmail(), token);
+        logger.debug("Demande de réinitialisation pour: {}", email);
+        try {
+
+            Utilisateur utilisateur = contexteService.charger(email);
+            if (utilisateur != null) {
+                String token = UUID.randomUUID().toString();
+                utilisateur.setResetToken(token);
+                utilisateur.setResetTokenExpiry(LocalDateTime.now().plusHours(24));
+                contexteService.updateUtilisateur(utilisateur);
+                
+                sendPasswordResetEmail(utilisateur.getEmail(), token);
+                logger.info("Email de réinitialisation envoyé à: {}", email);
+
+            }
+        } catch (Exception e) {
+            logger.error("Erreur lors de la réinitialisation du mot de passe: {}", e.getMessage(), e);
+            throw e;
         }
     }
     

@@ -12,6 +12,8 @@ import org.springframework.stereotype.Repository;
 
 import fr.eni.enchere.bo.Utilisateur;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 @Repository
 public class UtilisateurDAOImpl implements UtilisateurDAO {
 	private final static String SELECT_BY_ID = "SELECT no_utilisateur, pseudo, nom, prenom, email, telephone, rue, code_postal as codePostal, ville, mot_de_passe as motDePasse, credit, administrateur as admin, actif FROM UTILISATEURS WHERE no_utilisateur=:id";
@@ -21,6 +23,7 @@ public class UtilisateurDAOImpl implements UtilisateurDAO {
 	private final static String UPDATE = "UPDATE UTILISATEURS SET pseudo=:pseudo, nom=:nom, prenom=:prenom, email=:email, telephone=:telephone, rue=:rue, code_postal=:codePostal, ville=:ville, mot_de_passe=:motDePasse, actif=CAST(:actif AS BIT), reset_token=:resetToken, reset_token_expiry=:resetTokenExpiry WHERE no_utilisateur=:noUtilisateur";
     private final static String DELETE = "DELETE FROM UTILISATEURS WHERE no_utilisateur = :id";
 	private static final String FIND_BY_RESET_TOKEN = "SELECT no_utilisateur, pseudo, nom, prenom, email, telephone, rue, code_postal, ville, mot_de_passe, credit, administrateur, actif, reset_token, reset_token_expiry FROM UTILISATEURS WHERE reset_token = :token";
+    private static final Logger logger = LoggerFactory.getLogger(UtilisateurDAOImpl.class);
 
 	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 	
@@ -48,6 +51,8 @@ public class UtilisateurDAOImpl implements UtilisateurDAO {
 
 	@Override
 	public void create(Utilisateur utilisateur) {
+		logger.debug("Début création utilisateur en DB: {}", utilisateur.getEmail());
+
 		MapSqlParameterSource namedParameters = new MapSqlParameterSource();
 		namedParameters.addValue("pseudo", utilisateur.getPseudo());
 		namedParameters.addValue("nom", utilisateur.getNom());
@@ -61,12 +66,20 @@ public class UtilisateurDAOImpl implements UtilisateurDAO {
 		namedParameters.addValue("credit", 0);
 		namedParameters.addValue("administrateur", false);
 
-		KeyHolder keyHolder = new GeneratedKeyHolder();
-		namedParameterJdbcTemplate.update(CREATE, namedParameters, keyHolder);
+		try  {
+			KeyHolder keyHolder = new GeneratedKeyHolder();
+			namedParameterJdbcTemplate.update(CREATE, namedParameters, keyHolder);
+			logger.info("Utilisateur créé en DB avec succès: {}", utilisateur.getEmail());
 
-		if (keyHolder.getKeys() != null) {
-			utilisateur.setNoUtilisateur(((Number) keyHolder.getKeys().get("no_utilisateur")).longValue());
+			if (keyHolder.getKeys() != null) {
+				utilisateur.setNoUtilisateur(((Number) keyHolder.getKeys().get("no_utilisateur")).longValue());
+			}
+		} catch (Exception e) {
+			logger.error("Erreur lors de la création de l'utilisateur: {}", e.getMessage(), e);
+			throw e;
 		}
+
+
 	}
 	
 	@Override

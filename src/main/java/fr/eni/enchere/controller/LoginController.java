@@ -2,6 +2,8 @@ package fr.eni.enchere.controller;
 
 import java.security.Principal;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,6 +22,7 @@ import jakarta.validation.Valid;
 @Controller
 @SessionAttributes({"utilisateurSession"})
 public class LoginController {
+    private static final Logger logger = LoggerFactory.getLogger(LoginController.class);
 
 	@Autowired
     private PasswordResetService passwordResetService;
@@ -50,11 +53,13 @@ public class LoginController {
 		
 	@PostMapping("/register")
 	public String registerAccount(@Valid @ModelAttribute("utilisateur") Utilisateur utilisateur, BindingResult bindingResult) {
-		System.out.println("creerUtilisateur = " + utilisateur);
+		logger.debug("Tentative d'inscription: {}", utilisateur.getEmail());
 		if (!bindingResult.hasErrors()) {
 			contexteService.creerUtilisateur(utilisateur);
+			logger.info("Nouvel utilisateur créé: {}", utilisateur.getEmail());
 			return "redirect:/login";
 		} else {
+			logger.warn("Échec de la création du compte: {}", bindingResult.getAllErrors());
 			return "register";
 		}
 	}
