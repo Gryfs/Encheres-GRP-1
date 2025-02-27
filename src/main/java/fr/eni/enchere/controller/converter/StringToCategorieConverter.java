@@ -18,7 +18,6 @@ public class StringToCategorieConverter implements Converter<String, Categories>
 	@Override
 	public Categories convert(String idCategorie) {
 		System.out.println("convert idParticipant = " + idCategorie);
-
 		return this.enchereService.consulterCategorieparId(Long.parseLong(idCategorie));
 
 	}

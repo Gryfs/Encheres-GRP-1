@@ -33,7 +33,6 @@ public class EnchereServiceImpl implements EnchereService {
 
 		List<ArticleVendu> listeArticle = articleVenduDAO.findAll();
 		for (ArticleVendu article : listeArticle) {
-			int idCategorie = article.getCategorie().getId();
 			article.setCategorie(categorieDAO.read(article.getCategorie().getId()));
 			article.setUtilisateur(utilisateurDAO.read(article.getUtilisateur().getNoUtilisateur()));
 
@@ -80,6 +79,7 @@ public class EnchereServiceImpl implements EnchereService {
 		article.setCategorie(categorieDAO.read(article.getCategorie().getId()));
 		article.setUtilisateur(utilisateurDAO.read(article.getUtilisateur().getNoUtilisateur()));
 		article.setRetrait(retraitDAO.consulterRetraitParIdarticle(article.getNoArticle()));
+		
 		if (article.getDateDebutEncheres().isBefore(LocalDate.now()) && article.getDateFinEncheres().isAfter(LocalDate.now())) {
 		    article.setEtatVente("OPEN");
 		} else {

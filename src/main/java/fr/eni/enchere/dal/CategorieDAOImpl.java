@@ -12,8 +12,8 @@ import fr.eni.enchere.bo.Categories;
 @Repository
 public class CategorieDAOImpl implements CategorieDAO {
 
-	private final static String SELECT_ALL = "SELECT no_categorie as id, libelle FROM categories";
-	private final static String SELECT_BY_ID = "SELECT no_categorie as id, libelle FROM categories WHERE no_categorie=:no_categorie";
+	private final static String SELECT_ALL = "SELECT * FROM categories";
+	private final static String SELECT_BY_ID = "SELECT no_categorie, libelle FROM categories WHERE no_categorie=:no_categorie";
 	private final static String INSERT = "INSERT INTO categories (libelle) VALUES (:libelle)";
 	private final static String UPDATE = "UPDATE categories SET libelle=:libelle WHERE no_categorie=:no_categorie";
 	private final static String DELETE = "DELETE FROM categories WHERE no_categorie=:no_categorie";
@@ -29,6 +29,7 @@ public class CategorieDAOImpl implements CategorieDAO {
 	public List<Categories> findAll() {
 		List<Categories> categories = namedParameterJdbcTemplate.query(SELECT_ALL,
 				new BeanPropertyRowMapper<Categories>(Categories.class));
+		System.out.println(categories);
 		return categories;
 	}
 
@@ -36,7 +37,7 @@ public class CategorieDAOImpl implements CategorieDAO {
 	public Categories read(long id) {
 
 		MapSqlParameterSource namedParameters = new MapSqlParameterSource();
-		namedParameters.addValue("id", id);
+		namedParameters.addValue("no_categorie", id);
 
 		return namedParameterJdbcTemplate.queryForObject(SELECT_BY_ID, namedParameters,
 				new BeanPropertyRowMapper<Categories>(Categories.class));

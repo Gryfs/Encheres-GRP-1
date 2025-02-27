@@ -36,31 +36,28 @@ public class EnchereController {
 
 		return "redirect:/encheres";
 	}
-
+	
 	@GetMapping("encheres")
 	public String afficherArticles(Model model, @RequestParam(name = "id", required = false) Integer categoryId,
-			@RequestParam(name = "search", required = false) String search) {
-		List<ArticleVendu> listeArticles;
+	                               @RequestParam(name = "search", required = false) String search,
+	                               @SessionAttribute(name = "utilisateurSession", required = false) Utilisateur utilisateurConnecte) {
+	    List<ArticleVendu> listeArticles;
 
-		System.out.println("Catégorie reçue : " + categoryId);
-		System.out.println("Recherche reçue : " + search);
+	    if ((categoryId == null || categoryId == 0) && (search == null || search.isEmpty())) {
+	        listeArticles = enchereService.consulterArticle();
+	    } else if (categoryId != null && categoryId != 0) {
+	        listeArticles = enchereService.consulterArticleparCategorie(categoryId);
+	    } else {
+	        listeArticles = enchereService.rechercherArticlesParNom(search);
+	    }
 
-		if ((categoryId == null || categoryId == 0) && (search == null || search.isEmpty())) {
-			// Si aucun filtre n'est appliqué
-			listeArticles = enchereService.consulterArticle();
-		} else if (categoryId != null && categoryId != 0) {
-			// Filtrer par catégorie
-			listeArticles = enchereService.consulterArticleparCategorie(categoryId);
-		} else {
-			// Filtrer par nom d'article
-			listeArticles = enchereService.rechercherArticlesParNom(search);
-		}
+	    model.addAttribute("articles", listeArticles);
+	    model.addAttribute("search", search);
+	    model.addAttribute("utilisateurConnecte", utilisateurConnecte); // Ajoutez l'utilisateur connecté au modèle
 
-		model.addAttribute("articles", listeArticles);
-		model.addAttribute("search", search);
-
-		return "encheres";
+	    return "encheres";
 	}
+
 
 	@GetMapping("/detail")
 	public String afficherDetail(@RequestParam(name = "id") int idArticle, Model model) {
