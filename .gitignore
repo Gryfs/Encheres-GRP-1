@@ -37,8 +37,4 @@ out/
 .vscode/
 
 application-dev.properties
-<<<<<<< HEAD
-=======
-
->>>>>>> S014
 logs/

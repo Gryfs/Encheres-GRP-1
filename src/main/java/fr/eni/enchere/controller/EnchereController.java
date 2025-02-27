@@ -69,6 +69,8 @@ public class EnchereController {
 		);
 
 	    model.addAttribute("articles", listeArticles);
+		model.addAttribute("currentPage", page);
+    	model.addAttribute("totalPages", totalPages);
 	    model.addAttribute("search", search); 
 
 	    return "encheres";
