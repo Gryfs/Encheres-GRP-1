@@ -18,6 +18,7 @@ public class CategorieDAOImpl implements CategorieDAO {
     private final static String UPDATE = "UPDATE categories SET libelle=:libelle WHERE no_categorie=:no_categorie";
     private final static String DELETE = "DELETE FROM categories WHERE no_categorie=:no_categorie";
 	
+
 	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
 	public CategorieDAOImpl(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {

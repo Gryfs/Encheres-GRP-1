@@ -19,28 +19,6 @@
 			</h1>
 
 
-			<form method="GET" action="/articles">
-				<div class="mb-4">
-					<label for="search" class="block text-gray-700">Rechercher
-						par nom :</label> <input type="text" id="search" name="search"
-						class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-						placeholder="Entrez un nom d'article..." th:value="${search}">
-				</div>
-
-				<div class="mb-4">
-					<label for="categorie" class="block text-gray-700">Filtrer
-						par catégorie :</label> <select id="id" name="id"
-						class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-						<option value="0">Toutes les catégories</option>
-						<option th:each="c : ${categorieSession}" th:value="${c.id}"
-							th:text="${c.libelle}"></option>
-					</select>
-				</div>
-
-				<button type="submit"
-					class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-					Filtrer</button>
-			</form>
 
 
 
@@ -52,14 +30,13 @@
 						<tr>
 							<th scope="col"
 								class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-								N°</th>
-							<th scope="col"
-								class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
 								Nom</th>
 							<th scope="col"
 								class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
 								Catégorie</th>
-
+							<th scope="col"
+								class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+								Description</th>
 							<th scope="col"
 								class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
 								Date de début</th>
@@ -74,35 +51,50 @@
 								Prix de vente</th>
 							<th scope="col"
 								class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-								Utilisateur</th>
+								Vendeur</th>
+							<th scope="col"
+								class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+								Rue</th>
+							<th scope="col"
+								class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+								Code Postal</th>
+							<th scope="col"
+								class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+								Ville</th>
 						</tr>
 					</thead>
 					<tbody class="bg-white divide-y divide-gray-200">
-						<tr th:each="item : ${articles}" class="hover:bg-gray-50">
-							<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"
-								th:text="${item.noArticle}"></td>
+						<tr class="hover:bg-gray-50">
 							<td
 								class="px-6 py-4 whitespace-nowrap text-sm font-medium text-blue-600"
-								th:text="${item.nomArticle}"></td>
+								th:text="${article.nomArticle}"></td>
 							<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600"
-								th:text="${item.categorie.libelle}"></td>
+								th:text="${article.categorie.libelle}"></td>
+							<td class="px-6 py-4 text-sm text-gray-900"
+								th:text="${article.description}"></td>
 							<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600"
-								th:text="${item.dateDebutEncheres}"></td>
+								th:text="${article.dateDebutEncheres}"></td>
 							<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600"
-								th:text="${item.dateFinEncheres}"></td>
+								th:text="${article.dateFinEncheres}"></td>
 							<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"
-								th:text="${item.prixInitial} + '€'"></td>
+								th:text="${article.prixInitial} + '€'"></td>
 							<td
 								class="px-6 py-4 whitespace-nowrap text-sm font-medium text-green-600"
-								th:text="${item.prixVente} + '€'"></td>
+								th:text="${article.prixVente} + '€'"></td>
 							<td
 								class="px-6 py-4 whitespace-nowrap text-sm font-medium text-green-600"
-								th:text="${item.utilisateur.pseudo}"></td>
-							<td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-								<a th:href="@{/detail(id=${item.noArticle})}"
-								class="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-md">
-									Détail </a>
-							</td>
+								th:text="${article.utilisateur.pseudo}"></td>
+							<td
+								class="px-6 py-4 whitespace-nowrap text-sm font-medium text-green-600"
+								th:text="${article.retrait.rue}"></td>
+							<td
+								class="px-6 py-4 whitespace-nowrap text-sm font-medium text-green-600"
+								th:text="${article.retrait.codePostal}"></td>
+							<td
+								class="px-6 py-4 whitespace-nowrap text-sm font-medium text-green-600"
+								th:text="${article.retrait.ville}"></td>
+
+
 						</tr>
 					</tbody>
 				</table>
