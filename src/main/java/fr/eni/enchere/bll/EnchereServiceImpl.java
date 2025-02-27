@@ -1,5 +1,6 @@
 package fr.eni.enchere.bll;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -79,7 +80,18 @@ public class EnchereServiceImpl implements EnchereService {
 		article.setCategorie(categorieDAO.read(article.getCategorie().getId()));
 		article.setUtilisateur(utilisateurDAO.read(article.getUtilisateur().getNoUtilisateur()));
 		article.setRetrait(retraitDAO.consulterRetraitParIdarticle(article.getNoArticle()));
+		if (article.getDateDebutEncheres().isBefore(LocalDate.now()) && article.getDateFinEncheres().isAfter(LocalDate.now())) {
+		    article.setEtatVente("OPEN");
+		} else {
+			article.setEtatVente("CLOSE");
+		}
 		return article;
+	}
+
+	@Override
+	public void updatePrixVente(long idArticle, Float nouveauPrix) {
+		articleVenduDAO.updatePrixVente(idArticle, nouveauPrix);
+		
 	}
 
 }

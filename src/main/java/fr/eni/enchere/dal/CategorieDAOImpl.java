@@ -15,9 +15,8 @@ public class CategorieDAOImpl implements CategorieDAO {
 	private final static String SELECT_ALL = "SELECT no_categorie as id, libelle FROM categories";
 	private final static String SELECT_BY_ID = "SELECT no_categorie as id, libelle FROM categories WHERE no_categorie=:no_categorie";
 	private final static String INSERT = "INSERT INTO categories (libelle) VALUES (:libelle)";
-    private final static String UPDATE = "UPDATE categories SET libelle=:libelle WHERE no_categorie=:no_categorie";
-    private final static String DELETE = "DELETE FROM categories WHERE no_categorie=:no_categorie";
-	
+	private final static String UPDATE = "UPDATE categories SET libelle=:libelle WHERE no_categorie=:no_categorie";
+	private final static String DELETE = "DELETE FROM categories WHERE no_categorie=:no_categorie";
 
 	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
@@ -44,27 +43,27 @@ public class CategorieDAOImpl implements CategorieDAO {
 	}
 
 	@Override
-    public void create(Categories categorie) {
-        MapSqlParameterSource namedParameters = new MapSqlParameterSource();
-        namedParameters.addValue("libelle", categorie.getLibelle());
-        
-        namedParameterJdbcTemplate.update(INSERT, namedParameters);
-    }
+	public void create(Categories categorie) {
+		MapSqlParameterSource namedParameters = new MapSqlParameterSource();
+		namedParameters.addValue("libelle", categorie.getLibelle());
 
-    @Override
-    public void update(Categories categorie) {
-        MapSqlParameterSource namedParameters = new MapSqlParameterSource();
-        namedParameters.addValue("no_categorie", categorie.getId());
-        namedParameters.addValue("libelle", categorie.getLibelle());
-        
-        namedParameterJdbcTemplate.update(UPDATE, namedParameters);
-    }
+		namedParameterJdbcTemplate.update(INSERT, namedParameters);
+	}
 
-    @Override
-    public void delete(long id) {
-        MapSqlParameterSource namedParameters = new MapSqlParameterSource();
-        namedParameters.addValue("no_categorie", id);
-        
-        namedParameterJdbcTemplate.update(DELETE, namedParameters);
-    }
+	@Override
+	public void update(Categories categorie) {
+		MapSqlParameterSource namedParameters = new MapSqlParameterSource();
+		namedParameters.addValue("no_categorie", categorie.getId());
+		namedParameters.addValue("libelle", categorie.getLibelle());
+
+		namedParameterJdbcTemplate.update(UPDATE, namedParameters);
+	}
+
+	@Override
+	public void delete(long id) {
+		MapSqlParameterSource namedParameters = new MapSqlParameterSource();
+		namedParameters.addValue("no_categorie", id);
+
+		namedParameterJdbcTemplate.update(DELETE, namedParameters);
+	}
 }

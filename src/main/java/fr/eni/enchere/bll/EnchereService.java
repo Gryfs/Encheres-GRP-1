@@ -22,6 +22,8 @@ public interface EnchereService {
 	
 	List<ArticleVendu> rechercherArticlesParNom(String nom);
 	
+	void updatePrixVente (long idArticle, Float nouveauPrix);
+	
 	
 	
 	
