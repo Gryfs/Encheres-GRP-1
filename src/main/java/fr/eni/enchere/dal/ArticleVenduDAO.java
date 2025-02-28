@@ -17,7 +17,7 @@ public interface ArticleVenduDAO {
 	
 	ArticleVendu rechercherArticleParId(long id);
 	
-	void updatePrixVente(long id, Float nouveauPrix);
+	void updatePrixVente(ArticleVendu article, Float nouveauPrix);
 
 	
 

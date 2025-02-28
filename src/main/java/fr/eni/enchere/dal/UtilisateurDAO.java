@@ -23,5 +23,9 @@ public interface UtilisateurDAO {
 	Utilisateur findById(Integer id);
 
 	Utilisateur findByResetToken(String token);
+	
+	void retirerCredit(Utilisateur utilisateur, Float montant);
+	
+	void ajouterCredit(Utilisateur utilisateur, Float montant);
 
 }

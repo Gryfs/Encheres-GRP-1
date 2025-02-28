@@ -22,17 +22,17 @@ public class RetraitDAOImpl implements RetraitDAO {
 
 		MapSqlParameterSource namedParameters = new MapSqlParameterSource();
 		namedParameters.addValue("no_article", id);
-		
+
 		try {
-            // Tente de récupérer le retrait existant
-            return namedParameterJdbcTemplate.queryForObject(SELECT_BY_ID, namedParameters,
-                    new BeanPropertyRowMapper<>(Retrait.class));
-        } catch (org.springframework.dao.EmptyResultDataAccessException e) {
-            // Si aucun retrait n'est trouvé, créez un nouveau retrait vide
-            System.out.println("Aucun retrait trouvé pour l'article " + id + ". Création d'un nouveau retrait vide.");
-            Retrait retrait = new Retrait();
-            retrait.setNoArticle(id);
-            return retrait;
-        }
+			// Tente de récupérer le retrait existant
+			return namedParameterJdbcTemplate.queryForObject(SELECT_BY_ID, namedParameters,
+					new BeanPropertyRowMapper<>(Retrait.class));
+		} catch (org.springframework.dao.EmptyResultDataAccessException e) {
+			// Si aucun retrait n'est trouvé, créez un nouveau retrait vide
+			System.out.println("Aucun retrait trouvé pour l'article " + id + ". Création d'un nouveau retrait vide.");
+			Retrait retrait = new Retrait();
+			retrait.setNoArticle(id);
+			return retrait;
+		}
 	}
 }

@@ -23,7 +23,10 @@ public class UtilisateurDAOImpl implements UtilisateurDAO {
 	private final static String UPDATE = "UPDATE UTILISATEURS SET pseudo=:pseudo, nom=:nom, prenom=:prenom, email=:email, telephone=:telephone, rue=:rue, code_postal=:codePostal, ville=:ville, mot_de_passe=:motDePasse, actif=CAST(:actif AS BIT), reset_token=:resetToken, reset_token_expiry=:resetTokenExpiry WHERE no_utilisateur=:noUtilisateur";
     private final static String DELETE = "DELETE FROM UTILISATEURS WHERE no_utilisateur = :id";
 	private static final String FIND_BY_RESET_TOKEN = "SELECT no_utilisateur, pseudo, nom, prenom, email, telephone, rue, code_postal, ville, mot_de_passe, credit, administrateur, actif, reset_token, reset_token_expiry FROM UTILISATEURS WHERE reset_token = :token";
-    private static final Logger logger = LoggerFactory.getLogger(UtilisateurDAOImpl.class);
+    private static final String SOUSTRAIRE_CREDIT = "UPDATE UTILISATEURS SET credit = credit - :montant WHERE no_utilisateur = :id";
+    private static final String AJOUTER_CREDIT = "UPDATE UTILISATEURS SET credit = credit + :montant WHERE no_utilisateur = :id";
+	
+	private static final Logger logger = LoggerFactory.getLogger(UtilisateurDAOImpl.class);
 
 	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 	
@@ -156,5 +159,34 @@ public class UtilisateurDAOImpl implements UtilisateurDAO {
             return null;
         }
     }
+	
+	@Override
+	public void retirerCredit(Utilisateur utilisateur, Float montant) {
+
+	    MapSqlParameterSource namedParameters = new MapSqlParameterSource();
+	    namedParameters.addValue("montant", montant);
+	    namedParameters.addValue("id", utilisateur.getNoUtilisateur());
+
+	    namedParameterJdbcTemplate.update(SOUSTRAIRE_CREDIT, namedParameters);
+
+
+	    utilisateur.setCredit(utilisateur.getCredit() - montant);
+	}
+
+	@Override
+	public void ajouterCredit(Utilisateur utilisateur, Float montant) {
+
+
+	    MapSqlParameterSource namedParameters = new MapSqlParameterSource();
+	    namedParameters.addValue("montant", montant);
+	    namedParameters.addValue("id", utilisateur.getNoUtilisateur());
+
+	    namedParameterJdbcTemplate.update(AJOUTER_CREDIT, namedParameters);
+
+
+	    utilisateur.setCredit(utilisateur.getCredit() + montant);
+		
+	}
+
 
 }

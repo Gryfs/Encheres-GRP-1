@@ -4,6 +4,8 @@ import java.util.List;
 
 import fr.eni.enchere.bo.ArticleVendu;
 import fr.eni.enchere.bo.Categories;
+import fr.eni.enchere.bo.Enchere;
+import fr.eni.enchere.bo.Utilisateur;
 
 
 public interface EnchereService {
@@ -22,7 +24,7 @@ public interface EnchereService {
 	
 	List<ArticleVendu> rechercherArticlesParNom(String nom);
 	
-	void updatePrixVente (long idArticle, Float nouveauPrix);
+	void encherir (ArticleVendu article, Float nouveauPrix, Utilisateur utilisateur);
 	
 	
 	

@@ -97,7 +97,7 @@
 								class="px-6 py-4 whitespace-nowrap text-sm font-medium text-center">
 
 								<a
-								th:if="${article.etatVente == 'OPEN' and utilisateurConnecte != null and utilisateurConnecte.noUtilisateur != article.utilisateur.noUtilisateur}"
+								th:if="${article.etatVente == 'OPEN' and utilisateurConnecte.noUtilisateur != article.utilisateur.noUtilisateur}"
 								th:href="@{/encherir(id=${article.noArticle})}"
 								class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition">
 									<i class="fas fa-hand-paper mr-2"></i>Enchérir

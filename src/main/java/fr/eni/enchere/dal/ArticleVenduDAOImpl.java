@@ -93,16 +93,18 @@ public class ArticleVenduDAOImpl implements ArticleVenduDAO {
 	        retraitParameters.addValue("ville", article.getRetrait().getVille());
 
 	        namedParameterJdbcTemplate.update(insertRetrait, retraitParameters);
+	        
+
 	    }
 	}
 
 	@Override
-	public void updatePrixVente(long id, Float nouveauPrix) {
+	public void updatePrixVente(ArticleVendu article, Float nouveauPrix) {
 	    
 
 	    MapSqlParameterSource namedParameters = new MapSqlParameterSource();
 	    namedParameters.addValue("nouveau_prix", nouveauPrix);
-	    namedParameters.addValue("no_article", id);
+	    namedParameters.addValue("no_article", article.getNoArticle());
 
 	    namedParameterJdbcTemplate.update(UPDATE_PRIX, namedParameters);
 	}

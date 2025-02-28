@@ -133,6 +133,10 @@ public class ArticleVendu implements Serializable {
 	public void setEncheres(List<Enchere> encheres) {
 		this.encheres = encheres;
 	}
+	
+	  public void ajouterEnchere(Enchere enchere) {
+	        this.encheres.add(enchere); 
+	    }
 
 	@Override
 	public String toString() {

@@ -37,25 +37,23 @@ public class EnchereController {
 
 		return "redirect:/encheres";
 	}
-	
+
 	@GetMapping("encheres")
 	public String afficherArticles(Model model, @RequestParam(name = "id", required = false) Integer categoryId,
-	                               @RequestParam(name = "search", required = false) String search,
-	                               @SessionAttribute(name = "utilisateurSession", required = false) Utilisateur utilisateurConnecte,
-								   @RequestParam(name = "page", defaultValue = "0") int page  
-								   ) {
-	    List<ArticleVendu> allArticles;
+			@RequestParam(name = "search", required = false) String search,
+			@RequestParam(name = "page", defaultValue = "0") int page) {
+		List<ArticleVendu> allArticles;
 
-	    if ((categoryId == null || categoryId == 0) && (search == null || search.isEmpty())) {
-	        // Si aucun filtre n'est appliqué
-	        allArticles = enchereService.consulterArticle();
-	    } else if (categoryId != null && categoryId != 0) {
-	        // Filtrer par catégorie
-	        allArticles = enchereService.consulterArticleparCategorie(categoryId);
-	    } else {
-	        // Filtrer par nom d'article
-	        allArticles = enchereService.rechercherArticlesParNom(search);
-	    }
+		if ((categoryId == null || categoryId == 0) && (search == null || search.isEmpty())) {
+			// Si aucun filtre n'est appliqué
+			allArticles = enchereService.consulterArticle();
+		} else if (categoryId != null && categoryId != 0) {
+			// Filtrer par catégorie
+			allArticles = enchereService.consulterArticleparCategorie(categoryId);
+		} else {
+			// Filtrer par nom d'article
+			allArticles = enchereService.rechercherArticlesParNom(search);
+		}
 
 		// Calcul de la pagination
 		int totalItems = allArticles.size();
@@ -63,26 +61,25 @@ public class EnchereController {
 
 		// Extraction de la page courante
 		int startItem = page * PAGE_SIZE;
-		List<ArticleVendu> listeArticles = allArticles.subList(
-			startItem,
-			Math.min(startItem + PAGE_SIZE, allArticles.size())
-		);
+		List<ArticleVendu> listeArticles = allArticles.subList(startItem,
+				Math.min(startItem + PAGE_SIZE, allArticles.size()));
 
-	    model.addAttribute("articles", listeArticles);
+		model.addAttribute("articles", listeArticles);
 		model.addAttribute("currentPage", page);
-    	model.addAttribute("totalPages", totalPages);
-	    model.addAttribute("search", search); 
+		model.addAttribute("totalPages", totalPages);
+		model.addAttribute("search", search);
 
-	    return "encheres";
+		return "encheres";
 	}
 
-
 	@GetMapping("/detail")
-	public String afficherDetail(@RequestParam(name = "id") int idArticle, Model model) {
+	public String afficherDetail(@RequestParam(name = "id") int idArticle, Model model,
+			@SessionAttribute(name = "utilisateurSession", required = false) Utilisateur utilisateurConnecte) {
 
 		ArticleVendu article = enchereService.consulterArticleParId(idArticle);
 
 		model.addAttribute("article", article);
+		model.addAttribute("utilisateurConnecte", utilisateurConnecte);
 
 		return "detail";
 	}
@@ -97,22 +94,24 @@ public class EnchereController {
 		return "encherir";
 	}
 
-	
-
 	@PostMapping("/encherir")
-	public String encherir(@RequestParam("id") Long id, @RequestParam("nouveauPrix") Float nouveauPrix, RedirectAttributes redirectAttributes) {
-	    ArticleVendu article = enchereService.consulterArticleParId(id);
+	public String encherir(@RequestParam("id") Long id, @RequestParam("nouveauPrix") Float nouveauPrix,
+			RedirectAttributes redirectAttributes,
+			@SessionAttribute(name = "utilisateurSession", required = false) Utilisateur utilisateur) {
+		ArticleVendu article = enchereService.consulterArticleParId(id);
 
-	    if (nouveauPrix > article.getPrixVente()) {
-	        enchereService.updatePrixVente(id, nouveauPrix);
-	        redirectAttributes.addFlashAttribute("successMessage", "Votre enchère a été acceptée !");
-	    } else {
-	        redirectAttributes.addFlashAttribute("errorMessage", "Le nouveau prix doit être supérieur au prix actuel.");
-	    }
+		if (nouveauPrix < article.getPrixVente()) {
+			redirectAttributes.addFlashAttribute("errorMessage", "Le nouveau prix doit être supérieur au prix actuel.");
 
-	    return "redirect:/encherir?id=" + article.getNoArticle();
+		} else if (nouveauPrix > utilisateur.getCredit()) {
+			redirectAttributes.addFlashAttribute("errorMessage", "Vos crédits ne sont pas suffisant");
+		}else {
+			enchereService.encherir(article, nouveauPrix, utilisateur);
+			redirectAttributes.addFlashAttribute("successMessage", "Votre enchère a été acceptée !");
+		}
+
+		return "redirect:/encherir?id=" + article.getNoArticle();
 	}
-
 
 	@GetMapping("/creer")
 	public String afficherFormulaireCreation(Model model) {
