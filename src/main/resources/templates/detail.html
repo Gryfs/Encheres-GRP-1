@@ -107,6 +107,15 @@
 
 
 							</td>
+							<td><a
+								th:if="${utilisateurConnecte.noUtilisateur == article.utilisateur.noUtilisateur}
+          						and ${article.dateDebutEncheres.isAfter(T(java.time.LocalDate).now())}"
+								th:href="@{/article/edit(id=${article.noArticle})}"
+								class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition">
+									<i class="fas fa-edit mr-2"></i>Modifier
+							</a></td>
+
+
 
 
 						</tr>

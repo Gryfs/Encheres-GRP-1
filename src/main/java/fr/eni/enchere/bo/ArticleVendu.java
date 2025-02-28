@@ -6,12 +6,16 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 public class ArticleVendu implements Serializable {
 
 	private long noArticle;
 	private String nomArticle;
 	private String description;
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private LocalDate dateDebutEncheres;
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private LocalDate dateFinEncheres;
 	private Float prixInitial;
 	private Float prixVente;

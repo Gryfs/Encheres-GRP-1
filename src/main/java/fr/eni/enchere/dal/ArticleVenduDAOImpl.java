@@ -26,7 +26,7 @@ public class ArticleVenduDAOImpl implements ArticleVenduDAO {
 	private final static String SELECT_BY_NOM = "SELECT no_article, nom_article, description, date_debut_encheres, date_fin_encheres, prix_initial, prix_vente, no_categorie, no_utilisateur FROM articles_vendus WHERE LOWER(nom_article) LIKE LOWER(:search)";
 	private final static String SELECT_BY_ID = "SELECT no_article, nom_article, description, date_debut_encheres, date_fin_encheres, prix_initial, prix_vente, no_categorie, no_utilisateur FROM articles_vendus WHERE no_article=:no_article";
 	private final static String UPDATE_PRIX = "UPDATE articles_vendus SET prix_vente = :nouveau_prix WHERE no_article = :no_article";
-	
+	private final static String UPDATE_ARTICLE = "UPDATE articles_vendus SET nom_article = :nom_article, description = :description, no_categorie = :no_categorie, date_debut_encheres = :date_debut_encheres, date_fin_encheres = :date_fin_encheres, prix_initial = :prix_initial	WHERE no_article = :no_article";
 	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
 	public ArticleVenduDAOImpl(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
@@ -68,48 +68,59 @@ public class ArticleVenduDAOImpl implements ArticleVenduDAO {
 
 	@Override
 	public void create(ArticleVendu article) {
-	    MapSqlParameterSource namedParameters = new MapSqlParameterSource();
-	    namedParameters.addValue("nom_article", article.getNomArticle());
-	    namedParameters.addValue("description", article.getDescription());
-	    namedParameters.addValue("no_categorie", article.getCategorie().getId());
-	    namedParameters.addValue("date_debut_encheres", article.getDateDebutEncheres());
-	    namedParameters.addValue("date_fin_encheres", article.getDateFinEncheres());
-	    namedParameters.addValue("prix_initial", article.getPrixInitial());
-	    namedParameters.addValue("prix_vente", article.getPrixInitial());
-	    namedParameters.addValue("no_utilisateur", article.getUtilisateur().getNoUtilisateur());
+		MapSqlParameterSource namedParameters = new MapSqlParameterSource();
+		namedParameters.addValue("nom_article", article.getNomArticle());
+		namedParameters.addValue("description", article.getDescription());
+		namedParameters.addValue("no_categorie", article.getCategorie().getId());
+		namedParameters.addValue("date_debut_encheres", article.getDateDebutEncheres());
+		namedParameters.addValue("date_fin_encheres", article.getDateFinEncheres());
+		namedParameters.addValue("prix_initial", article.getPrixInitial());
+		namedParameters.addValue("prix_vente", article.getPrixInitial());
+		namedParameters.addValue("no_utilisateur", article.getUtilisateur().getNoUtilisateur());
 
-	    KeyHolder keyHolder = new GeneratedKeyHolder();
-	    namedParameterJdbcTemplate.update(CREATE, namedParameters, keyHolder, new String[]{"no_article"});
+		KeyHolder keyHolder = new GeneratedKeyHolder();
+		namedParameterJdbcTemplate.update(CREATE, namedParameters, keyHolder, new String[] { "no_article" });
 
-	    if (keyHolder != null && keyHolder.getKey() != null) {
-	        article.setNoArticle(keyHolder.getKey().longValue());
+		if (keyHolder != null && keyHolder.getKey() != null) {
+			article.setNoArticle(keyHolder.getKey().longValue());
 
-	        // Insertion dans la table RETRAITS
-	        String insertRetrait = "INSERT INTO RETRAITS (no_article, rue, code_postal, ville) VALUES (:no_article, :rue, :code_postal, :ville)";
-	        MapSqlParameterSource retraitParameters = new MapSqlParameterSource();
-	        retraitParameters.addValue("no_article", article.getNoArticle());
-	        retraitParameters.addValue("rue", article.getRetrait().getRue());
-	        retraitParameters.addValue("code_postal", article.getRetrait().getCodePostal());
-	        retraitParameters.addValue("ville", article.getRetrait().getVille());
+			// Insertion dans la table RETRAITS
+			String insertRetrait = "INSERT INTO RETRAITS (no_article, rue, code_postal, ville) VALUES (:no_article, :rue, :code_postal, :ville)";
+			MapSqlParameterSource retraitParameters = new MapSqlParameterSource();
+			retraitParameters.addValue("no_article", article.getNoArticle());
+			retraitParameters.addValue("rue", article.getRetrait().getRue());
+			retraitParameters.addValue("code_postal", article.getRetrait().getCodePostal());
+			retraitParameters.addValue("ville", article.getRetrait().getVille());
 
-	        namedParameterJdbcTemplate.update(insertRetrait, retraitParameters);
-	        
+			namedParameterJdbcTemplate.update(insertRetrait, retraitParameters);
 
-	    }
+		}
 	}
 
 	@Override
 	public void updatePrixVente(ArticleVendu article, Float nouveauPrix) {
-	    
 
-	    MapSqlParameterSource namedParameters = new MapSqlParameterSource();
-	    namedParameters.addValue("nouveau_prix", nouveauPrix);
-	    namedParameters.addValue("no_article", article.getNoArticle());
+		MapSqlParameterSource namedParameters = new MapSqlParameterSource();
+		namedParameters.addValue("nouveau_prix", nouveauPrix);
+		namedParameters.addValue("no_article", article.getNoArticle());
 
-	    namedParameterJdbcTemplate.update(UPDATE_PRIX, namedParameters);
+		namedParameterJdbcTemplate.update(UPDATE_PRIX, namedParameters);
 	}
 
+	@Override
+	public void updateArticle(ArticleVendu article) {
 
+		MapSqlParameterSource namedParameters = new MapSqlParameterSource();
+		namedParameters.addValue("nom_article", article.getNomArticle());
+		namedParameters.addValue("description", article.getDescription());
+		namedParameters.addValue("no_categorie", article.getCategorie().getId());
+		namedParameters.addValue("date_debut_encheres", article.getDateDebutEncheres());
+		namedParameters.addValue("date_fin_encheres", article.getDateFinEncheres());
+		namedParameters.addValue("prix_initial", article.getPrixInitial());
+		namedParameters.addValue("no_article", article.getNoArticle());
+
+		namedParameterJdbcTemplate.update(UPDATE_ARTICLE, namedParameters);
+	}
 
 }
 

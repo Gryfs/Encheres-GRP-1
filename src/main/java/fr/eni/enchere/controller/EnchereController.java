@@ -84,6 +84,32 @@ public class EnchereController {
 		return "detail";
 	}
 
+	@GetMapping("/article/edit")
+	public String editArticle(@RequestParam(name = "id") Long id, Model model) {
+
+		ArticleVendu article = enchereService.consulterArticleParId(id);
+
+		model.addAttribute("article", article);
+
+		return "edit-article";
+	}
+
+	@PostMapping("/article/edit")
+	public String editArticle(@Valid @ModelAttribute("article") ArticleVendu article, BindingResult bindingResult,
+			Model model) {
+
+		if (bindingResult.hasErrors()) {
+			// Si oui, renvoie à la page de modification avec les erreurs
+			model.addAttribute("categories", enchereService.consulterCategories());
+			return "edit-article";
+		}
+
+		// Enregistre les modifications de l'article
+		enchereService.updateArticle(article);
+
+		return "redirect:/detail?id=" + article.getNoArticle();
+	}
+
 	@GetMapping("/encherir")
 	public String afficherEncherir(@RequestParam(name = "id") int idArticle, Model model) {
 
@@ -105,7 +131,7 @@ public class EnchereController {
 
 		} else if (nouveauPrix > utilisateur.getCredit()) {
 			redirectAttributes.addFlashAttribute("errorMessage", "Vos crédits ne sont pas suffisant");
-		}else {
+		} else {
 			enchereService.encherir(article, nouveauPrix, utilisateur);
 			redirectAttributes.addFlashAttribute("successMessage", "Votre enchère a été acceptée !");
 		}

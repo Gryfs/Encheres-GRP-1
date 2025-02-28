@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" class="h-full">
+<head>
+<title>Modifier Article - ENI-Enchères</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="/css/style.css" rel="stylesheet" />
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+</head>
+<body
+	class="h-full flex flex-col bg-gradient-to-br from-gray-50 to-gray-100">
+	<div th:replace="~{fragments/fragment-entete :: entete}"></div>
+
+	<main class="flex-grow container mx-auto px-4 py-8">
+		<div class="max-w-4xl mx-auto">
+			<div class="bg-white rounded-2xl shadow-xl overflow-hidden">
+				<!-- En-tête du formulaire -->
+				<div class="bg-gradient-to-r from-blue-600 to-blue-700 px-6 py-8">
+					<h1 class="text-3xl font-bold text-white mb-2">
+						<i class="fas fa-edit mr-3"></i>Modifier l'article
+					</h1>
+					<p class="text-blue-100">Modifiez les informations de votre
+						article ci-dessous.</p>
+				</div>
+
+				<form th:action="@{/article/edit}" method="post"
+					th:object="${article}" class="p-6">
+					<input type="hidden" th:field="*{noArticle}" />
+
+					<div class="space-y-6">
+						<!-- Nom de l'article -->
+						<div class="relative">
+							<label class="block text-sm font-medium text-gray-700 mb-1">Nom
+								de l'article</label>
+							<div class="relative">
+								<span
+									class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-500">
+									<i class="fas fa-tag"></i>
+								</span> <input type="text" th:field="*{nomArticle}" required
+									class="pl-10 block w-full rounded-lg border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 py-2" />
+							</div>
+						</div>
+
+						<!-- Description de l'article -->
+						<div class="relative">
+							<label class="block text-sm font-medium text-gray-700 mb-1">Description</label>
+							<textarea th:field="*{description}" required
+								class="block w-full rounded-lg border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 py-2"></textarea>
+						</div>
+
+						<!-- Catégorie de l'article -->
+						<label for="categorie"
+							class="block text-sm font-medium text-gray-700">Catégorie</label>
+						<div class="relative">
+							<select id="categorie" th:field="*{categorie}" required
+								class="appearance-none p-2 mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 bg-white pr-10">
+								<option th:each="c : ${categorieSession}" th:value="${c.id}"
+									th:text="${c.libelle}"></option>
+							</select>
+
+							<!-- Prix initial -->
+							<div class="relative">
+								<label class="block text-sm font-medium text-gray-700 mb-1">Prix
+									initial</label>
+								<div class="relative">
+									<span
+										class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-500">
+										<i class="fas fa-euro-sign"></i>
+									</span> <input type="number" th:field="*{prixInitial}" required
+										class="pl-10 block w-full rounded-lg border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 py-2" />
+								</div>
+							</div>
+
+							<!-- Date de début des enchères -->
+							<div class="relative">
+								<label class="block text-sm font-medium text-gray-700 mb-1">Date
+									de début des enchères</label> <input type="date"
+									th:field="*{dateDebutEncheres}" required
+									class="block w-full rounded-lg border-gray-300 shadow-sm
+								focus:ring-blue-500 focus:border-blue-500 py-2" />
+							</div>
+
+							<!-- Date de fin des enchères -->
+							<div class="relative">
+								<label class="block text-sm font-medium text-gray-700 mb-1">Date
+									de fin des enchères</label> <input type="date"
+									th:field="*{dateFinEncheres}" required
+									class="block w-full rounded-lg border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 py-2" />
+							</div>
+						</div>
+
+
+
+						<!-- Boutons d'action -->
+						<div class="mt-8 flex items-center justify-end space-x-4">
+							<a th:href="@{/enchere(id=${article.noArticle})}"
+								class="px-6 py-2 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-50 transition-colors duration-200">
+								<i class="fas fa-times mr-2"></i>Annuler
+							</a>
+							<button type="submit"
+								class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors duration-200">
+								<i class="fas fa-save mr-2"></i>Enregistrer
+							</button>
+						</div>
+				</form>
+			</div>
+		</div>
+	</main>
+
+	<div th:replace="~{fragments/fragment-piedpage :: footer}"></div>
+</body>
+</html>
+

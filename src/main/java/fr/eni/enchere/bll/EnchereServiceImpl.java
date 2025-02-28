@@ -124,4 +124,12 @@ public class EnchereServiceImpl implements EnchereService {
 
 	}
 
+	@Override
+	public void updateArticle(ArticleVendu article) {
+		if(article.getDateDebutEncheres().isAfter(LocalDate.now())) {
+			articleVenduDAO.updateArticle(article);
+		}
+		
+	}
+
 }
