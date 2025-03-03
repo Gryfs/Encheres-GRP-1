@@ -20,6 +20,8 @@ public interface ArticleVenduDAO {
 	void updatePrixVente(ArticleVendu article, Float nouveauPrix);
 	
 	void updateArticle(ArticleVendu article);
+	
+	List<ArticleVendu> findAllByUser(long id);
 
 	
 

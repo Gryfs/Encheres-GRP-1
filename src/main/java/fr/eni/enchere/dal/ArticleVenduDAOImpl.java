@@ -26,6 +26,9 @@ public class ArticleVenduDAOImpl implements ArticleVenduDAO {
     private final static String SELECT_BY_ID = "SELECT no_article, nom_article, description, date_debut_encheres, date_fin_encheres, prix_initial, prix_vente, no_categorie, no_utilisateur, image FROM articles_vendus WHERE no_article=:no_article";
     private final static String UPDATE_ARTICLE = "UPDATE articles_vendus SET nom_article = :nom_article, description = :description, no_categorie = :no_categorie, date_debut_encheres = :date_debut_encheres, date_fin_encheres = :date_fin_encheres, prix_initial = :prix_initial, image = :image WHERE no_article = :no_article";
 	private final static String UPDATE_PRIX = "UPDATE articles_vendus SET prix_vente = :nouveau_prix WHERE no_article = :no_article";
+	private final static String SELECT_ALL_BY_ID_UTILISATEUR = "SELECT no_article, nom_article, description, date_debut_encheres, date_fin_encheres, prix_initial, prix_vente, no_categorie, no_utilisateur FROM articles_vendus WHERE no_utilisateur=:no_utilisateur";
+	
+	
 	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
 	public ArticleVenduDAOImpl(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
@@ -54,6 +57,14 @@ public class ArticleVenduDAOImpl implements ArticleVenduDAO {
 		namedParameters.addValue("no_categorie", id);
 
 		return namedParameterJdbcTemplate.query(SELECT_ALL_BY_CATEGORIE, namedParameters, new ArticleRowMapper());
+	}
+	
+	@Override
+	public List<ArticleVendu> findAllByUser(long id) {
+		MapSqlParameterSource namedParameters = new MapSqlParameterSource();
+		namedParameters.addValue("no_utilisateur", id);
+
+		return namedParameterJdbcTemplate.query(SELECT_ALL_BY_ID_UTILISATEUR, namedParameters, new ArticleRowMapper());
 	}
 
 	@Override
