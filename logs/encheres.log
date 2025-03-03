@@ -728,3 +728,212 @@ java.lang.ClassCastException: cannot assign instance of java.lang.StackTraceElem
 2025-03-03 09:40:49 [restartedMain] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/'
 2025-03-03 09:40:49 [restartedMain] INFO  f.e.enchere.EncheresGrp1Application - Started EncheresGrp1Application in 0.336 seconds (process running for 1881.426)
 2025-03-03 09:40:49 [restartedMain] INFO  o.s.b.d.a.ConditionEvaluationDeltaLoggingListener - Condition evaluation unchanged
+2025-03-03 09:58:08 [background-preinit] INFO  o.h.validator.internal.util.Version - HV000001: Hibernate Validator 8.0.2.Final
+2025-03-03 09:58:08 [restartedMain] INFO  f.e.enchere.EncheresGrp1Application - Starting EncheresGrp1Application using Java 17 with PID 9960 (C:\Users\alens2024\Desktop\workspace\Encheres-GRP-1\bin\main started by alens2024 in C:\Users\alens2024\Desktop\workspace\Encheres-GRP-1)
+2025-03-03 09:58:08 [restartedMain] DEBUG f.e.enchere.EncheresGrp1Application - Running with Spring Boot v3.4.1, Spring v6.2.1
+2025-03-03 09:58:08 [restartedMain] INFO  f.e.enchere.EncheresGrp1Application - The following 1 profile is active: "dev"
+2025-03-03 09:58:08 [restartedMain] INFO  o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2025-03-03 09:58:08 [restartedMain] INFO  o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2025-03-03 09:58:08 [restartedMain] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+2025-03-03 09:58:08 [restartedMain] INFO  o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+2025-03-03 09:58:08 [restartedMain] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2025-03-03 09:58:08 [restartedMain] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.34]
+2025-03-03 09:58:09 [restartedMain] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2025-03-03 09:58:09 [restartedMain] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 704 ms
+2025-03-03 09:58:09 [restartedMain] WARN  o.a.c.c.C.[Tomcat].[localhost].[/] - Cannot deserialize session attribute [categorieSession] for session [5D60D400CCF86B6D32552AAAC0E5DCD4]
+2025-03-03 09:58:09 [restartedMain] ERROR o.a.catalina.session.StandardManager - Exception loading sessions from persistent storage
+java.lang.ClassCastException: cannot assign instance of java.lang.StackTraceElement to field java.util.Collections$UnmodifiableList.list of type java.util.List in instance of java.util.Collections$UnmodifiableList
+	at java.base/java.io.ObjectStreamClass$FieldReflector.setObjFieldValues(ObjectStreamClass.java:2227)
+	at java.base/java.io.ObjectStreamClass$FieldReflector.checkObjectFieldValueTypes(ObjectStreamClass.java:2191)
+	at java.base/java.io.ObjectStreamClass.checkObjFieldValueTypes(ObjectStreamClass.java:1478)
+	at java.base/java.io.ObjectInputStream$FieldValues.defaultCheckFieldValues(ObjectInputStream.java:2657)
+	at java.base/java.io.ObjectInputStream.readSerialData(ObjectInputStream.java:2471)
+	at java.base/java.io.ObjectInputStream.readOrdinaryObject(ObjectInputStream.java:2242)
+	at java.base/java.io.ObjectInputStream.readObject0(ObjectInputStream.java:1742)
+	at java.base/java.io.ObjectInputStream$FieldValues.<init>(ObjectInputStream.java:2584)
+	at java.base/java.io.ObjectInputStream.readSerialData(ObjectInputStream.java:2442)
+	at java.base/java.io.ObjectInputStream.readOrdinaryObject(ObjectInputStream.java:2242)
+	at java.base/java.io.ObjectInputStream.readObject0(ObjectInputStream.java:1742)
+	at java.base/java.io.ObjectInputStream$FieldValues.<init>(ObjectInputStream.java:2584)
+	at java.base/java.io.ObjectInputStream.readSerialData(ObjectInputStream.java:2442)
+	at java.base/java.io.ObjectInputStream.readOrdinaryObject(ObjectInputStream.java:2242)
+	at java.base/java.io.ObjectInputStream.readObject0(ObjectInputStream.java:1742)
+	at java.base/java.io.ObjectInputStream.readObject(ObjectInputStream.java:514)
+	at java.base/java.io.ObjectInputStream.readObject(ObjectInputStream.java:472)
+	at org.apache.catalina.session.StandardSession.doReadObject(StandardSession.java:1198)
+	at org.apache.catalina.session.StandardSession.readObjectData(StandardSession.java:831)
+	at org.apache.catalina.session.StandardManager.doLoad(StandardManager.java:210)
+	at org.apache.catalina.session.StandardManager.load(StandardManager.java:156)
+	at org.apache.catalina.session.StandardManager.startInternal(StandardManager.java:345)
+	at org.apache.catalina.util.LifecycleBase.start(LifecycleBase.java:164)
+	at org.apache.catalina.core.StandardContext.startInternal(StandardContext.java:4453)
+	at org.apache.catalina.util.LifecycleBase.start(LifecycleBase.java:164)
+	at org.apache.catalina.core.ContainerBase$StartChild.call(ContainerBase.java:1203)
+	at org.apache.catalina.core.ContainerBase$StartChild.call(ContainerBase.java:1193)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+	at org.apache.tomcat.util.threads.InlineExecutorService.execute(InlineExecutorService.java:75)
+	at java.base/java.util.concurrent.AbstractExecutorService.submit(AbstractExecutorService.java:145)
+	at org.apache.catalina.core.ContainerBase.startInternal(ContainerBase.java:749)
+	at org.apache.catalina.core.StandardHost.startInternal(StandardHost.java:772)
+	at org.apache.catalina.util.LifecycleBase.start(LifecycleBase.java:164)
+	at org.apache.catalina.core.ContainerBase$StartChild.call(ContainerBase.java:1203)
+	at org.apache.catalina.core.ContainerBase$StartChild.call(ContainerBase.java:1193)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+	at org.apache.tomcat.util.threads.InlineExecutorService.execute(InlineExecutorService.java:75)
+	at java.base/java.util.concurrent.AbstractExecutorService.submit(AbstractExecutorService.java:145)
+	at org.apache.catalina.core.ContainerBase.startInternal(ContainerBase.java:749)
+	at org.apache.catalina.core.StandardEngine.startInternal(StandardEngine.java:203)
+	at org.apache.catalina.util.LifecycleBase.start(LifecycleBase.java:164)
+	at org.apache.catalina.core.StandardService.startInternal(StandardService.java:415)
+	at org.apache.catalina.util.LifecycleBase.start(LifecycleBase.java:164)
+	at org.apache.catalina.core.StandardServer.startInternal(StandardServer.java:870)
+	at org.apache.catalina.util.LifecycleBase.start(LifecycleBase.java:164)
+	at org.apache.catalina.startup.Tomcat.start(Tomcat.java:437)
+	at org.springframework.boot.web.embedded.tomcat.TomcatWebServer.initialize(TomcatWebServer.java:128)
+	at org.springframework.boot.web.embedded.tomcat.TomcatWebServer.<init>(TomcatWebServer.java:107)
+	at org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory.getTomcatWebServer(TomcatServletWebServerFactory.java:516)
+	at org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory.getWebServer(TomcatServletWebServerFactory.java:222)
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.createWebServer(ServletWebServerApplicationContext.java:188)
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.onRefresh(ServletWebServerApplicationContext.java:162)
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:621)
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:146)
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:752)
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:439)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:318)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1361)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1350)
+	at fr.eni.enchere.EncheresGrp1Application.main(EncheresGrp1Application.java:10)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.springframework.boot.devtools.restart.RestartLauncher.run(RestartLauncher.java:50)
+2025-03-03 09:58:09 [restartedMain] WARN  o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Found 2 UserDetailsService beans, with names [userDetailsService, users]. Global Authentication Manager will not use a UserDetailsService for username/password login. Consider publishing a single UserDetailsService bean.
+2025-03-03 09:58:09 [restartedMain] INFO  o.s.s.p.JdbcUserDetailsManager - No authentication manager set. Reauthentication of users when changing passwords will not be performed.
+2025-03-03 09:58:09 [restartedMain] INFO  o.s.b.d.a.OptionalLiveReloadServer - LiveReload server is running on port 35729
+2025-03-03 09:58:09 [restartedMain] INFO  o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+2025-03-03 09:58:09 [restartedMain] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/'
+2025-03-03 09:58:09 [restartedMain] INFO  f.e.enchere.EncheresGrp1Application - Started EncheresGrp1Application in 1.531 seconds (process running for 2.105)
+2025-03-03 09:58:12 [http-nio-8080-exec-1] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-03-03 09:58:12 [http-nio-8080-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2025-03-03 09:58:12 [http-nio-8080-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 0 ms
+2025-03-03 09:58:12 [http-nio-8080-exec-1] DEBUG f.e.e.c.SecurityConfig$SessionTimeoutFilter - Vérification timeout session pour: /
+2025-03-03 09:58:12 [http-nio-8080-exec-2] DEBUG f.e.e.c.SecurityConfig$SessionTimeoutFilter - Vérification timeout session pour: /login
+2025-03-03 09:58:19 [http-nio-8080-exec-3] DEBUG f.e.e.c.SecurityConfig$SessionTimeoutFilter - Vérification timeout session pour: /login
+2025-03-03 09:58:19 [http-nio-8080-exec-3] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2025-03-03 09:58:20 [http-nio-8080-exec-3] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@3c4d14a8
+2025-03-03 09:58:20 [http-nio-8080-exec-3] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2025-03-03 09:58:20 [http-nio-8080-exec-4] DEBUG f.e.e.c.SecurityConfig$SessionTimeoutFilter - Vérification timeout session pour: /session
+2025-03-03 09:58:20 [http-nio-8080-exec-5] DEBUG f.e.e.c.SecurityConfig$SessionTimeoutFilter - Vérification timeout session pour: /
+2025-03-03 09:58:20 [http-nio-8080-exec-6] DEBUG f.e.e.c.SecurityConfig$SessionTimeoutFilter - Vérification timeout session pour: /encheres
+2025-03-03 09:58:22 [http-nio-8080-exec-7] DEBUG f.e.e.c.SecurityConfig$SessionTimeoutFilter - Vérification timeout session pour: /css/style.css
+2025-03-03 09:58:26 [http-nio-8080-exec-8] DEBUG f.e.e.c.SecurityConfig$SessionTimeoutFilter - Vérification timeout session pour: /articles
+2025-03-03 09:58:26 [http-nio-8080-exec-8] DEBUG f.e.e.c.SecurityConfig$SessionTimeoutFilter - Vérification timeout session pour: /error
+2025-03-03 09:58:34 [http-nio-8080-exec-9] DEBUG f.e.e.c.SecurityConfig$SessionTimeoutFilter - Vérification timeout session pour: /articles
+2025-03-03 09:58:34 [http-nio-8080-exec-9] DEBUG f.e.e.c.SecurityConfig$SessionTimeoutFilter - Vérification timeout session pour: /error
+2025-03-03 10:09:49 [RMI TCP Connection(15)-127.0.0.1] INFO  o.s.b.a.SpringApplicationAdminMXBeanRegistrar$SpringApplicationAdmin - Application shutdown requested.
+2025-03-03 10:09:49 [RMI TCP Connection(15)-127.0.0.1] INFO  o.s.b.w.e.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
+2025-03-03 10:09:49 [tomcat-shutdown] INFO  o.a.coyote.http11.Http11NioProtocol - Pausing ProtocolHandler ["http-nio-8080"]
+2025-03-03 10:09:49 [tomcat-shutdown] INFO  o.s.b.w.e.tomcat.GracefulShutdown - Graceful shutdown complete
+2025-03-03 10:09:49 [RMI TCP Connection(15)-127.0.0.1] INFO  o.a.coyote.http11.Http11NioProtocol - Stopping ProtocolHandler ["http-nio-8080"]
+2025-03-03 10:09:49 [RMI TCP Connection(15)-127.0.0.1] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2025-03-03 10:09:50 [RMI TCP Connection(15)-127.0.0.1] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+2025-03-03 10:10:07 [background-preinit] INFO  o.h.validator.internal.util.Version - HV000001: Hibernate Validator 8.0.2.Final
+2025-03-03 10:10:07 [restartedMain] INFO  f.e.enchere.EncheresGrp1Application - Starting EncheresGrp1Application using Java 17 with PID 504 (C:\Users\alens2024\Desktop\workspace\Encheres-GRP-1\bin\main started by alens2024 in C:\Users\alens2024\Desktop\workspace\Encheres-GRP-1)
+2025-03-03 10:10:07 [restartedMain] DEBUG f.e.enchere.EncheresGrp1Application - Running with Spring Boot v3.4.1, Spring v6.2.1
+2025-03-03 10:10:07 [restartedMain] INFO  f.e.enchere.EncheresGrp1Application - The following 1 profile is active: "dev"
+2025-03-03 10:10:07 [restartedMain] INFO  o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2025-03-03 10:10:07 [restartedMain] INFO  o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2025-03-03 10:10:08 [restartedMain] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+2025-03-03 10:10:08 [restartedMain] INFO  o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+2025-03-03 10:10:08 [restartedMain] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2025-03-03 10:10:08 [restartedMain] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.34]
+2025-03-03 10:10:08 [restartedMain] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2025-03-03 10:10:08 [restartedMain] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 768 ms
+2025-03-03 10:10:08 [restartedMain] WARN  o.a.c.c.C.[Tomcat].[localhost].[/] - Cannot deserialize session attribute [categorieSession] for session [2976B9998F438F60FD5379423165C22A]
+2025-03-03 10:10:08 [restartedMain] ERROR o.a.catalina.session.StandardManager - Exception loading sessions from persistent storage
+java.lang.ClassCastException: cannot assign instance of java.lang.StackTraceElement to field java.util.Collections$UnmodifiableList.list of type java.util.List in instance of java.util.Collections$UnmodifiableList
+	at java.base/java.io.ObjectStreamClass$FieldReflector.setObjFieldValues(ObjectStreamClass.java:2227)
+	at java.base/java.io.ObjectStreamClass$FieldReflector.checkObjectFieldValueTypes(ObjectStreamClass.java:2191)
+	at java.base/java.io.ObjectStreamClass.checkObjFieldValueTypes(ObjectStreamClass.java:1478)
+	at java.base/java.io.ObjectInputStream$FieldValues.defaultCheckFieldValues(ObjectInputStream.java:2657)
+	at java.base/java.io.ObjectInputStream.readSerialData(ObjectInputStream.java:2471)
+	at java.base/java.io.ObjectInputStream.readOrdinaryObject(ObjectInputStream.java:2242)
+	at java.base/java.io.ObjectInputStream.readObject0(ObjectInputStream.java:1742)
+	at java.base/java.io.ObjectInputStream$FieldValues.<init>(ObjectInputStream.java:2584)
+	at java.base/java.io.ObjectInputStream.readSerialData(ObjectInputStream.java:2442)
+	at java.base/java.io.ObjectInputStream.readOrdinaryObject(ObjectInputStream.java:2242)
+	at java.base/java.io.ObjectInputStream.readObject0(ObjectInputStream.java:1742)
+	at java.base/java.io.ObjectInputStream$FieldValues.<init>(ObjectInputStream.java:2584)
+	at java.base/java.io.ObjectInputStream.readSerialData(ObjectInputStream.java:2442)
+	at java.base/java.io.ObjectInputStream.readOrdinaryObject(ObjectInputStream.java:2242)
+	at java.base/java.io.ObjectInputStream.readObject0(ObjectInputStream.java:1742)
+	at java.base/java.io.ObjectInputStream.readObject(ObjectInputStream.java:514)
+	at java.base/java.io.ObjectInputStream.readObject(ObjectInputStream.java:472)
+	at org.apache.catalina.session.StandardSession.doReadObject(StandardSession.java:1198)
+	at org.apache.catalina.session.StandardSession.readObjectData(StandardSession.java:831)
+	at org.apache.catalina.session.StandardManager.doLoad(StandardManager.java:210)
+	at org.apache.catalina.session.StandardManager.load(StandardManager.java:156)
+	at org.apache.catalina.session.StandardManager.startInternal(StandardManager.java:345)
+	at org.apache.catalina.util.LifecycleBase.start(LifecycleBase.java:164)
+	at org.apache.catalina.core.StandardContext.startInternal(StandardContext.java:4453)
+	at org.apache.catalina.util.LifecycleBase.start(LifecycleBase.java:164)
+	at org.apache.catalina.core.ContainerBase$StartChild.call(ContainerBase.java:1203)
+	at org.apache.catalina.core.ContainerBase$StartChild.call(ContainerBase.java:1193)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+	at org.apache.tomcat.util.threads.InlineExecutorService.execute(InlineExecutorService.java:75)
+	at java.base/java.util.concurrent.AbstractExecutorService.submit(AbstractExecutorService.java:145)
+	at org.apache.catalina.core.ContainerBase.startInternal(ContainerBase.java:749)
+	at org.apache.catalina.core.StandardHost.startInternal(StandardHost.java:772)
+	at org.apache.catalina.util.LifecycleBase.start(LifecycleBase.java:164)
+	at org.apache.catalina.core.ContainerBase$StartChild.call(ContainerBase.java:1203)
+	at org.apache.catalina.core.ContainerBase$StartChild.call(ContainerBase.java:1193)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+	at org.apache.tomcat.util.threads.InlineExecutorService.execute(InlineExecutorService.java:75)
+	at java.base/java.util.concurrent.AbstractExecutorService.submit(AbstractExecutorService.java:145)
+	at org.apache.catalina.core.ContainerBase.startInternal(ContainerBase.java:749)
+	at org.apache.catalina.core.StandardEngine.startInternal(StandardEngine.java:203)
+	at org.apache.catalina.util.LifecycleBase.start(LifecycleBase.java:164)
+	at org.apache.catalina.core.StandardService.startInternal(StandardService.java:415)
+	at org.apache.catalina.util.LifecycleBase.start(LifecycleBase.java:164)
+	at org.apache.catalina.core.StandardServer.startInternal(StandardServer.java:870)
+	at org.apache.catalina.util.LifecycleBase.start(LifecycleBase.java:164)
+	at org.apache.catalina.startup.Tomcat.start(Tomcat.java:437)
+	at org.springframework.boot.web.embedded.tomcat.TomcatWebServer.initialize(TomcatWebServer.java:128)
+	at org.springframework.boot.web.embedded.tomcat.TomcatWebServer.<init>(TomcatWebServer.java:107)
+	at org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory.getTomcatWebServer(TomcatServletWebServerFactory.java:516)
+	at org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory.getWebServer(TomcatServletWebServerFactory.java:222)
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.createWebServer(ServletWebServerApplicationContext.java:188)
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.onRefresh(ServletWebServerApplicationContext.java:162)
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:621)
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:146)
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:752)
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:439)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:318)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1361)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1350)
+	at fr.eni.enchere.EncheresGrp1Application.main(EncheresGrp1Application.java:10)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.springframework.boot.devtools.restart.RestartLauncher.run(RestartLauncher.java:50)
+2025-03-03 10:10:08 [restartedMain] WARN  o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Found 2 UserDetailsService beans, with names [userDetailsService, users]. Global Authentication Manager will not use a UserDetailsService for username/password login. Consider publishing a single UserDetailsService bean.
+2025-03-03 10:10:08 [restartedMain] INFO  o.s.s.p.JdbcUserDetailsManager - No authentication manager set. Reauthentication of users when changing passwords will not be performed.
+2025-03-03 10:10:09 [restartedMain] INFO  o.s.b.d.a.OptionalLiveReloadServer - LiveReload server is running on port 35729
+2025-03-03 10:10:09 [restartedMain] INFO  o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+2025-03-03 10:10:09 [restartedMain] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/'
+2025-03-03 10:10:09 [restartedMain] INFO  f.e.enchere.EncheresGrp1Application - Started EncheresGrp1Application in 1.609 seconds (process running for 1.963)
+2025-03-03 10:10:12 [http-nio-8080-exec-1] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-03-03 10:10:12 [http-nio-8080-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2025-03-03 10:10:12 [http-nio-8080-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 1 ms
+2025-03-03 10:10:12 [http-nio-8080-exec-1] DEBUG f.e.e.c.SecurityConfig$SessionTimeoutFilter - Vérification timeout session pour: /encheres
+2025-03-03 10:10:12 [http-nio-8080-exec-2] DEBUG f.e.e.c.SecurityConfig$SessionTimeoutFilter - Vérification timeout session pour: /login
+2025-03-03 10:10:17 [http-nio-8080-exec-3] DEBUG f.e.e.c.SecurityConfig$SessionTimeoutFilter - Vérification timeout session pour: /login
+2025-03-03 10:10:17 [http-nio-8080-exec-3] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2025-03-03 10:10:18 [http-nio-8080-exec-3] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@44fd9d87
+2025-03-03 10:10:18 [http-nio-8080-exec-3] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2025-03-03 10:10:19 [http-nio-8080-exec-4] DEBUG f.e.e.c.SecurityConfig$SessionTimeoutFilter - Vérification timeout session pour: /session
+2025-03-03 10:10:19 [http-nio-8080-exec-5] DEBUG f.e.e.c.SecurityConfig$SessionTimeoutFilter - Vérification timeout session pour: /
+2025-03-03 10:10:19 [http-nio-8080-exec-6] DEBUG f.e.e.c.SecurityConfig$SessionTimeoutFilter - Vérification timeout session pour: /encheres
+2025-03-03 10:10:21 [http-nio-8080-exec-7] DEBUG f.e.e.c.SecurityConfig$SessionTimeoutFilter - Vérification timeout session pour: /css/style.css

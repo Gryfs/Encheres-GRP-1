@@ -155,7 +155,7 @@ public class EnchereController {
 		} else {
 			System.out.println("Aucun utilisateur en session !");
 			return "redirect:/login";
-		}
+	 	}
 
 		System.out.println("creerarticle = " + article);
 		this.enchereService.creerArticle(article);
