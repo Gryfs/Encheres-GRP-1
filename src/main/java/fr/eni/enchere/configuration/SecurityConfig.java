@@ -23,6 +23,7 @@ import org.springframework.security.provisioning.JdbcUserDetailsManager;
 import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.util.unit.DataSize;
 import org.springframework.web.filter.GenericFilterBean;
 import fr.eni.enchere.security.CustomUserDetails;
@@ -71,7 +72,9 @@ public class SecurityConfig {
                 .requestMatchers("/profile").authenticated()
                 .requestMatchers("/profile/edit").authenticated()
                 .requestMatchers("/profile/delete").authenticated()
-                .requestMatchers(HttpMethod.GET, "/detail/*").permitAll()
+                .requestMatchers("/credits/checkout").authenticated()
+                .requestMatchers("/credits/success").authenticated()
+                .requestMatchers("/credits/cancel").authenticated()                .requestMatchers(HttpMethod.GET, "/detail/*").permitAll()
                 .requestMatchers(HttpMethod.GET, "/encherir/*").authenticated()
                 .requestMatchers(HttpMethod.GET, "/creer").authenticated()
                 .requestMatchers(HttpMethod.POST, "/creer").authenticated()
@@ -80,8 +83,11 @@ public class SecurityConfig {
                 .anyRequest().denyAll()
             )
             .userDetailsService(userDetailsService())
-            .csrf(csrf -> csrf.disable())
+            .csrf(csrf -> csrf
+                .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+            )
             .formLogin(form -> form
+            
             .loginPage("/login")
                 .usernameParameter("username")
                 .passwordParameter("password")

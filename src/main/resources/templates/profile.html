@@ -10,6 +10,8 @@
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
     />
+    <meta name="_csrf" th:content="${_csrf.token}" />
+    <meta name="_csrf_header" th:content="${_csrf.headerName}" />
   </head>
   <body class="h-full flex flex-col bg-gradient-to-br from-gray-50 to-gray-100">
     <div th:replace="~{fragments/fragment-entete :: entete}"></div>
@@ -119,16 +121,41 @@
                       th:text="${utilisateur.codePostal + ' ' + utilisateur.ville}"
                     ></p>
                   </div>
-
-                  <div class="profile-info">
-                    <div class="flex items-center text-gray-500 mb-1">
-                      <i class="fas fa-coins mr-2"></i>
-                      <h3 class="text-sm font-medium">Crédits disponibles</h3>
+                  <div
+                    class="transform hover:scale-105 transition-all duration-300"
+                  >
+                    <div
+                      class="flex items-center justify-between p-6 bg-gradient-to-br from-white to-blue-50 rounded-xl shadow-lg border border-blue-100"
+                    >
+                      <div class="space-y-4">
+                        <div>
+                          <h3
+                            class="text-lg font-semibold text-gray-800 flex items-center"
+                          >
+                            <i class="fas fa-coins text-blue-500 mr-2"></i>
+                            Crédits disponibles
+                          </h3>
+                          <p
+                            class="text-3xl font-bold bg-gradient-to-r from-blue-600 to-blue-400 bg-clip-text text-transparent"
+                            th:text="${utilisateur.credit}"
+                          >
+                            0
+                          </p>
+                        </div>
+                        <button
+                          onclick="showCreditModal()"
+                          class="group bg-gradient-to-r from-green-600 to-green-500 text-white px-6 py-3 rounded-lg hover:from-green-500 hover:to-green-400 transition-all duration-300 shadow-md hover:shadow-lg flex items-center space-x-3"
+                        >
+                          <i
+                            class="fas fa-plus-circle group-hover:rotate-90 transition-transform duration-300"
+                          ></i>
+                          <span>Acheter des crédits</span>
+                        </button>
+                      </div>
+                      <div class="hidden md:block opacity-20">
+                        <i class="fas fa-wallet text-6xl text-blue-500"></i>
+                      </div>
                     </div>
-                    <p class="text-lg font-semibold text-blue-600">
-                      <span th:text="${utilisateur.credit}"></span>
-                      <span class="text-sm ml-1">points</span>
-                    </p>
                   </div>
                 </div>
               </div>
@@ -203,5 +230,129 @@
     </main>
 
     <div th:replace="~{fragments/fragment-piedpage :: footer}"></div>
+
+    <!-- Ajoutez ceci juste après la div des crédits disponibles -->
+    <div
+      id="creditModal"
+      class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50"
+    >
+      <div
+        class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white"
+      >
+        <div class="mt-3 text-center">
+          <div
+            class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-green-100 mb-4"
+          >
+            <i class="fas fa-coins text-green-600 text-xl"></i>
+          </div>
+          <h3 class="text-lg leading-6 font-medium text-gray-900 mb-4">
+            Acheter des crédits
+          </h3>
+          <div class="mt-2 px-7 py-3">
+            <div class="flex flex-col space-y-4">
+              <div class="flex justify-center space-x-4">
+                <button onclick="setAmount(10)" class="credit-option">
+                  10 €
+                </button>
+                <button onclick="setAmount(20)" class="credit-option">
+                  20 €
+                </button>
+                <button onclick="setAmount(50)" class="credit-option">
+                  50 €
+                </button>
+              </div>
+              <div class="flex items-center justify-center space-x-2">
+                <input
+                  type="number"
+                  id="customAmount"
+                  min="1"
+                  max="1000"
+                  class="w-24 px-3 py-2 border rounded-md focus:ring-2 focus:ring-green-500"
+                  placeholder="Autre"
+                />
+                <span class="text-gray-600">€</span>
+              </div>
+            </div>
+          </div>
+          <div class="flex justify-center gap-4 mt-4">
+            <button
+              onclick="document.getElementById('creditModal').classList.add('hidden')"
+              class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400"
+            >
+              Annuler
+            </button>
+            <button
+              onclick="processPayment()"
+              class="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700"
+            >
+              Payer
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <style>
+      .credit-option {
+        @apply px-6 py-3 border-2 border-green-500 text-green-600 rounded-lg hover:bg-green-50 transition-colors;
+      }
+      .credit-option.selected {
+        @apply bg-green-500 text-white;
+      }
+    </style>
+
+    <script>
+      let selectedAmount = 0;
+
+      function showCreditModal() {
+        document.getElementById("creditModal").classList.remove("hidden");
+      }
+
+      function setAmount(amount) {
+        selectedAmount = amount;
+        document.getElementById("customAmount").value = "";
+        document.querySelectorAll(".credit-option").forEach((btn) => {
+          btn.classList.remove("selected");
+          if (btn.innerText === amount + " €") {
+            btn.classList.add("selected");
+          }
+        });
+      }
+
+      function processPayment() {
+        const customAmount = document.getElementById("customAmount").value;
+        const finalAmount = customAmount || selectedAmount;
+
+        if (!finalAmount || finalAmount < 1) {
+          alert("Veuillez sélectionner un montant valide");
+          return;
+        }
+
+        const csrfToken = document.querySelector('meta[name="_csrf"]').content;
+        const csrfHeader = document.querySelector(
+          'meta[name="_csrf_header"]'
+        ).content;
+
+        fetch("/credits/checkout", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            [csrfHeader]: csrfToken,
+          },
+          body: JSON.stringify({ amount: parseInt(finalAmount) }),
+        })
+          .then((response) => {
+            if (!response.ok) throw new Error("Erreur réseau");
+            return response.text();
+          })
+          .then((url) => {
+            window.location.href = url;
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+            alert("Une erreur est survenue lors du traitement du paiement");
+          });
+      }
+    </script>
   </body>
 </html>
