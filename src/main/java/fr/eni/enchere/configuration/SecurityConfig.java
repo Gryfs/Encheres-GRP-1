@@ -6,6 +6,7 @@ import java.util.List;
 
 import javax.sql.DataSource;
 
+import org.springframework.boot.web.servlet.MultipartConfigFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -22,12 +23,14 @@ import org.springframework.security.provisioning.JdbcUserDetailsManager;
 import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.util.unit.DataSize;
 import org.springframework.web.filter.GenericFilterBean;
 import fr.eni.enchere.security.CustomUserDetails;
 
 import fr.eni.enchere.bll.ContexteService;
 import fr.eni.enchere.bo.Utilisateur;
 import jakarta.servlet.FilterChain;
+import jakarta.servlet.MultipartConfigElement;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
@@ -191,6 +194,16 @@ public class SecurityConfig {
         return jdbcUserDetailsManager;
     }
 
+    @Configuration
+    public class MultipartConfig {
+        @Bean
+        public MultipartConfigElement multipartConfigElement() {
+            MultipartConfigFactory factory = new MultipartConfigFactory();
+            factory.setMaxFileSize(DataSize.ofMegabytes(5));
+            factory.setMaxRequestSize(DataSize.ofMegabytes(5));
+            return factory.createMultipartConfig();
+        }
+    }
 
 }
 

@@ -1,5 +1,7 @@
 package fr.eni.enchere.controller;
 
+import java.io.IOException;
+import java.util.Base64;
 import java.util.List;
 
 import org.springframework.stereotype.Controller;
@@ -11,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import fr.eni.enchere.bll.EnchereService;
@@ -147,8 +150,24 @@ public class EnchereController {
 	}
 
 	@PostMapping("/creer")
-	public String creerArticle(@Valid @ModelAttribute("article") ArticleVendu article, BindingResult bindingResult,
+	public String creerArticle(@Valid @ModelAttribute("article") ArticleVendu article,  @RequestParam("imageFile") MultipartFile imageFile, BindingResult bindingResult,
 			@SessionAttribute(name = "utilisateurSession", required = false) Utilisateur utilisateur) {
+
+		if (!imageFile.isEmpty()) {
+			try {
+				// Convertir l'image en Base64
+				byte[] bytes = imageFile.getBytes();
+				String base64Image = "data:" + imageFile.getContentType() + ";base64," + 
+				Base64.getEncoder().encodeToString(bytes);
+				
+				// Sauvegarder l'image en Base64 dans l'article
+				article.setImage(base64Image);
+				
+			} catch (IOException e) {
+				// Gérer l'erreur
+				e.printStackTrace();
+			}
+		}
 
 		if (utilisateur != null) {
 			article.setUtilisateur(utilisateur);

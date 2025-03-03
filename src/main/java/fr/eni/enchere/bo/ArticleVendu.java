@@ -3,11 +3,9 @@ package fr.eni.enchere.bo;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import org.springframework.format.annotation.DateTimeFormat;
-
 public class ArticleVendu implements Serializable {
 
 	private long noArticle;
@@ -24,6 +22,7 @@ public class ArticleVendu implements Serializable {
 	private List<Enchere> encheres = new ArrayList<>();
 	private Categories categorie;
 	private Retrait retrait;
+	private String image;
 
 	public ArticleVendu() {
 
@@ -41,6 +40,14 @@ public class ArticleVendu implements Serializable {
 		this.prixVente = prixVente;
 		this.etatVente = etatVente;
 	}
+
+	public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
 
 	public long getNoArticle() {
 		return noArticle;
