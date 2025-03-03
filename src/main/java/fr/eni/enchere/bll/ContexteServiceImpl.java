@@ -89,4 +89,11 @@ public class ContexteServiceImpl implements ContexteService {
         return utilisateurDAO.findByResetToken(token);
     }
 
+	@Override
+	public void ajouterCredits(long userId, int amount) {
+		Utilisateur utilisateur = chargerAvecId(userId);
+		utilisateur.setCredit(utilisateur.getCredit() + amount);
+		updateUtilisateur(utilisateur);
+	}
+
 }

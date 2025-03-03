@@ -21,4 +21,7 @@ public interface ContexteService {
     Utilisateur chargerParId(Integer id);
 
     Utilisateur findByResetToken(String token);
+	
+	void ajouterCredits(long userId, int amount);
+
 }
