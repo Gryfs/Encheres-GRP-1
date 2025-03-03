@@ -46,6 +46,27 @@ public class EnchereServiceImpl implements EnchereService {
 		}
 		return listeArticle;
 	}
+	
+	@Override
+	public List<ArticleVendu> consulterArticlesParUtilisateur(long id) {
+
+		List<ArticleVendu> listeArticle = articleVenduDAO.findAllByUser(id);
+		for (ArticleVendu article : listeArticle) {
+			article.setCategorie(categorieDAO.read(article.getCategorie().getId()));
+			article.setUtilisateur(utilisateurDAO.read(article.getUtilisateur().getNoUtilisateur()));
+			article.setRetrait(retraitDAO.consulterRetraitParIdarticle(article.getNoArticle()));
+			article.setEncheres(enchereDAO.SelectEnchereByIdArticle(article.getNoArticle()));
+			
+			if (article.getDateDebutEncheres().isBefore(LocalDate.now())
+					&& article.getDateFinEncheres().isAfter(LocalDate.now())) {
+				article.setEtatVente("OPEN");
+			} else {
+				article.setEtatVente("CLOSE");
+			}
+
+		}
+		return listeArticle;
+	}
 
 	@Override
 	public List<Categories> consulterCategories() {

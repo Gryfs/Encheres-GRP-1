@@ -163,6 +163,41 @@ public class EnchereController {
 		return "redirect:/encheres";
 	}
 
+	@GetMapping("/mes-articles")
+	public String afficherMesEncheres(Model model, @RequestParam(name = "id", required = false) Integer categoryId,
+			@RequestParam(name = "search", required = false) String search,
+			@RequestParam(name = "page", defaultValue = "0") int page,
+			@SessionAttribute(name = "utilisateurSession", required = false) Utilisateur utilisateur) {
+		List<ArticleVendu> allArticles;
+
+		if ((categoryId == null || categoryId == 0) && (search == null || search.isEmpty())) {
+			// Si aucun filtre n'est appliqué
+			allArticles = enchereService.consulterArticlesParUtilisateur(utilisateur.getNoUtilisateur());
+		} else if (categoryId != null && categoryId != 0) {
+			// Filtrer par catégorie
+			allArticles = enchereService.consulterArticleparCategorie(categoryId);
+		} else {
+			// Filtrer par nom d'article
+			allArticles = enchereService.rechercherArticlesParNom(search);
+		}
+
+		// Calcul de la pagination
+		int totalItems = allArticles.size();
+		int totalPages = (int) Math.ceil((double) totalItems / PAGE_SIZE);
+
+		// Extraction de la page courante
+		int startItem = page * PAGE_SIZE;
+		List<ArticleVendu> listeArticles = allArticles.subList(startItem,
+				Math.min(startItem + PAGE_SIZE, allArticles.size()));
+
+		model.addAttribute("articles", listeArticles);
+		model.addAttribute("currentPage", page);
+		model.addAttribute("totalPages", totalPages);
+		model.addAttribute("search", search);
+
+		return "mes-articles";
+	}
+
 	@ModelAttribute("categorieSession")
 	public List<Categories> chargerCategorieEnSession() {
 		return this.enchereService.consulterCategories();

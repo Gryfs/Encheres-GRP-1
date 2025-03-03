@@ -26,5 +26,7 @@ public interface EnchereService {
 	void encherir(ArticleVendu article, Float nouveauPrix, Utilisateur utilisateur);
 
 	void updateArticle(ArticleVendu article);
+	
+	List<ArticleVendu> consulterArticlesParUtilisateur(long id);
 
 }
