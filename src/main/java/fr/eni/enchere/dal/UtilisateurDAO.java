@@ -5,11 +5,11 @@ import java.util.List;
 import fr.eni.enchere.bo.Utilisateur;
 
 public interface UtilisateurDAO {
-	
+
 	Utilisateur read(long id);
-	
+
 	Utilisateur read(String email);
-	
+
 	void create(Utilisateur utilisateur);
 
 	int countByEmail(String email);
@@ -23,9 +23,7 @@ public interface UtilisateurDAO {
 	Utilisateur findById(Integer id);
 
 	Utilisateur findByResetToken(String token);
-	
-	void retirerCredit(Utilisateur utilisateur, Float montant);
-	
-	void ajouterCredit(Utilisateur utilisateur, Float montant);
+
+	void updateCredit(Utilisateur utilisateur);
 
 }

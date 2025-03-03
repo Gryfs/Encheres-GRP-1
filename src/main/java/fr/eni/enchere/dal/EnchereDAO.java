@@ -10,4 +10,6 @@ public interface EnchereDAO {
 	void create(Enchere enchere);
 	
 	List<Enchere> SelectEnchereByIdArticle(long id);
+	
+	List<Enchere> findEncheresByUtilisateur(long idUtilisateur);
 }

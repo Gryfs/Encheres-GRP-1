@@ -190,7 +190,7 @@
 
               <!-- Bouton Enchérir -->
               <div
-                th:if="${article.etatVente == 'OPEN'} and ${utilisateurConnecte.noUtilisateur != article.utilisateur.noUtilisateur}"
+                th:if="${article.etatVente eq 'OPEN'} and ${utilisateurConnecte.noUtilisateur != article.utilisateur.noUtilisateur}"
               >
                 <a
                   th:href="@{/encherir(id=${article.noArticle})}"

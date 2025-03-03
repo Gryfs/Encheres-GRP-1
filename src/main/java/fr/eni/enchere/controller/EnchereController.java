@@ -96,6 +96,15 @@ public class EnchereController {
 
 		return "edit-article";
 	}
+	
+	@PostMapping("/article/delete")
+	public String deleteArticle(@RequestParam(name = "id") Long id, Model model) {
+
+		enchereService.deleteArticle(id);
+
+		return "redirect:/encheres";
+	}
+	
 
 	@PostMapping("/article/edit")
 	public String editArticle(@Valid @ModelAttribute("article") ArticleVendu article, BindingResult bindingResult,
@@ -183,7 +192,7 @@ public class EnchereController {
 	}
 
 	@GetMapping("/mes-articles")
-	public String afficherMesEncheres(Model model, @RequestParam(name = "id", required = false) Integer categoryId,
+	public String afficherMesArticles(Model model, @RequestParam(name = "id", required = false) Integer categoryId,
 			@RequestParam(name = "search", required = false) String search,
 			@RequestParam(name = "page", defaultValue = "0") int page,
 			@SessionAttribute(name = "utilisateurSession", required = false) Utilisateur utilisateur) {
@@ -215,6 +224,41 @@ public class EnchereController {
 		model.addAttribute("search", search);
 
 		return "mes-articles";
+	}
+	
+	@GetMapping("/mes-encheres")
+	public String afficherMesEncheres(Model model, @RequestParam(name = "id", required = false) Integer categoryId,
+			@RequestParam(name = "search", required = false) String search,
+			@RequestParam(name = "page", defaultValue = "0") int page,
+			@SessionAttribute(name = "utilisateurSession", required = false) Utilisateur utilisateur) {
+		List<ArticleVendu> allArticles;
+
+		if ((categoryId == null || categoryId == 0) && (search == null || search.isEmpty())) {
+			// Si aucun filtre n'est appliqué
+			allArticles = enchereService.obtenirArticlesParEncheresUtilisateur(utilisateur.getNoUtilisateur());
+		} else if (categoryId != null && categoryId != 0) {
+			// Filtrer par catégorie
+			allArticles = enchereService.consulterArticleparCategorie(categoryId);
+		} else {
+			// Filtrer par nom d'article
+			allArticles = enchereService.rechercherArticlesParNom(search);
+		}
+
+		// Calcul de la pagination
+		int totalItems = allArticles.size();
+		int totalPages = (int) Math.ceil((double) totalItems / PAGE_SIZE);
+
+		// Extraction de la page courante
+		int startItem = page * PAGE_SIZE;
+		List<ArticleVendu> listeArticles = allArticles.subList(startItem,
+				Math.min(startItem + PAGE_SIZE, allArticles.size()));
+
+		model.addAttribute("articles", listeArticles);
+		model.addAttribute("currentPage", page);
+		model.addAttribute("totalPages", totalPages);
+		model.addAttribute("search", search);
+
+		return "mes-encheres";
 	}
 
 	@ModelAttribute("categorieSession")

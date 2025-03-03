@@ -71,6 +71,7 @@ public class SecurityConfig {
                 .requestMatchers("/profile").authenticated()
                 .requestMatchers("/profile/edit").authenticated()
                 .requestMatchers("/profile/delete").authenticated()
+                .requestMatchers(HttpMethod.POST, "/article/delete").authenticated()
                 .requestMatchers(HttpMethod.GET, "/detail/*").permitAll()
                 .requestMatchers(HttpMethod.GET, "/encherir/*").authenticated()
                 .requestMatchers(HttpMethod.GET, "/creer").authenticated()

@@ -1,9 +1,13 @@
 package fr.eni.enchere.bll;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import fr.eni.enchere.bo.ArticleVendu;
 import fr.eni.enchere.bo.Categories;
@@ -46,7 +50,7 @@ public class EnchereServiceImpl implements EnchereService {
 		}
 		return listeArticle;
 	}
-	
+
 	@Override
 	public List<ArticleVendu> consulterArticlesParUtilisateur(long id) {
 
@@ -56,7 +60,7 @@ public class EnchereServiceImpl implements EnchereService {
 			article.setUtilisateur(utilisateurDAO.read(article.getUtilisateur().getNoUtilisateur()));
 			article.setRetrait(retraitDAO.consulterRetraitParIdarticle(article.getNoArticle()));
 			article.setEncheres(enchereDAO.SelectEnchereByIdArticle(article.getNoArticle()));
-			
+
 			if (article.getDateDebutEncheres().isBefore(LocalDate.now())
 					&& article.getDateFinEncheres().isAfter(LocalDate.now())) {
 				article.setEtatVente("OPEN");
@@ -82,7 +86,6 @@ public class EnchereServiceImpl implements EnchereService {
 		articleVenduDAO.create(article);
 
 	}
-
 
 	@Override
 	public Categories consulterCategorieparId(long id) {
@@ -121,16 +124,25 @@ public class EnchereServiceImpl implements EnchereService {
 	}
 
 	@Override
+	@Transactional
 	public void encherir(ArticleVendu article, Float nouveauPrix, Utilisateur utilisateur) {
-		
-		utilisateurDAO.retirerCredit(utilisateur, nouveauPrix);
-		if(article.getEncheres().size() != 0) {
-			Utilisateur utilisateurDerniereEnchere = article.getEncheres().get(article.getEncheres().size() - 1).getUtilisateur();
-			System.out.println(utilisateurDerniereEnchere);
-			utilisateurDAO.ajouterCredit(utilisateurDerniereEnchere, nouveauPrix);
+
+		utilisateur.setCredit(utilisateur.getCredit() - nouveauPrix);
+		utilisateurDAO.updateCredit(utilisateur);
+
+		if (article.getEncheres().size() != 0) {
+			Enchere derniereEnchere = article.getEncheres().get(article.getEncheres().size() - 1);
+			Utilisateur utilisateurDerniereEnchere = utilisateurDAO
+					.read(derniereEnchere.getUtilisateur().getNoUtilisateur());
+			Float montantDerniereEnchere = derniereEnchere.getMontantEnchere();
+
+			// Rembourser le montant de la dernière enchère à l'utilisateur précédent
+			float testCredit = utilisateurDerniereEnchere.getCredit() + montantDerniereEnchere;
+			System.out.println(testCredit);
+			utilisateurDerniereEnchere.setCredit(utilisateurDerniereEnchere.getCredit() + montantDerniereEnchere);
+			utilisateurDAO.updateCredit(utilisateurDerniereEnchere);
 		}
-		
-		
+
 		Enchere nouvelleEnchere = new Enchere();
 		nouvelleEnchere.setArticle(article);
 		nouvelleEnchere.setMontantEnchere(nouveauPrix);
@@ -139,18 +151,54 @@ public class EnchereServiceImpl implements EnchereService {
 
 		enchereDAO.create(nouvelleEnchere);
 		article.ajouterEnchere(nouvelleEnchere);
-		
+
 		articleVenduDAO.updatePrixVente(article, nouveauPrix);
-		
 
 	}
 
 	@Override
 	public void updateArticle(ArticleVendu article) {
-		if(article.getDateDebutEncheres().isAfter(LocalDate.now())) {
+		if (article.getDateDebutEncheres().isAfter(LocalDate.now())) {
 			articleVenduDAO.updateArticle(article);
 		}
-		
+
 	}
+
+	@Override
+	public void deleteArticle(long id) {
+		ArticleVendu article = articleVenduDAO.rechercherArticleParId(id);
+		if (article.getDateDebutEncheres().isAfter(LocalDate.now())) {
+			articleVenduDAO.deleteArticle(article);
+			article.getNoArticle()
+		}
+
+	}
+
+	@Override
+	public List<ArticleVendu> obtenirArticlesParEncheresUtilisateur(long idUtilisateur) {
+	    // Récupérer toutes les enchères de l'utilisateur
+	    List<Enchere> encheresUtilisateur = enchereDAO.findEncheresByUtilisateur(idUtilisateur);
+
+
+	    // Extraire les identifiants des articles associés à ces enchères
+	    Set<Long> articleIds = encheresUtilisateur.stream()
+	            .map(Enchere::getArticle) // Extrait l'objet Article
+	            .map(ArticleVendu::getNoArticle) // Extrait l'ID de l'article
+	            .collect(Collectors.toSet());
+
+	    // Récupérer les articles à partir des identifiants
+	    List<ArticleVendu> articles = new ArrayList<>();
+	    for (Long articleId : articleIds) {
+	        ArticleVendu article = articleVenduDAO.rechercherArticleParId(articleId);
+	        if (article != null) {
+	            articles.add(article);
+	        }
+	    }
+
+	    return articles;
+	}
+
+
+
 
 }

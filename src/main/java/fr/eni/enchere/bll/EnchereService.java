@@ -28,5 +28,9 @@ public interface EnchereService {
 	void updateArticle(ArticleVendu article);
 	
 	List<ArticleVendu> consulterArticlesParUtilisateur(long id);
+	
+	void deleteArticle(long id);
+	
+	List<ArticleVendu> obtenirArticlesParEncheresUtilisateur(long idUtilisateur);
 
 }

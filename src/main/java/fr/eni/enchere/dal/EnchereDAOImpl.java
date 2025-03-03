@@ -22,7 +22,8 @@ public class EnchereDAOImpl implements EnchereDAO {
 
 	private final static String CREATE = "INSERT INTO ENCHERES (date_enchere, montant_enchere, no_utilisateur, no_article) VALUES (:date_enchere, :montant_enchere, :no_utilisateur, :no_article)";
 	private final static String SELECT_BY_ID_ARTICLE = "SELECT no_enchere, date_enchere, montant_enchere, no_utilisateur, no_article FROM ENCHERES WHERE no_article = :no_article";
-
+	private final static String SELECT_ALL_BY_UTILISATEUR = "SELECT no_enchere, date_enchere, montant_enchere, no_utilisateur, no_article FROM ENCHERES WHERE no_utilisateur = :no_utilisateur";
+	
 	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
 	public EnchereDAOImpl(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
@@ -75,5 +76,13 @@ public class EnchereDAOImpl implements EnchereDAO {
 
 			return enchere;
 		}
+	}
+
+	@Override
+	public List<Enchere> findEncheresByUtilisateur(long idUtilisateur) {
+		MapSqlParameterSource namedParameters = new MapSqlParameterSource();
+		namedParameters.addValue("no_utilisateur", idUtilisateur);
+
+		return namedParameterJdbcTemplate.query(SELECT_ALL_BY_UTILISATEUR, namedParameters, new EnchereRowMapper());
 	}
 }

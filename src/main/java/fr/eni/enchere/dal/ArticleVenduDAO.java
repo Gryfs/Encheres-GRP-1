@@ -22,6 +22,8 @@ public interface ArticleVenduDAO {
 	void updateArticle(ArticleVendu article);
 	
 	List<ArticleVendu> findAllByUser(long id);
+	
+	void deleteArticle(ArticleVendu article);
 
 	
 
