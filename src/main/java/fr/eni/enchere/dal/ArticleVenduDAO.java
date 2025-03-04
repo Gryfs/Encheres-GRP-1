@@ -1,5 +1,6 @@
 package fr.eni.enchere.dal;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import fr.eni.enchere.bo.ArticleVendu;
@@ -24,6 +25,11 @@ public interface ArticleVenduDAO {
 	List<ArticleVendu> findAllByUser(long id);
 	
 	void deleteArticle(ArticleVendu article);
+	
+	List<ArticleVendu> findExpiredAuctions(LocalDate today);
+	
+	void updateEtatVente(long idArticle);
+
 
 	
 

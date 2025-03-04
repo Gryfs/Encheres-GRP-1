@@ -106,7 +106,7 @@
                     </span>
                     <!-- Enchère en cours -->
                     <span
-                      th:if="${not item.dateDebutEncheres.isAfter(now) and not item.dateFinEncheres.isBefore(now)}"
+                      th:if="${not item.dateDebutEncheres.isAfter(now) and not item.dateFinEncheres.isBefore(now) and not item.dateFinEncheres.isEqual(now)}"
                       class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-green-500 text-white"
                     >
                       <span
@@ -116,7 +116,7 @@
                     </span>
                     <!-- Enchère terminée -->
                     <span
-                      th:if="${item.dateFinEncheres.isBefore(now)}"
+                      th:if="${item.dateFinEncheres.isBefore(now) or item.dateFinEncheres.isEqual(now)}"
                       class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-red-500 text-white"
                     >
                       <i class="fas fa-gavel mr-1"></i>Terminée
