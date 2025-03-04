@@ -169,7 +169,7 @@ public class EnchereServiceImpl implements EnchereService {
 		ArticleVendu article = articleVenduDAO.rechercherArticleParId(id);
 		if (article.getDateDebutEncheres().isAfter(LocalDate.now())) {
 			articleVenduDAO.deleteArticle(article);
-			article.getNoArticle()
+			article.getNoArticle();
 		}
 
 	}
