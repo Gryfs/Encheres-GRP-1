@@ -23,17 +23,18 @@ public class PaiementService {
         this.utilisateurDAO = utilisateurDAO;
     }
 
-    @Value("${stripe.secret.key}")
-    private String secretKey;
+	@Value("${stripe.secret.key}")
+	private String secretKey;
 
-    @Value("${app.url}")
-    private String appUrl;
+	@Value("${app.url}")
+	private String appUrl;
 
-    @PostConstruct
-    public void init() {
-        Stripe.apiKey = this.secretKey;
-    }
+	@PostConstruct
+	public void init() {
+		 //Stripe.apiKey = this.secretKey;
+	}
 
+<<<<<<< HEAD
 
     public String createCheckoutSession(int amount) {
         try {

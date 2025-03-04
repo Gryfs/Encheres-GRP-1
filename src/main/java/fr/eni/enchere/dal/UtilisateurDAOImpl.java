@@ -65,7 +65,7 @@ public class UtilisateurDAOImpl implements UtilisateurDAO {
 		namedParameters.addValue("codePostal", utilisateur.getCodePostal());
 		namedParameters.addValue("ville", utilisateur.getVille());
 		namedParameters.addValue("motDePasse", utilisateur.getMotDePasse());
-		namedParameters.addValue("credit", 0);
+		namedParameters.addValue("credit", 100);
 		namedParameters.addValue("administrateur", false);
 
 		try {
