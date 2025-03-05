@@ -49,6 +49,11 @@ public class ArticleVenduDAOImpl implements ArticleVenduDAO {
 			+ "AND e.date_enchere = (" + "   SELECT MAX(e2.date_enchere) " + "   FROM encheres e2 "
 			+ "   WHERE e2.no_article = av.no_article) " + "AND LOWER(av.nom_article) LIKE LOWER(:nomRecherche)";
 	private final static String UPDATE = "UPDATE ARTICLES_VENDUS SET etat_vente = :etat_vente WHERE no_article = :no_article";
+	private final static String SELECT_GAINS_CATEGORIE = "SELECT DISTINCT av.* " + "FROM articles_vendus av "
+			+ "JOIN encheres e ON av.no_article = e.no_article " + "WHERE av.etat_vente = 'CLOSE' "
+			+ "AND e.no_utilisateur = :idUtilisateur " + "AND av.date_fin_encheres <= :today "
+			+ "AND av.no_categorie = :idCategorie " + "AND e.date_enchere = (" + "   SELECT MAX(e2.date_enchere) "
+			+ "   FROM encheres e2 " + "   WHERE e2.no_article = av.no_article)";
 
 	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
@@ -215,7 +220,7 @@ public class ArticleVenduDAOImpl implements ArticleVenduDAO {
         params.addValue("etat_vente", article.getEtatVente());
         namedParameterJdbcTemplate.update(UPDATE, params);
     }
-
+	
 	@Override
 	public void deleteArticle(ArticleVendu article) {
 		MapSqlParameterSource params = new MapSqlParameterSource();
@@ -275,6 +280,18 @@ public class ArticleVenduDAOImpl implements ArticleVenduDAO {
 		params.addValue("nomRecherche", "%" + nomRecherche + "%");
 
 		return namedParameterJdbcTemplate.query(SELECT_ARTICLE_GAGNE_SEARCH, params, new ArticleRowMapper());
+	}
+
+	@Override
+	public List<ArticleVendu> findArticlesGagnesByUtilisateurAndCategorie(long idUtilisateur, LocalDate today,
+			long idCategorie) {
+
+		MapSqlParameterSource params = new MapSqlParameterSource();
+		params.addValue("idUtilisateur", idUtilisateur);
+		params.addValue("today", today);
+		params.addValue("idCategorie", idCategorie);
+
+		return namedParameterJdbcTemplate.query(SELECT_GAINS_CATEGORIE, params, new ArticleRowMapper());
 	}
 
 	@Override

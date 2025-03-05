@@ -4,7 +4,6 @@ import java.util.List;
 
 import fr.eni.enchere.bo.ArticleVendu;
 import fr.eni.enchere.bo.Categories;
-import fr.eni.enchere.bo.Enchere;
 import fr.eni.enchere.bo.Utilisateur;
 
 public interface EnchereService {
@@ -44,5 +43,7 @@ public interface EnchereService {
 	List<ArticleVendu> consulterGainsAvecRecherche(Utilisateur utilisateur, String nomRecherche);
 
 	Utilisateur consulterUtilisateurParId(long id);
+	List<ArticleVendu> consulterGainsParCategorie(Utilisateur utilisateur, long idCategorie);
+
 
 }

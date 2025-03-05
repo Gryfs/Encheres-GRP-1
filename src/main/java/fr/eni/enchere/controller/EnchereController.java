@@ -281,8 +281,7 @@ public class EnchereController {
 			allArticles = enchereService.consulterGains(utilisateur);
 		} else if (categoryId != null && categoryId != 0) {
 			// Filtrer par catégorie
-			//TODO
-			allArticles = enchereService.consulterArticleparCategorieUtilisateur(categoryId, utilisateur);
+			allArticles = enchereService.consulterGainsParCategorie(utilisateur, categoryId);
 		} else {
 			// Filtrer par nom d'article
 			allArticles = enchereService.consulterGainsAvecRecherche(utilisateur, search);

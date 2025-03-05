@@ -1,7 +1,6 @@
 package fr.eni.enchere.bll;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -175,10 +174,42 @@ public class EnchereServiceImpl implements EnchereService {
 	}
 
 	@Override
-    public List<ArticleVendu> consulterGains(Utilisateur utilisateur) {
+	public List<ArticleVendu> consulterGains(Utilisateur utilisateur) {
+		LocalDate today = LocalDate.now();
+		// Récupérer les articles gagnés par l'utilisateur
+		List<ArticleVendu> articlesGagnes = articleVenduDAO
+				.findArticlesGagnesByUtilisateur(utilisateur.getNoUtilisateur(), today);
+
+		// Remplir les détails des articles (catégorie, utilisateur)
+		for (ArticleVendu article : articlesGagnes) {
+			article.setCategorie(categorieDAO.read(article.getCategorie().getId()));
+			article.setUtilisateur(utilisateurDAO.read(article.getUtilisateur().getNoUtilisateur()));
+		}
+
+		return articlesGagnes;
+	}
+
+	@Override
+	public List<ArticleVendu> consulterGainsAvecRecherche(Utilisateur utilisateur, String nomRecherche) {
+		LocalDate today = LocalDate.now();
+		// Récupérer les articles gagnés par l'utilisateur et filtrer par nom
+		List<ArticleVendu> articlesGagnes = articleVenduDAO
+				.findArticlesGagnesByUtilisateurAndNom(utilisateur.getNoUtilisateur(), today, nomRecherche);
+
+		// Remplir les détails des articles (catégorie, utilisateur)
+		for (ArticleVendu article : articlesGagnes) {
+			article.setCategorie(categorieDAO.read(article.getCategorie().getId()));
+			article.setUtilisateur(utilisateurDAO.read(article.getUtilisateur().getNoUtilisateur()));
+		}
+
+		return articlesGagnes;
+	}
+
+	@Override
+    public List<ArticleVendu> consulterGainsParCategorie(Utilisateur utilisateur, long idCategorie) {
         LocalDate today = LocalDate.now();
-        // Récupérer les articles gagnés par l'utilisateur
-        List<ArticleVendu> articlesGagnes = articleVenduDAO.findArticlesGagnesByUtilisateur(utilisateur.getNoUtilisateur(), today);
+        // Récupérer les articles gagnés par l'utilisateur et filtrer par catégorie
+        List<ArticleVendu> articlesGagnes = articleVenduDAO.findArticlesGagnesByUtilisateurAndCategorie(utilisateur.getNoUtilisateur(), today, idCategorie);
 
         // Remplir les détails des articles (catégorie, utilisateur)
         for (ArticleVendu article : articlesGagnes) {
@@ -189,21 +220,7 @@ public class EnchereServiceImpl implements EnchereService {
         return articlesGagnes;
     }
 	
-	 @Override
-	    public List<ArticleVendu> consulterGainsAvecRecherche(Utilisateur utilisateur, String nomRecherche) {
-	        LocalDate today = LocalDate.now();
-	        // Récupérer les articles gagnés par l'utilisateur et filtrer par nom
-	        List<ArticleVendu> articlesGagnes = articleVenduDAO.findArticlesGagnesByUtilisateurAndNom(utilisateur.getNoUtilisateur(), today, nomRecherche);
-
-	        // Remplir les détails des articles (catégorie, utilisateur)
-	        for (ArticleVendu article : articlesGagnes) {
-	            article.setCategorie(categorieDAO.read(article.getCategorie().getId()));
-	            article.setUtilisateur(utilisateurDAO.read(article.getUtilisateur().getNoUtilisateur()));
-	        }
-
-	        return articlesGagnes;
-	    }
-
+	
 	@Override
 	public void updateArticle(ArticleVendu article) {
 		if (article.getDateDebutEncheres().isAfter(LocalDate.now())) {
@@ -248,29 +265,25 @@ public class EnchereServiceImpl implements EnchereService {
 		return articles;
 	}
 
-	
-
 	@Override
-    public List<ArticleVendu> obtenirArticlesParEncheresEtNom(long idUtilisateur, String nomRecherche) {
-        // Récupérer toutes les enchères de l'utilisateur
-        List<Enchere> encheresUtilisateur = enchereDAO.findEncheresByUtilisateur(idUtilisateur);
+	public List<ArticleVendu> obtenirArticlesParEncheresEtNom(long idUtilisateur, String nomRecherche) {
+		// Récupérer toutes les enchères de l'utilisateur
+		List<Enchere> encheresUtilisateur = enchereDAO.findEncheresByUtilisateur(idUtilisateur);
 
-        // Extraire les identifiants des articles associés à ces enchères
-        Set<Long> articleIds = encheresUtilisateur.stream()
-                .map(Enchere::getArticle)
-                .map(ArticleVendu::getNoArticle)
-                .collect(Collectors.toSet());
+		// Extraire les identifiants des articles associés à ces enchères
+		Set<Long> articleIds = encheresUtilisateur.stream().map(Enchere::getArticle).map(ArticleVendu::getNoArticle)
+				.collect(Collectors.toSet());
 
-        // Récupérer les articles à partir des identifiants et du nom recherché
-        List<ArticleVendu> articles = articleVenduDAO.findArticlesByIdsAndNom(articleIds, nomRecherche);
+		// Récupérer les articles à partir des identifiants et du nom recherché
+		List<ArticleVendu> articles = articleVenduDAO.findArticlesByIdsAndNom(articleIds, nomRecherche);
 
-        // Remplir les détails des articles (catégorie, utilisateur)
-        for (ArticleVendu article : articles) {
-            article.setCategorie(categorieDAO.read(article.getCategorie().getId()));
-            article.setUtilisateur(utilisateurDAO.read(article.getUtilisateur().getNoUtilisateur()));
-        }
+		// Remplir les détails des articles (catégorie, utilisateur)
+		for (ArticleVendu article : articles) {
+			article.setCategorie(categorieDAO.read(article.getCategorie().getId()));
+			article.setUtilisateur(utilisateurDAO.read(article.getUtilisateur().getNoUtilisateur()));
+		}
 
-        return articles;
-    }
+		return articles;
+	}
 
 }
