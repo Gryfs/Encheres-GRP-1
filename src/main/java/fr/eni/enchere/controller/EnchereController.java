@@ -171,7 +171,7 @@ public class EnchereController {
 	@PostMapping("/creer")
 	public String creerArticle(@Valid @ModelAttribute("article") ArticleVendu article,
 			@RequestParam("imageFile") MultipartFile imageFile, BindingResult bindingResult,
-			@SessionAttribute(name = "utilisateurSession", required = false) Utilisateur utilisateur) {
+			@SessionAttribute(name = "utilisateurSession", required = false) Utilisateur utilisateur, Model model) {
 
 		if (!imageFile.isEmpty()) {
 			try {
@@ -195,6 +195,13 @@ public class EnchereController {
 			System.out.println("Aucun utilisateur en session !");
 			return "redirect:/login";
 		}
+		
+		if (article.getDateFinEncheres().isBefore(article.getDateDebutEncheres())) {
+	        bindingResult.rejectValue("dateFinEncheres", "error.dateFinEncheres", "La date de fin ne peut pas être antérieure à la date de début.");
+	        model.addAttribute("dateFinEncheresError", true);
+	        model.addAttribute("dateFinEncheresErrorMessage", "La date de fin ne peut pas être antérieure à la date de début.");
+	        return "creer"; // Renvoyer vers le formulaire avec un message d'erreur
+	    }
 
 		System.out.println("creerarticle = " + article);
 		this.enchereService.creerArticle(article);
