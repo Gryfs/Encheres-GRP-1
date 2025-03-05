@@ -125,6 +125,13 @@ public class EnchereController {
 			model.addAttribute("categories", enchereService.consulterCategories());
 			return "edit-article";
 		}
+		
+		if (article.getDateFinEncheres().isBefore(article.getDateDebutEncheres())) {
+	        bindingResult.rejectValue("dateFinEncheres", "error.dateFinEncheres", "La date de fin ne peut pas être antérieure à la date de début.");
+	        model.addAttribute("dateFinEncheresError", true);
+	        model.addAttribute("dateFinEncheresErrorMessage", "La date de fin ne peut pas être antérieure à la date de début.");
+	        return "edit-article"; // Renvoyer vers le formulaire avec un message d'erreur
+	    }
 
 		// Enregistre les modifications de l'article
 		enchereService.updateArticle(article);

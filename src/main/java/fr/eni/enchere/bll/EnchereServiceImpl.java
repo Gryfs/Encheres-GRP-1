@@ -107,14 +107,23 @@ public class EnchereServiceImpl implements EnchereService {
 
 	@Override
 	public List<ArticleVendu> consulterArticleparCategorie(Integer id) {
-
-		return articleVenduDAO.findAllByCategorie(id);
+		List<ArticleVendu> listeArticles = articleVenduDAO.findAllByCategorie(id);
+		for (ArticleVendu article : listeArticles) {
+			article.setCategorie(categorieDAO.read(article.getCategorie().getId()));
+			article.setUtilisateur(utilisateurDAO.read(article.getUtilisateur().getNoUtilisateur()));
+		}
+		return listeArticles;
 	}
 
 	@Override
 	public List<ArticleVendu> rechercherArticlesParNom(String nom) {
+		List<ArticleVendu> listeArticles = articleVenduDAO.rechercherArticlesParNom(nom);
+		for (ArticleVendu article : listeArticles) {
+			article.setCategorie(categorieDAO.read(article.getCategorie().getId()));
+			article.setUtilisateur(utilisateurDAO.read(article.getUtilisateur().getNoUtilisateur()));
+		}
 
-		return articleVenduDAO.rechercherArticlesParNom(nom);
+		return listeArticles;
 	}
 
 	@Override

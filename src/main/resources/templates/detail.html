@@ -1,374 +1,278 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" class="h-full">
-  <head>
+<head>
     <meta charset="UTF-8" />
     <title>Détail de l'article - ENI-Enchères</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link href="/css/style.css" rel="stylesheet" />
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
-    />
-  </head>
-  <body class="h-full bg-slate-50">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+</head>
+<body class="h-full bg-slate-50">
     <div th:replace="~{fragments/fragment-entete :: entete}"></div>
 
     <main class="container mx-auto px-4 py-4 md:py-16">
-      <div class="bg-white rounded-3xl shadow-sm overflow-hidden">
-        <!-- En-tête avec état de l'enchère -->
-        <!-- Remplacer la div d'état d'enchère existante par : -->
-        <div class="bg-gradient-to-r from-blue-600 to-blue-700 p-6">
-          <div class="container mx-auto">
-            <!-- État de l'enchère -->
-            <div th:with="now=${T(java.time.LocalDate).now()}">
-              <!-- Enchère non débutée -->
-              <div
-                th:if="${article.dateDebutEncheres.isAfter(now)}"
-                class="inline-flex items-center px-4 py-2 rounded-full text-sm font-medium bg-gray-500 text-white"
-              >
-                <i class="fas fa-clock mr-2"></i>
-                <span
-                  >Début le
-                  <span
-                    th:text="${#temporals.format(article.dateDebutEncheres, 'dd/MM/yyyy')}"
-                  ></span
-                ></span>
-              </div>
+        <div class="bg-white rounded-3xl shadow-sm overflow-hidden">
+            <!-- En-tête avec état de l'enchère -->
+            <div class="bg-gradient-to-r from-blue-600 to-blue-700 p-6">
+                <div class="container mx-auto">
+                    <!-- État de l'enchère -->
+                    <div th:with="now=${T(java.time.LocalDate).now()}">
+                        <!-- Enchère non débutée -->
+                        <div th:if="${article.dateDebutEncheres.isAfter(now)}"
+                             class="inline-flex items-center px-4 py-2 rounded-full text-sm font-medium bg-gray-500 text-white">
+                            <i class="fas fa-clock mr-2"></i>
+                            <span>Début le <span th:text="${#temporals.format(article.dateDebutEncheres, 'dd/MM/yyyy')}"></span></span>
+                        </div>
 
-              <!-- Enchère en cours -->
-              <div
-                th:if="${not article.dateDebutEncheres.isAfter(now) and not article.dateFinEncheres.isBefore(now)}"
-                class="inline-flex items-center px-4 py-2 rounded-full text-sm font-medium bg-green-500 text-white"
-              >
-                <span
-                  class="animate-pulse mr-2 h-2 w-2 rounded-full bg-white"
-                ></span>
-                <span>Enchère en cours</span>
-                <span class="ml-2 font-normal">
-                  (Termine dans
-                  <span
-                    th:with="daysLeft=${article.dateFinEncheres.toEpochDay() - now.toEpochDay()}"
-                    th:text="${daysLeft + ' jour' + (daysLeft > 1 ? 's' : '')}"
-                  >
-                  </span
-                  >)
-                </span>
-              </div>
+                        <!-- Enchère en cours -->
+                        <div th:if="${not article.dateDebutEncheres.isAfter(now) and not article.dateFinEncheres.isBefore(now)}"
+                             class="inline-flex items-center px-4 py-2 rounded-full text-sm font-medium bg-green-500 text-white">
+                            <span class="animate-pulse mr-2 h-2 w-2 rounded-full bg-white"></span>
+                            <span>Enchère en cours</span>
+                            <span class="ml-2 font-normal">
+                                (Termine dans
+                                <span th:with="daysLeft=${article.dateFinEncheres.toEpochDay() - now.toEpochDay()}"
+                                      th:text="${daysLeft + ' jour' + (daysLeft > 1 ? 's' : '')}"></span>)
+                            </span>
+                        </div>
 
-              <!-- Enchère terminée -->
-              <div
-                th:if="${article.dateFinEncheres.isBefore(now)}"
-                class="inline-flex items-center px-4 py-2 rounded-full text-sm font-medium bg-red-500 text-white"
-              >
-                <i class="fas fa-gavel mr-2"></i>
-                <span>Enchère terminée</span>
-                <span th:if="${article.prixVente > 0}" class="ml-2 font-normal">
-                  (Vendu <span th:text="${article.prixVente + ' €'}"></span>)
-                </span>
-                <span
-                  th:unless="${article.prixVente > 0}"
-                  class="ml-2 font-normal"
-                >
-                  (Non vendu)
-                </span>
-              </div>
+                        <!-- Enchère terminée -->
+                        <div th:if="${article.dateFinEncheres.isBefore(now)}"
+                             class="inline-flex items-center px-4 py-2 rounded-full text-sm font-medium bg-red-500 text-white">
+                            <i class="fas fa-gavel mr-2"></i>
+                            <span>Enchère terminée</span>
+                            <span th:if="${article.prixVente > 0}" class="ml-2 font-normal">
+                                (Vendu <span th:text="${article.prixVente + ' €'}"></span>)
+                            </span>
+                            <span th:unless="${article.prixVente > 0}" class="ml-2 font-normal">
+                                (Non vendu)
+                            </span>
+                        </div>
 
-              <!-- Informations complémentaires -->
-              <div class="mt-4 grid grid-cols-2 md:grid-cols-3 gap-4">
-                <div class="bg-white/10 rounded-lg p-3 text-white">
-                  <span class="block text-xs opacity-75">Début</span>
-                  <span
-                    class="font-medium"
-                    th:text="${#temporals.format(article.dateDebutEncheres, 'dd/MM/yyyy')}"
-                  ></span>
+                        <!-- Informations complémentaires -->
+                        <div class="mt-4 grid grid-cols-2 md:grid-cols-3 gap-4">
+                            <div class="bg-white/10 rounded-lg p-3 text-white">
+                                <span class="block text-xs opacity-75">Début</span>
+                                <span class="font-medium" th:text="${#temporals.format(article.dateDebutEncheres, 'dd/MM/yyyy')}"></span>
+                            </div>
+                            <div class="bg-white/10 rounded-lg p-3 text-white">
+                                <span class="block text-xs opacity-75">Fin</span>
+                                <span class="font-medium" th:text="${#temporals.format(article.dateFinEncheres, 'dd/MM/yyyy')}"></span>
+                            </div>
+                            <div class="bg-white/10 rounded-lg p-3 text-white">
+                                <span class="block text-xs opacity-75">Nombre d'enchères</span>
+                                <span class="font-medium" th:text="${#lists.size(article.encheres)}"></span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="bg-white/10 rounded-lg p-3 text-white">
-                  <span class="block text-xs opacity-75">Fin</span>
-                  <span
-                    class="font-medium"
-                    th:text="${#temporals.format(article.dateFinEncheres, 'dd/MM/yyyy')}"
-                  ></span>
-                </div>
-                <div class="bg-white/10 rounded-lg p-3 text-white">
-                  <span class="block text-xs opacity-75"
-                    >Nombre d'enchères</span
-                  >
-                  <span
-                    class="font-medium"
-                    th:text="${#lists.size(article.encheres)}"
-                  ></span>
-                </div>
-              </div>
             </div>
-          </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 p-8">
+                <!-- Colonne gauche -->
+                <div class="space-y-8">
+                    <!-- Image -->
+                    <div class="relative group">
+                        <div class="aspect-square rounded-2xl bg-gradient-to-br from-gray-50 to-gray-100 p-4 transition-all duration-300 group-hover:shadow-xl overflow-hidden">
+                            <img th:if="${article.image}" th:src="${article.image}"
+                                 class="w-full h-full object-contain transform transition-transform duration-500 group-hover:scale-110"
+                                 alt="Image de l'article" />
+                            <div th:unless="${article.image}" class="flex items-center justify-center h-full">
+                                <i class="fas fa-image fa-4x text-gray-300"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Description -->
+                    <div class="bg-gray-50 rounded-2xl p-6">
+                        <h3 class="text-lg font-semibold mb-4">Description</h3>
+                        <p class="text-gray-600 leading-relaxed" th:text="${article.description}"></p>
+                    </div>
+
+                    <!-- Graphique des enchères (visible uniquement pour le créateur) -->
+                    <div th:if="${utilisateurConnecte != null and utilisateurConnecte.noUtilisateur == article.utilisateur.noUtilisateur}"
+                         class="bg-white rounded-2xl p-6 shadow-sm">
+                        <h3 class="text-lg font-semibold mb-4">Historique des enchères</h3>
+                        <div style="height: 300px;">
+                            <canvas id="enchereChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Colonne droite -->
+                <div class="space-y-8">
+                    <!-- En-tête article -->
+                    <div>
+                        <h1 class="text-4xl font-bold text-gray-900 mb-3" th:text="${article.nomArticle}"></h1>
+                        <div class="flex items-center space-x-4 text-sm">
+                            <span class="inline-flex items-center px-3 py-1 rounded-full bg-blue-50 text-blue-700">
+                                <i class="fas fa-tag mr-2"></i>
+                                <span th:text="${article.categorie.libelle}"></span>
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Prix et enchères -->
+                    <div class="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-2xl p-8">
+                        <div class="mb-6">
+                            <h2 class="text-xl font-semibold mb-2">Enchère actuelle</h2>
+                            <div class="flex items-baseline">
+                                <span class="text-5xl font-bold text-blue-600" th:text="${article.prixVente > 0 ? article.prixVente : article.prixInitial}"></span>
+                                <span class="text-2xl font-medium text-blue-600 ml-2">€</span>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-4 mb-6">
+                            <div class="bg-white rounded-xl p-4">
+                                <span class="block text-sm text-gray-500">Prix initial</span>
+                                <span class="text-lg font-semibold" th:text="${article.prixInitial} + ' €'"></span>
+                            </div>
+                            <div class="bg-white rounded-xl p-4">
+                                <span class="block text-sm text-gray-500">Fin de l'enchère</span>
+                                <span class="text-lg font-semibold" th:text="${#temporals.format(article.dateFinEncheres, 'dd/MM/yyyy')}"></span>
+                            </div>
+                        </div>
+
+                        <!-- Bouton Enchérir -->
+                        <div th:if="${article.etatVente eq 'OPEN'} and ${utilisateurConnecte != null and utilisateurConnecte.noUtilisateur != article.utilisateur.noUtilisateur}">
+                            <a th:href="@{/encherir(id=${article.noArticle})}"
+                               class="group w-full inline-flex items-center justify-center px-8 py-4 text-lg font-medium text-white bg-gradient-to-r from-blue-600 to-blue-700 rounded-xl hover:from-blue-700 hover:to-blue-800 transform transition-all duration-200 hover:shadow-lg">
+                                <i class="fas fa-gavel mr-3"></i>
+                                Enchérir maintenant
+                                <i class="fas fa-arrow-right ml-3 transform transition-transform group-hover:translate-x-1"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Informations vendeur -->
+                    <div class="rounded-2xl border border-gray-100 p-6">
+                        <h3 class="text-lg font-semibold mb-6">Informations vendeur</h3>
+                        <div class="space-y-4">
+                            <div class="flex items-center p-3 bg-gray-50 rounded-xl">
+                                <div class="w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-sm">
+                                    <i class="fas fa-user text-blue-600"></i>
+                                </div>
+                                <div class="ml-4">
+                                    <span class="block font-medium" th:text="${article.utilisateur.pseudo}"></span>
+                                    <span class="text-sm text-gray-500">Vendeur</span>
+                                </div>
+                            </div>
+                            <div class="flex items-center p-3 bg-gray-50 rounded-xl">
+                                <div class="w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-sm">
+                                    <i class="fas fa-map-marker-alt text-blue-600"></i>
+                                </div>
+                                <div class="ml-4">
+                                    <span class="block text-sm text-gray-600" th:text="${article.retrait.rue}"></span>
+                                    <span class="block text-sm text-gray-600" th:text="${article.retrait.codePostal + ' ' + article.retrait.ville}"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="space-y-4" th:if="${utilisateurConnecte != null and utilisateurConnecte.noUtilisateur == article.utilisateur.noUtilisateur and article.dateDebutEncheres.isAfter(T(java.time.LocalDate).now())}">
+                        <a th:href="@{/article/edit(id=${article.noArticle})}"
+                           class="w-full inline-flex items-center justify-center px-6 py-4 text-lg font-medium text-emerald-600 bg-emerald-50 rounded-xl hover:bg-emerald-100 transition-colors">
+                            <i class="fas fa-edit mr-2"></i>
+                            Modifier l'article
+                        </a>
+                        <button type="button" onclick="confirmerSuppression()"
+                                class="w-full inline-flex items-center justify-center px-6 py-4 text-lg font-medium text-red-600 bg-red-50 rounded-xl hover:bg-red-100 transition-colors">
+                            <i class="fas fa-trash-alt mr-2"></i>
+                            Supprimer l'article
+                        </button>
+                    </div>
+                </div>
+            </div>
         </div>
-
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 p-8">
-          <!-- Colonne gauche -->
-          <div class="space-y-8">
-            <!-- Image -->
-            <div class="relative group">
-              <div
-                class="aspect-square rounded-2xl bg-gradient-to-br from-gray-50 to-gray-100 p-4 transition-all duration-300 group-hover:shadow-xl overflow-hidden"
-              >
-                <img
-                  th:if="${article.image}"
-                  th:src="${article.image}"
-                  class="w-full h-full object-contain transform transition-transform duration-500 group-hover:scale-110"
-                  alt="Image de l'article"
-                />
-                <div
-                  th:unless="${article.image}"
-                  class="flex items-center justify-center h-full"
-                >
-                  <i class="fas fa-image fa-4x text-gray-300"></i>
-                </div>
-              </div>
-            </div>
-
-            <!-- Description -->
-            <div class="bg-gray-50 rounded-2xl p-6">
-              <h3 class="text-lg font-semibold mb-4">Description</h3>
-              <p
-                class="text-gray-600 leading-relaxed"
-                th:text="${article.description}"
-              ></p>
-            </div>
-
-            <!-- Graphique des enchères (visible uniquement pour le créateur) -->
-            <div th:if="${utilisateurConnecte != null and utilisateurConnecte.noUtilisateur == article.utilisateur.noUtilisateur}" 
-                 class="bg-white rounded-2xl p-6 shadow-sm">
-              <h3 class="text-lg font-semibold mb-4">Historique des enchères</h3>
-              <div style="height: 300px;">
-                <canvas id="enchereChart"></canvas>
-              </div>
-            </div>
-          </div>
-
-          <!-- Colonne droite -->
-          <div class="space-y-8">
-            <!-- En-tête article -->
-            <div>
-              <h1
-                class="text-4xl font-bold text-gray-900 mb-3"
-                th:text="${article.nomArticle}"
-              ></h1>
-              <div class="flex items-center space-x-4 text-sm">
-                <span
-                  class="inline-flex items-center px-3 py-1 rounded-full bg-blue-50 text-blue-700"
-                >
-                  <i class="fas fa-tag mr-2"></i>
-                  <span th:text="${article.categorie.libelle}"></span>
-                </span>
-              </div>
-            </div>
-
-            <!-- Prix et enchères -->
-            <div
-              class="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-2xl p-8"
-            >
-              <div class="mb-6">
-                <h2 class="text-xl font-semibold mb-2">Enchère actuelle</h2>
-                <div class="flex items-baseline">
-                  <span
-                    class="text-5xl font-bold text-blue-600"
-                    th:text="${article.prixVente > 0 ? article.prixVente : article.prixInitial}"
-                  ></span>
-                  <span class="text-2xl font-medium text-blue-600 ml-2">€</span>
-                </div>
-              </div>
-
-              <div class="grid grid-cols-2 gap-4 mb-6">
-                <div class="bg-white rounded-xl p-4">
-                  <span class="block text-sm text-gray-500">Prix initial</span>
-                  <span
-                    class="text-lg font-semibold"
-                    th:text="${article.prixInitial} + ' €'"
-                  ></span>
-                </div>
-                <div class="bg-white rounded-xl p-4">
-                  <span class="block text-sm text-gray-500"
-                    >Fin de l'enchère</span
-                  >
-                  <span
-                    class="text-lg font-semibold"
-                    th:text="${#temporals.format(article.dateFinEncheres, 'dd/MM/yyyy')}"
-                  ></span>
-                </div>
-              </div>
-
-              <!-- Bouton Enchérir -->
-              <div
-                th:if="${article.etatVente eq 'OPEN'} and ${utilisateurConnecte.noUtilisateur != article.utilisateur.noUtilisateur}"
-              >
-                <a
-                  th:href="@{/encherir(id=${article.noArticle})}"
-                  class="group w-full inline-flex items-center justify-center px-8 py-4 text-lg font-medium text-white bg-gradient-to-r from-blue-600 to-blue-700 rounded-xl hover:from-blue-700 hover:to-blue-800 transform transition-all duration-200 hover:shadow-lg"
-                >
-                  <i class="fas fa-gavel mr-3"></i>
-                  Enchérir maintenant
-                  <i
-                    class="fas fa-arrow-right ml-3 transform transition-transform group-hover:translate-x-1"
-                  ></i>
-                </a>
-              </div>
-            </div>
-
-            <!-- Informations vendeur -->
-            <div class="rounded-2xl border border-gray-100 p-6">
-              <h3 class="text-lg font-semibold mb-6">Informations vendeur</h3>
-              <div class="space-y-4">
-                <div class="flex items-center p-3 bg-gray-50 rounded-xl">
-                  <div
-                    class="w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-sm"
-                  >
-                    <i class="fas fa-user text-blue-600"></i>
-                  </div>
-                  <div class="ml-4">
-                    <span
-                      class="block font-medium"
-                      th:text="${article.utilisateur.pseudo}"
-                    ></span>
-                    <span class="text-sm text-gray-500">Vendeur</span>
-                  </div>
-                </div>
-                <div class="flex items-center p-3 bg-gray-50 rounded-xl">
-                  <div
-                    class="w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-sm"
-                  >
-                    <i class="fas fa-map-marker-alt text-blue-600"></i>
-                  </div>
-                  <div class="ml-4">
-                    <span
-                      class="block text-sm text-gray-600"
-                      th:text="${article.retrait.rue}"
-                    ></span>
-                    <span
-                      class="block text-sm text-gray-600"
-                      th:text="${article.retrait.codePostal + ' ' + article.retrait.ville}"
-                    ></span>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div
-              class="space-y-4"
-              th:if="${utilisateurConnecte.noUtilisateur == article.utilisateur.noUtilisateur} and ${article.dateDebutEncheres.isAfter(T(java.time.LocalDate).now())}"
-            >
-              <a
-                th:href="@{/article/edit(id=${article.noArticle})}"
-                class="w-full inline-flex items-center justify-center px-6 py-4 text-lg font-medium text-emerald-600 bg-emerald-50 rounded-xl hover:bg-emerald-100 transition-colors"
-              >
-                <i class="fas fa-edit mr-2"></i>
-                Modifier l'article
-              </a>
-              <button
-                type="button"
-                onclick="confirmerSuppression()"
-                class="w-full inline-flex items-center justify-center px-6 py-4 text-lg font-medium text-red-600 bg-red-50 rounded-xl hover:bg-red-100 transition-colors"
-              >
-                <i class="fas fa-trash-alt mr-2"></i>
-                Supprimer l'article
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
     </main>
 
     <div th:replace="~{fragments/fragment-piedpage :: footer}"></div>
-    <form
-      th:action="@{/article/delete}"
-      method="post"
-      id="deleteForm"
-      class="hidden"
-    >
-      <input type="hidden" name="id" th:value="${article.noArticle}" />
+    <form th:action="@{/article/delete}" method="post" id="deleteForm" class="hidden">
+        <input type="hidden" name="id" th:value="${article.noArticle}" />
     </form>
 
     <script th:inline="javascript">
-      function confirmerSuppression() {
-        if (confirm("Êtes-vous sûr de vouloir supprimer cet article ?")) {
-          document.getElementById("deleteForm").submit();
-        }
-      }
-
-      // Script pour le graphique des enchères
-      document.addEventListener('DOMContentLoaded', function() {
-        const isCreator = /*[[${utilisateurConnecte != null and utilisateurConnecte.noUtilisateur == article.utilisateur.noUtilisateur}]]*/ false;
-        
-        if (isCreator) {
-          const encheres = /*[[${article.encheres}]]*/ [];
-          const ctx = document.getElementById('enchereChart').getContext('2d');
-          
-          // Préparer les données pour le graphique
-          const montants = [];
-          const dates = [];
-          const utilisateurs = [];
-
-          // Trier les enchères par date
-          encheres.sort((a, b) => new Date(a.dateEnchere) - new Date(b.dateEnchere));
-
-          // Extraire les données
-          encheres.forEach(enchere => {
-            montants.push(enchere.montantEnchere);
-            const date = new Date(enchere.dateEnchere);
-            dates.push(date.toLocaleDateString('fr-FR', { 
-              day: '2-digit',
-              month: '2-digit',
-            }));
-            
-            // Utiliser directement le nom de l'utilisateur car il est déjà chargé
-            const nomUtilisateur = enchere.utilisateur ? `${enchere.utilisateur.nom} ${enchere.utilisateur.prenom}` : 'Utilisateur inconnu';
-            utilisateurs.push(nomUtilisateur);
-          });
-
-          // Créer le graphique
-          new Chart(ctx, {
-            type: 'line',
-            data: {
-              labels: dates,
-              datasets: [{
-                label: 'Montant des enchères',
-                data: montants,
-                borderColor: 'rgb(59, 130, 246)',
-                backgroundColor: 'rgba(59, 130, 246, 0.1)',
-                fill: true,
-                tension: 0.4
-              }]
-            },
-            options: {
-              responsive: true,
-              maintainAspectRatio: true,
-              plugins: {
-                tooltip: {
-                  callbacks: {
-                    label: function(context) {
-                      return `${utilisateurs[context.dataIndex]}: ${context.raw}€`;
-                    }
-                  }
-                }
-              },
-              scales: {
-                y: {
-                  beginAtZero: false,
-                  title: {
-                    display: true,
-                    text: 'Montant (€)'
-                  }
-                },
-                x: {
-                  title: {
-                    display: true,
-                    text: 'Date et heure'
-                  }
-                }
-              }
+        function confirmerSuppression() {
+            if (confirm("Êtes-vous sûr de vouloir supprimer cet article ?")) {
+                document.getElementById("deleteForm").submit();
             }
-          });
         }
-      });
+
+        // Script pour le graphique des enchères
+        document.addEventListener('DOMContentLoaded', function() {
+            const isCreator = /*[[${utilisateurConnecte != null and utilisateurConnecte.noUtilisateur == article.utilisateur.noUtilisateur}]]*/ false;
+
+            if (isCreator) {
+                const encheres = /*[[${article.encheres}]]*/ [];
+                const ctx = document.getElementById('enchereChart').getContext('2d');
+
+                // Préparer les données pour le graphique
+                const montants = [];
+                const dates = [];
+                const utilisateurs = [];
+
+                // Trier les enchères par date
+                encheres.sort((a, b) => new Date(a.dateEnchere) - new Date(b.dateEnchere));
+
+                // Extraire les données
+                encheres.forEach(enchere => {
+                    montants.push(enchere.montantEnchere);
+                    const date = new Date(enchere.dateEnchere);
+                    dates.push(date.toLocaleDateString('fr-FR', {
+                        day: '2-digit',
+                        month: '2-digit',
+                    }));
+
+                    // Utiliser directement le nom de l'utilisateur car il est déjà chargé
+                    const nomUtilisateur = enchere.utilisateur ? `${enchere.utilisateur.nom} ${enchere.utilisateur.prenom}` : 'Utilisateur inconnu';
+                    utilisateurs.push(nomUtilisateur);
+                });
+
+                // Créer le graphique
+                new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: dates,
+                        datasets: [{
+                            label: 'Montant des enchères',
+                            data: montants,
+                            borderColor: 'rgb(59, 130, 246)',
+                            backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                            fill: true,
+                            tension: 0.4
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: true,
+                        plugins: {
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        return `${utilisateurs[context.dataIndex]}: ${context.raw}€`;
+                                    }
+                                }
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: false,
+                                title: {
+                                    display: true,
+                                    text: 'Montant (€)'
+                                }
+                            },
+                            x: {
+                                title: {
+                                    display: true,
+                                    text: 'Date et heure'
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+        });
     </script>
-  </body>
+</body>
 </html>
