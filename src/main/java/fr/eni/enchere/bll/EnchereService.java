@@ -43,5 +43,7 @@ public interface EnchereService {
 
 	List<ArticleVendu> consulterGainsAvecRecherche(Utilisateur utilisateur, String nomRecherche);
 
+	List<ArticleVendu> consulterGainsParCategorie(Utilisateur utilisateur, long idCategorie);
+
 
 }
