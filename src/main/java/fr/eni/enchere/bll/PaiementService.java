@@ -31,7 +31,7 @@ public class PaiementService {
 
 	@PostConstruct
 	public void init() {
-		 //Stripe.apiKey = this.secretKey;
+		Stripe.apiKey = this.secretKey;
 	}
 
     public String createCheckoutSession(int amount) {

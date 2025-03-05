@@ -1,6 +1,47 @@
 <header th:fragment="entete"
 	class="bg-white shadow-lg sticky top-0 z-50">
-	<nav class="container mx-auto px-4">
+	<script>
+		let currentLanguage = localStorage.getItem('language') || 'fr';
+
+		// Function to toggle between languages
+		function toggleLanguage() {
+			currentLanguage = currentLanguage === 'fr' ? 'en' : 'fr';
+			localStorage.setItem('language', currentLanguage);
+			
+			// Update the button text
+			const langButton = document.getElementById('currentLang');
+			if (langButton) {
+				langButton.textContent = currentLanguage.toUpperCase();
+			}
+			
+			// Rediriger vers la même page avec le paramètre de langue
+			let url = new URL(window.location.href);
+			// Supprimer l'ancien paramètre lang s'il existe
+			url.searchParams.delete('lang');
+			// Ajouter le nouveau paramètre lang
+			url.searchParams.append('lang', currentLanguage);
+			window.location.href = url.toString();
+		}
+
+		// Initialize language on page load
+		document.addEventListener('DOMContentLoaded', function() {
+			const langButton = document.getElementById('currentLang');
+			// Récupérer le paramètre lang de l'URL
+			const urlParams = new URLSearchParams(window.location.search);
+			const urlLang = urlParams.get('lang');
+			
+			// Si un paramètre lang est présent dans l'URL, mettre à jour le localStorage
+			if (urlLang) {
+				currentLanguage = urlLang;
+				localStorage.setItem('language', urlLang);
+			}
+			
+			if (langButton) {
+				langButton.textContent = currentLanguage.toUpperCase();
+			}
+		});
+	</script>
+<nav class="container mx-auto px-4">
 		<div class="flex items-center justify-between h-16">
 			<!-- Logo et titre - inchangé -->
 			<div class="flex items-center space-x-4">
@@ -9,35 +50,46 @@
 						viewBox="0 0 20 20">
             <path
 							d="M2 6a2 2 0 012-2h12a2 2 0 012 2v8a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" />
-          </svg> <span class="text-xl font-bold text-gray-900">ENI-Enchères</span>
+          </svg> <span class="text-xl font-bold text-gray-900" th:text="#{header.title}">ENI-Enchères</span>
 				</a>
 			</div>
 
 			<div class="flex items-center space-x-6">
 
-				<a sec:authorize="isAuthenticated()" th:href="@{/creer}"
-					class="nav-link"> <i class="fas fa-plus mr-2"></i>Créer
-				</a> <a sec:authorize="isAuthenticated()" th:href="@{/mes-articles}"
-					class="px-4 py-2 text-gray-700 bg-gray-200 rounded-lg hover:bg-gray-300 transition duration-300 flex items-center shadow-sm">
-					<i class="fas fa-gavel mr-2"></i> Mes Ventes
-				</a> <a sec:authorize="isAuthenticated()" th:href="@{/mes-encheres}"
-					class="px-4 py-2 text-gray-700 bg-gray-200 rounded-lg hover:bg-gray-300 transition duration-300 flex items-center shadow-sm">
-					<i class="fas fa-gavel mr-2"></i> Mes Encheres
-				</a> <a sec:authorize="isAuthenticated()" th:href="@{/mes-gains}"
-					class="px-4 py-2 text-gray-700 bg-gray-200 rounded-lg hover:bg-gray-300 transition duration-300 flex items-center shadow-sm">
-					<i class="fas fa-trophy mr-2"></i> Mes Gains
-				</a>
+				<!-- Bouton de changement de langue -->
+				<button onclick="toggleLanguage()" 
+					class="px-3 py-1 text-gray-700 bg-gray-200 rounded-lg hover:bg-gray-300 transition duration-300 flex items-center shadow-sm">
+					<i class="fas fa-globe mr-2"></i>
+					<span id="currentLang">FR</span>
+				</button>
 
+				<a sec:authorize="isAuthenticated()" th:href="@{/creer}"
+					class="nav-link"> 
+					<i class="fas fa-plus mr-2"></i><span th:text="#{header.create}">Créer</span>
+				</a> 
+				<a sec:authorize="isAuthenticated()" th:href="@{/mes-articles}"
+					class="px-4 py-2 text-gray-700 bg-gray-200 rounded-lg hover:bg-gray-300 transition duration-300 flex items-center shadow-sm">
+					<i class="fas fa-gavel mr-2"></i><span th:text="#{header.my.sales}">Mes Ventes</span>
+				</a> 
+				<a sec:authorize="isAuthenticated()" th:href="@{/mes-encheres}"
+					class="px-4 py-2 text-gray-700 bg-gray-200 rounded-lg hover:bg-gray-300 transition duration-300 flex items-center shadow-sm">
+					<i class="fas fa-gavel mr-2"></i><span th:text="#{header.my.bids}">Mes Encheres</span>
+				</a> 
+				<a sec:authorize="isAuthenticated()" th:href="@{/mes-gains}"
+					class="px-4 py-2 text-gray-700 bg-gray-200 rounded-lg hover:bg-gray-300 transition duration-300 flex items-center shadow-sm">
+					<i class="fas fa-trophy mr-2"></i><span th:text="#{header.my.wins}">Mes Gains</span>
+				</a>
 
 				<!-- Menu non connecté -->
 				<div sec:authorize="!isAuthenticated()"
 					class="flex items-center space-x-4">
 					<a th:href="@{/login}"
 						class="px-4 py-2 text-gray-700 bg-gray-200 rounded-lg hover:bg-gray-300 transition duration-300 flex items-center shadow-sm">
-						<i class="fas fa-sign-in-alt mr-2"></i> Connexion
-					</a> <a th:href="@{/register}"
+						<i class="fas fa-sign-in-alt mr-2"></i><span th:text="#{header.login}">Connexion</span>
+					</a> 
+					<a th:href="@{/register}"
 						class="px-4 py-2 text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition duration-300 flex items-center shadow-sm">
-						<i class="fas fa-user-plus mr-2"></i> Inscription
+						<i class="fas fa-user-plus mr-2"></i><span th:text="#{header.register}">Inscription</span>
 					</a>
 				</div>
 
@@ -72,16 +124,17 @@
 							class="w-48 bg-white rounded-md shadow-lg py-1 ring-1 ring-black ring-opacity-5">
 							<a th:href="@{/profile}"
 								class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-								<i class="fas fa-user mr-2"></i>Mon Profil
-							</a> <a sec:authorize="hasRole('ADMIN')" th:href="@{/admin}"
+								<i class="fas fa-user mr-2"></i><span th:text="#{header.profile}">Mon Profil</span>
+							</a> 
+							<a sec:authorize="hasRole('ADMIN')" th:href="@{/admin}"
 								class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-								<i class="fas fa-cog mr-2"></i>Administration
+								<i class="fas fa-cog mr-2"></i><span th:text="#{header.admin}">Administration</span>
 							</a>
 							<div class="border-t border-gray-100"></div>
 							<form th:action="@{/logout}" method="post" class="block">
 								<button type="submit"
 									class="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100">
-									<i class="fas fa-sign-out-alt mr-2"></i>Déconnexion
+									<i class="fas fa-sign-out-alt mr-2"></i><span th:text="#{header.logout}">Déconnexion</span>
 								</button>
 							</form>
 						</div>
