@@ -7,31 +7,30 @@ import java.util.Set;
 import fr.eni.enchere.bo.ArticleVendu;
 import fr.eni.enchere.bo.Utilisateur;
 
-
 public interface ArticleVenduDAO {
-	
+
 	List<ArticleVendu> findAll();
-	
+
 	void create(ArticleVendu article);
-	
+
 	List<ArticleVendu> findAllByCategorie(Integer id);
-	
-	List<ArticleVendu> findAllByCategorieUtilisateur(Integer id,Utilisateur utilisateur);
-	
+
+	List<ArticleVendu> findAllByCategorieUtilisateur(Integer id, Utilisateur utilisateur);
+
 	List<ArticleVendu> rechercherArticlesParNom(String search);
-	
+
 	ArticleVendu rechercherArticleParId(long id);
-	
+
 	void updatePrixVente(ArticleVendu article, Float nouveauPrix);
-	
+
 	void updateArticle(ArticleVendu article);
-	
+
 	List<ArticleVendu> findAllByUser(long id);
-	
+
 	void deleteArticle(ArticleVendu article);
-	
+
 	List<ArticleVendu> findExpiredAuctions(LocalDate today);
-	
+
 	void updateEtatVente(long idArticle);
 
 	List<ArticleVendu> rechercherArticlesParNomEtUtilisateur(String search, Utilisateur utilisateur);
@@ -46,8 +45,7 @@ public interface ArticleVenduDAO {
 
 	List<ArticleVendu> findArticlesGagnesByUtilisateurAndNom(long idUtilisateur, LocalDate today, String nomRecherche);
 
-
-	
-
+	List<ArticleVendu> findArticlesGagnesByUtilisateurAndCategorie(long idUtilisateur, LocalDate today,
+			long idCategorie);
 
 }
