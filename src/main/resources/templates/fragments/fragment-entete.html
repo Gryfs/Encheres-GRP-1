@@ -42,63 +42,67 @@
 		});
 	</script>
 <nav class="container mx-auto px-4">
-		<div class="flex items-center justify-between h-16">
-			<!-- Logo et titre - inchangé -->
-			<div class="flex items-center space-x-4">
-				<a href="/" class="flex items-center space-x-2"> <svg
-						class="w-8 h-8 text-blue-600" fill="currentColor"
-						viewBox="0 0 20 20">
-            <path
-							d="M2 6a2 2 0 012-2h12a2 2 0 012 2v8a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" />
-          </svg> <span class="text-xl font-bold text-gray-900" th:text="#{header.title}">ENI-Enchères</span>
+		<div class="flex flex-col md:flex-row md:items-center md:justify-between py-4 md:h-16">
+			<!-- Logo et titre -->
+			<div class="flex items-center justify-between md:justify-start space-x-4">
+				<a href="/" class="flex items-center space-x-2">
+					<svg class="w-8 h-8 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
+						<path d="M2 6a2 2 0 012-2h12a2 2 0 012 2v8a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" />
+					</svg>
+					<span class="text-xl font-bold text-gray-900" th:text="#{header.title}">ENI-Enchères</span>
 				</a>
+				<!-- Menu burger pour mobile -->
+				<button id="menuButton" class="md:hidden p-2 rounded-lg hover:bg-gray-100">
+					<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+					</svg>
+				</button>
 			</div>
 
-			<div class="flex items-center space-x-6">
-
+			<!-- Menu principal - responsive -->
+			<div id="mainMenu" class="hidden md:flex flex-col md:flex-row items-center space-y-4 md:space-y-0 md:space-x-6 mt-4 md:mt-0">
 				<!-- Bouton de changement de langue -->
 				<button onclick="toggleLanguage()" 
-					class="px-3 py-1 text-gray-700 bg-gray-200 rounded-lg hover:bg-gray-300 transition duration-300 flex items-center shadow-sm">
+					class="w-full md:w-auto px-3 py-1 text-gray-700 bg-gray-200 rounded-lg hover:bg-gray-300 transition duration-300 flex items-center justify-center shadow-sm">
 					<i class="fas fa-globe mr-2"></i>
 					<span id="currentLang">FR</span>
 				</button>
 
 				<a sec:authorize="isAuthenticated()" th:href="@{/creer}"
-					class="nav-link"> 
+					class="w-full md:w-auto nav-link flex items-center justify-center"> 
 					<i class="fas fa-plus mr-2"></i><span th:text="#{header.create}">Créer</span>
 				</a> 
 				<a sec:authorize="isAuthenticated()" th:href="@{/mes-articles}"
-					class="px-4 py-2 text-gray-700 bg-gray-200 rounded-lg hover:bg-gray-300 transition duration-300 flex items-center shadow-sm">
+					class="w-full md:w-auto px-4 py-2 text-gray-700 bg-gray-200 rounded-lg hover:bg-gray-300 transition duration-300 flex items-center justify-center shadow-sm">
 					<i class="fas fa-gavel mr-2"></i><span th:text="#{header.my.sales}">Mes Ventes</span>
 				</a> 
 				<a sec:authorize="isAuthenticated()" th:href="@{/mes-encheres}"
-					class="px-4 py-2 text-gray-700 bg-gray-200 rounded-lg hover:bg-gray-300 transition duration-300 flex items-center shadow-sm">
+					class="w-full md:w-auto px-4 py-2 text-gray-700 bg-gray-200 rounded-lg hover:bg-gray-300 transition duration-300 flex items-center justify-center shadow-sm">
 					<i class="fas fa-gavel mr-2"></i><span th:text="#{header.my.bids}">Mes Encheres</span>
 				</a> 
 				<a sec:authorize="isAuthenticated()" th:href="@{/mes-gains}"
-					class="px-4 py-2 text-gray-700 bg-gray-200 rounded-lg hover:bg-gray-300 transition duration-300 flex items-center shadow-sm">
+					class="w-full md:w-auto px-4 py-2 text-gray-700 bg-gray-200 rounded-lg hover:bg-gray-300 transition duration-300 flex items-center justify-center shadow-sm">
 					<i class="fas fa-trophy mr-2"></i><span th:text="#{header.my.wins}">Mes Gains</span>
 				</a>
 
 				<!-- Menu non connecté -->
 				<div sec:authorize="!isAuthenticated()"
-					class="flex items-center space-x-4">
+					class="flex flex-col md:flex-row items-center space-y-4 md:space-y-0 md:space-x-4 w-full md:w-auto">
 					<a th:href="@{/login}"
-						class="px-4 py-2 text-gray-700 bg-gray-200 rounded-lg hover:bg-gray-300 transition duration-300 flex items-center shadow-sm">
+						class="w-full md:w-auto px-4 py-2 text-gray-700 bg-gray-200 rounded-lg hover:bg-gray-300 transition duration-300 flex items-center justify-center shadow-sm">
 						<i class="fas fa-sign-in-alt mr-2"></i><span th:text="#{header.login}">Connexion</span>
 					</a> 
 					<a th:href="@{/register}"
-						class="px-4 py-2 text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition duration-300 flex items-center shadow-sm">
+						class="w-full md:w-auto px-4 py-2 text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition duration-300 flex items-center justify-center shadow-sm">
 						<i class="fas fa-user-plus mr-2"></i><span th:text="#{header.register}">Inscription</span>
 					</a>
 				</div>
 
 				<!-- Menu utilisateur connecté -->
-				<div sec:authorize="isAuthenticated()" class="relative group">
+				<div sec:authorize="isAuthenticated()" class="relative w-full md:w-auto">
 					<button type="button"
-						class="flex items-center space-x-3 rounded-full hover:bg-gray-100 p-2">
-						<div
-							class="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center">
+						class="w-full md:w-auto flex items-center justify-center space-x-3 rounded-full hover:bg-gray-100 p-2">
+						<div class="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center">
 							<span class="text-white text-sm font-medium"
 								th:text="${#strings.substring(#authentication.principal.prenom,0,1)}">
 							</span>
@@ -106,22 +110,16 @@
 						<span class="text-gray-700"
 							th:text="${#authentication.principal.prenom + ' ' + #authentication.principal.nom}">
 						</span>
-						<svg
-							class="w-4 h-4 text-gray-500 group-hover:rotate-180 transition-transform duration-200"
+						<svg class="w-4 h-4 text-gray-500 transition-transform duration-200"
 							fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round"
-								stroke-width="2" d="M19 9l-7 7-7-7" />
-            </svg>
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+						</svg>
 					</button>
 
-					<!-- Menu déroulant avec zone tampon -->
-					<div class="hidden group-hover:block absolute right-0 mt-0 pt-2">
-						<!-- Zone tampon invisible pour faciliter la navigation -->
+					<!-- Menu déroulant -->
+					<div class="hidden group-hover:block absolute right-0 mt-0 pt-2 w-full md:w-48">
 						<div class="h-2 w-full"></div>
-
-						<!-- Contenu du menu -->
-						<div
-							class="w-48 bg-white rounded-md shadow-lg py-1 ring-1 ring-black ring-opacity-5">
+						<div class="bg-white rounded-md shadow-lg py-1 ring-1 ring-black ring-opacity-5">
 							<a th:href="@{/profile}"
 								class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
 								<i class="fas fa-user mr-2"></i><span th:text="#{header.profile}">Mon Profil</span>
@@ -143,4 +141,18 @@
 			</div>
 		</div>
 	</nav>
+	
+	<script>
+		// Menu mobile toggle
+		document.addEventListener('DOMContentLoaded', function() {
+			const menuButton = document.getElementById('menuButton');
+			const mainMenu = document.getElementById('mainMenu');
+			
+			if (menuButton && mainMenu) {
+				menuButton.addEventListener('click', function() {
+					mainMenu.classList.toggle('hidden');
+				});
+			}
+		});
+	</script>
 </header>

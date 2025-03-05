@@ -14,16 +14,16 @@
     <div th:replace="~{fragments/fragment-entete :: entete}"></div>
 
     <main class="flex-grow container mx-auto px-4 py-8">
-      <div class="bg-white rounded-xl shadow-lg p-6">
-        <h1 class="text-3xl font-bold text-gray-800 mb-8">
+      <div class="bg-white rounded-xl shadow-lg p-4 md:p-6">
+        <h1 class="text-2xl md:text-3xl font-bold text-gray-800 mb-6 md:mb-8">
           <i class="fas fa-gavel mr-3"></i>Articles à vendre
         </h1>
 
-        <div class="mb-8 bg-gray-50 p-6 rounded-lg border border-gray-200">
+        <div class="mb-6 md:mb-8 bg-gray-50 p-4 md:p-6 rounded-lg border border-gray-200">
           <form method="GET" action="/encheres" class="space-y-4">
-            <div class="grid grid-cols-10 gap-6 items-end">
+            <div class="grid grid-cols-1 md:grid-cols-10 gap-4 md:gap-6 items-end">
               <!-- Search field -->
-              <div class="col-span-4">
+              <div class="col-span-1 md:col-span-4">
                 <label
                   for="search"
                   class="block text-sm font-medium text-gray-700 mb-2"
@@ -41,7 +41,7 @@
               </div>
 
               <!-- Category filter -->
-              <div class="col-span-4">
+              <div class="col-span-1 md:col-span-4">
                 <label
                   for="id"
                   class="block text-sm font-medium text-gray-700 mb-2"
@@ -64,13 +64,14 @@
               </div>
 
               <!-- Submit button -->
-              <div class="col-span-2">
+              <div class="col-span-1 md:col-span-2">
                 <button
                   type="submit"
                   class="w-full px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors shadow-sm"
                 >
                   <i class="fas fa-search mr-2"></i>
-                  Appliquer les filtres
+                  <span class="hidden md:inline">Appliquer les filtres</span>
+                  <span class="md:hidden">Rechercher</span>
                 </button>
               </div>
             </div>
@@ -78,25 +79,17 @@
         </div>
 
         <div class="overflow-x-auto">
-          <div
-            class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-8"
-          >
-            <!-- Remplacer la section card par : -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+            <!-- Article card -->
             <div
               th:each="item : ${articles}"
               class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1"
             >
               <!-- En-tête de la card avec état de l'enchère -->
-              <div class="bg-gradient-to-r from-blue-600 to-indigo-600 p-4">
-                <div class="flex justify-between items-start mb-2">
-                  <h3
-                    class="text-lg font-semibold text-white"
-                    th:text="${item.nomArticle}"
-                  ></h3>
-                  <div
-                    th:with="now=${T(java.time.LocalDate).now()}"
-                    class="ml-2"
-                  >
+              <div class="bg-gradient-to-r from-blue-600 to-indigo-600 p-3 md:p-4">
+                <div class="flex flex-wrap justify-between items-start gap-2 mb-2">
+                  <h3 class="text-base md:text-lg font-semibold text-white break-words flex-1" th:text="${item.nomArticle}"></h3>
+                  <div th:with="now=${T(java.time.LocalDate).now()}" class="flex-shrink-0">
                     <!-- Enchère non débutée -->
                     <span
                       th:if="${item.dateDebutEncheres.isAfter(now)}"
@@ -126,9 +119,9 @@
               </div>
 
               <!-- Contenu de la card -->
-              <div class="flex p-4">
-                <!-- Image à gauche -->
-                <div class="w-1/3 mr-4">
+              <div class="flex flex-col sm:flex-row p-3 md:p-4">
+                <!-- Image -->
+                <div class="w-full sm:w-1/3 mb-4 sm:mb-0 sm:mr-4">
                   <div class="aspect-w-3 aspect-h-4 rounded-lg overflow-hidden">
                     <img
                       th:if="${item.image != null}"
@@ -140,41 +133,33 @@
                       th:if="${item.image == null}"
                       class="w-full h-full bg-gray-100 flex items-center justify-center"
                     >
-                      <i class="fas fa-image text-3xl text-gray-400"></i>
+                      <i class="fas fa-image text-2xl md:text-3xl text-gray-400"></i>
                     </div>
                   </div>
                 </div>
 
-                <!-- Informations à droite -->
-                <div class="w-2/3 space-y-3">
+                <!-- Informations -->
+                <div class="w-full sm:w-2/3 space-y-3">
                   <!-- Catégorie -->
-                  <div
-                    class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-blue-50 text-blue-700"
-                  >
+                  <div class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-blue-50 text-blue-700">
                     <i class="fas fa-tags mr-1.5"></i>
                     <span th:text="${item.categorie.libelle}"></span>
                   </div>
 
                   <!-- Prix -->
-                  <div class="flex space-x-4">
+                  <div class="flex flex-wrap gap-4">
                     <div class="text-gray-600">
                       <span class="text-sm">Prix initial</span>
-                      <div
-                        class="font-semibold text-gray-900"
-                        th:text="${item.prixInitial} + '€'"
-                      ></div>
+                      <div class="font-semibold text-gray-900" th:text="${item.prixInitial} + '€'"></div>
                     </div>
                     <div class="text-gray-600">
                       <span class="text-sm">Prix actuel</span>
-                      <div
-                        class="font-bold text-green-600"
-                        th:text="${item.prixVente} + '€'"
-                      ></div>
+                      <div class="font-bold text-green-600" th:text="${item.prixVente} + '€'"></div>
                     </div>
                   </div>
 
                   <!-- Dates -->
-                  <div class="grid grid-cols-2 gap-2 text-sm">
+                  <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm">
                     <div class="text-gray-600">
                       <i class="fas fa-calendar mr-1 text-blue-500"></i>
                       <span
@@ -222,7 +207,7 @@
           </div>
         </div>
 
-        <div class="mt-6 flex items-center justify-between">
+        <div class="mt-6 flex flex-col sm:flex-row items-center justify-between gap-4">
           <div class="flex items-center space-x-2">
             <!-- Bouton précédent -->
             <a
