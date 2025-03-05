@@ -48,6 +48,7 @@ public class ArticleVenduDAOImpl implements ArticleVenduDAO {
 			+ "AND e.no_utilisateur = :idUtilisateur " + "AND av.date_fin_encheres <= :today "
 			+ "AND e.date_enchere = (" + "   SELECT MAX(e2.date_enchere) " + "   FROM encheres e2 "
 			+ "   WHERE e2.no_article = av.no_article) " + "AND LOWER(av.nom_article) LIKE LOWER(:nomRecherche)";
+	private final static String UPDATE = "UPDATE ARTICLES_VENDUS SET etat_vente = :etat_vente WHERE no_article = :no_article";
 
 	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
@@ -208,15 +209,40 @@ public class ArticleVenduDAOImpl implements ArticleVenduDAO {
 	}
 
 	@Override
+	public void update(ArticleVendu article) {
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("no_article", article.getNoArticle());
+        params.addValue("etat_vente", article.getEtatVente());
+        namedParameterJdbcTemplate.update(UPDATE, params);
+    }
+
+	@Override
 	public void deleteArticle(ArticleVendu article) {
+		MapSqlParameterSource params = new MapSqlParameterSource();
+		params.addValue("no_article", article.getNoArticle());
+
+		// Delete associated encheres first
+		namedParameterJdbcTemplate.update(DELETE_ENCHERES, params);
+		
+		// Delete associated retrait
+		namedParameterJdbcTemplate.update(DELETE_RETRAIT, params);
+		
+		// Finally delete the article
+		namedParameterJdbcTemplate.update(DELETE_ARTICLE, params);
+	}
+
+	@Override
+	public void delete(long noArticle) {
 		MapSqlParameterSource namedParameters = new MapSqlParameterSource();
-		namedParameters.addValue("no_article", article.getNoArticle());
+		namedParameters.addValue("no_article", noArticle);
 
-		// Supprimer d'abord les dépendances
-		namedParameterJdbcTemplate.update(DELETE_RETRAIT, namedParameters);
+		// Supprimer d'abord les enchères associées
 		namedParameterJdbcTemplate.update(DELETE_ENCHERES, namedParameters);
-
-		// Puis supprimer l'article
+		
+		// Supprimer les retraits associés
+		namedParameterJdbcTemplate.update(DELETE_RETRAIT, namedParameters);
+		
+		// Supprimer l'article
 		namedParameterJdbcTemplate.update(DELETE_ARTICLE, namedParameters);
 	}
 

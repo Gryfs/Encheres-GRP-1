@@ -19,6 +19,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import fr.eni.enchere.bll.EnchereService;
 import fr.eni.enchere.bo.ArticleVendu;
 import fr.eni.enchere.bo.Categories;
+import fr.eni.enchere.bo.Enchere;
 import fr.eni.enchere.bo.Utilisateur;
 import jakarta.validation.Valid;
 
@@ -80,6 +81,16 @@ public class EnchereController {
 			@SessionAttribute(name = "utilisateurSession", required = false) Utilisateur utilisateurConnecte) {
 
 		ArticleVendu article = enchereService.consulterArticleParId(idArticle);
+		
+		// Charger les détails complets des utilisateurs pour chaque enchère
+		if (article.getEncheres() != null) {
+			for (Enchere enchere : article.getEncheres()) {
+				if (enchere.getUtilisateur() != null) {
+					Utilisateur utilisateurComplet = enchereService.consulterUtilisateurParId(enchere.getUtilisateur().getNoUtilisateur());
+					enchere.setUtilisateur(utilisateurComplet);
+				}
+			}
+		}
 
 		model.addAttribute("article", article);
 		model.addAttribute("utilisateurConnecte", utilisateurConnecte);

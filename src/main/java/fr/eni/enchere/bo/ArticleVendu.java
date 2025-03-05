@@ -6,6 +6,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.format.annotation.DateTimeFormat;
+
+/**
+ * 
+ * @author emile
+ *
+ */
 public class ArticleVendu implements Serializable {
 
 	private long noArticle;

@@ -12,7 +12,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -41,6 +40,7 @@ import jakarta.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
@@ -89,13 +89,19 @@ public class SecurityConfig {
                 .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
             )
             .formLogin(form -> form
-            
-            .loginPage("/login")
+                .loginPage("/login")
                 .usernameParameter("username")
                 .passwordParameter("password")
                 .defaultSuccessUrl("/session", true)
-                .failureUrl("/login?error=true")
-            .permitAll()
+                .failureHandler((request, response, exception) -> {
+                    String errorMessage = "Nom d'utilisateur ou mot de passe incorrect.";
+                    if (exception.getMessage().contains("désactivé")) {
+                        errorMessage = "Compte désactivé. Veuillez contacter l'administrateur.";
+                    }
+                    request.getSession().setAttribute("SPRING_SECURITY_LAST_EXCEPTION", exception);
+                    response.sendRedirect("/login?error=true&message=" + errorMessage);
+                })
+                .permitAll()
             )
             .logout(logout -> logout
                 .logoutUrl("/logout")
@@ -105,23 +111,11 @@ public class SecurityConfig {
                 .permitAll()
             )
             .sessionManagement(session -> session
-                .invalidSessionUrl("/login") // Redirection vers login en cas de session invalide
-                .maximumSessions(1) // Limite à une session active par utilisateur
-                .expiredUrl("/login?expired=true") // Redirection en cas d'expiration
-                .and()
-                .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
-                .sessionFixation().migrateSession()
                 .invalidSessionUrl("/login")
-                .maximumSessions(1)
-                .and()
-                .sessionAuthenticationErrorUrl("/login")
-                .sessionFixation().migrateSession()
-                .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
                 .maximumSessions(1)
                 .expiredUrl("/login?expired=true")
             )
             .addFilterBefore(new SessionTimeoutFilter(), UsernamePasswordAuthenticationFilter.class);
-            
 
         return http.build();
     }
@@ -163,6 +157,10 @@ public class SecurityConfig {
                 if (utilisateur == null) {
                     throw new UsernameNotFoundException("Utilisateur non trouvé");
                 }
+
+                if (!utilisateur.isActif()) {
+                    throw new UsernameNotFoundException("Compte désactivé. Veuillez contacter l'administrateur.");
+                }
     
                 List<GrantedAuthority> authorities = new ArrayList<>();
                 authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
@@ -185,25 +183,24 @@ public class SecurityConfig {
         };
     }
 
-
     @Bean
     UserDetailsManager users(DataSource dataSource) {
         JdbcUserDetailsManager jdbcUserDetailsManager = new JdbcUserDetailsManager(dataSource);
     
         jdbcUserDetailsManager.setUsersByUsernameQuery(
-            "select email, mot_de_passe, 'true' as enabled from UTILISATEURS where email = ?"
+            "select email, mot_de_passe, actif from UTILISATEURS where email = ?"
         );
         
         jdbcUserDetailsManager.setAuthoritiesByUsernameQuery(
             "SELECT email, CASE WHEN administrateur = 1 THEN 'ROLE_ADMIN' ELSE 'ROLE_USER' END as role " +
             "FROM UTILISATEURS WHERE email = ?"
         );
-
+        
         return jdbcUserDetailsManager;
     }
 
     @Configuration
-    public class MultipartConfig {
+    public static class MultipartConfig {
         @Bean
         public MultipartConfigElement multipartConfigElement() {
             MultipartConfigFactory factory = new MultipartConfigFactory();
@@ -212,6 +209,4 @@ public class SecurityConfig {
             return factory.createMultipartConfig();
         }
     }
-
 }
-

@@ -12,6 +12,8 @@ public interface EnchereDAO {
 	List<Enchere> SelectEnchereByIdArticle(long id);
 	
 	List<Enchere> findEncheresByUtilisateur(long idUtilisateur);
-
+	
+	void delete(long noEnchere);
+    List<Enchere> findByArticle(long noArticle);
 
 }

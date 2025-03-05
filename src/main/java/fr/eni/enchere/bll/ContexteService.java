@@ -24,4 +24,6 @@ public interface ContexteService {
 	
 	void ajouterCredits(long userId, int amount);
 
+    void annulerEncheresEtVentes(Utilisateur utilisateur);
+	
 }

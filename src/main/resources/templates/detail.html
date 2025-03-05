@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <title>Détail de l'article - ENI-Enchères</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link href="/css/style.css" rel="stylesheet" />
     <link
       rel="stylesheet"
@@ -133,6 +134,15 @@
                 class="text-gray-600 leading-relaxed"
                 th:text="${article.description}"
               ></p>
+            </div>
+
+            <!-- Graphique des enchères (visible uniquement pour le créateur) -->
+            <div th:if="${utilisateurConnecte != null and utilisateurConnecte.noUtilisateur == article.utilisateur.noUtilisateur}" 
+                 class="bg-white rounded-2xl p-6 shadow-sm">
+              <h3 class="text-lg font-semibold mb-4">Historique des enchères</h3>
+              <div style="height: 300px;">
+                <canvas id="enchereChart"></canvas>
+              </div>
             </div>
           </div>
 
@@ -276,13 +286,89 @@
     >
       <input type="hidden" name="id" th:value="${article.noArticle}" />
     </form>
-    
-    <script>
+
+    <script th:inline="javascript">
       function confirmerSuppression() {
         if (confirm("Êtes-vous sûr de vouloir supprimer cet article ?")) {
           document.getElementById("deleteForm").submit();
         }
       }
+
+      // Script pour le graphique des enchères
+      document.addEventListener('DOMContentLoaded', function() {
+        const isCreator = /*[[${utilisateurConnecte != null and utilisateurConnecte.noUtilisateur == article.utilisateur.noUtilisateur}]]*/ false;
+        
+        if (isCreator) {
+          const encheres = /*[[${article.encheres}]]*/ [];
+          const ctx = document.getElementById('enchereChart').getContext('2d');
+          
+          // Préparer les données pour le graphique
+          const montants = [];
+          const dates = [];
+          const utilisateurs = [];
+
+          // Trier les enchères par date
+          encheres.sort((a, b) => new Date(a.dateEnchere) - new Date(b.dateEnchere));
+
+          // Extraire les données
+          encheres.forEach(enchere => {
+            montants.push(enchere.montantEnchere);
+            const date = new Date(enchere.dateEnchere);
+            dates.push(date.toLocaleDateString('fr-FR', { 
+              day: '2-digit',
+              month: '2-digit',
+            }));
+            
+            // Utiliser directement le nom de l'utilisateur car il est déjà chargé
+            const nomUtilisateur = enchere.utilisateur ? `${enchere.utilisateur.nom} ${enchere.utilisateur.prenom}` : 'Utilisateur inconnu';
+            utilisateurs.push(nomUtilisateur);
+          });
+
+          // Créer le graphique
+          new Chart(ctx, {
+            type: 'line',
+            data: {
+              labels: dates,
+              datasets: [{
+                label: 'Montant des enchères',
+                data: montants,
+                borderColor: 'rgb(59, 130, 246)',
+                backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                fill: true,
+                tension: 0.4
+              }]
+            },
+            options: {
+              responsive: true,
+              maintainAspectRatio: true,
+              plugins: {
+                tooltip: {
+                  callbacks: {
+                    label: function(context) {
+                      return `${utilisateurs[context.dataIndex]}: ${context.raw}€`;
+                    }
+                  }
+                }
+              },
+              scales: {
+                y: {
+                  beginAtZero: false,
+                  title: {
+                    display: true,
+                    text: 'Montant (€)'
+                  }
+                },
+                x: {
+                  title: {
+                    display: true,
+                    text: 'Date et heure'
+                  }
+                }
+              }
+            }
+          });
+        }
+      });
     </script>
   </body>
 </html>

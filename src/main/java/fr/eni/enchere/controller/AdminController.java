@@ -39,6 +39,8 @@ public class AdminController {
     public String disableUser(@PathVariable("id") Integer id) {
         Utilisateur utilisateur = contexteService.chargerParId(id);
         utilisateur.setActif(!utilisateur.isActif());
+        // Annuler toutes les enchères et ventes de l'utilisateur
+        contexteService.annulerEncheresEtVentes(utilisateur);
         contexteService.updateUtilisateur(utilisateur);
         return "redirect:/admin";
     }

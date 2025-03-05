@@ -23,6 +23,8 @@ public class EnchereDAOImpl implements EnchereDAO {
 	private final static String CREATE = "INSERT INTO ENCHERES (date_enchere, montant_enchere, no_utilisateur, no_article) VALUES (:date_enchere, :montant_enchere, :no_utilisateur, :no_article)";
 	private final static String SELECT_BY_ID_ARTICLE = "SELECT no_enchere, date_enchere, montant_enchere, no_utilisateur, no_article FROM ENCHERES WHERE no_article = :no_article";
 	private final static String SELECT_ALL_BY_UTILISATEUR = "SELECT no_enchere, date_enchere, montant_enchere, no_utilisateur, no_article FROM ENCHERES WHERE no_utilisateur = :no_utilisateur";
+	private final static String DELETE = "DELETE FROM ENCHERES WHERE no_enchere = :no_enchere";
+	private final static String SELECT_BY_ARTICLE = "SELECT no_enchere, date_enchere, montant_enchere, no_utilisateur, no_article FROM ENCHERES WHERE no_article = :no_article";
 	
 	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
@@ -84,6 +86,20 @@ public class EnchereDAOImpl implements EnchereDAO {
 		namedParameters.addValue("no_utilisateur", idUtilisateur);
 
 		return namedParameterJdbcTemplate.query(SELECT_ALL_BY_UTILISATEUR, namedParameters, new EnchereRowMapper());
+	}
+
+	@Override
+	public void delete(long noEnchere) {
+		MapSqlParameterSource params = new MapSqlParameterSource();
+		params.addValue("no_enchere", noEnchere);
+		namedParameterJdbcTemplate.update(DELETE, params);
+	}
+
+	@Override
+	public List<Enchere> findByArticle(long noArticle) {
+		MapSqlParameterSource params = new MapSqlParameterSource();
+		params.addValue("no_article", noArticle);
+		return namedParameterJdbcTemplate.query(SELECT_BY_ARTICLE, params, new EnchereRowMapper());
 	}
 	
 }

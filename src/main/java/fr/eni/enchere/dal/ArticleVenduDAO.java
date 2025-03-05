@@ -24,11 +24,15 @@ public interface ArticleVenduDAO {
 	
 	void updatePrixVente(ArticleVendu article, Float nouveauPrix);
 	
+	void update(ArticleVendu article);
+	
 	void updateArticle(ArticleVendu article);
 	
 	List<ArticleVendu> findAllByUser(long id);
 	
 	void deleteArticle(ArticleVendu article);
+	
+	void delete(long noArticle);
 	
 	List<ArticleVendu> findExpiredAuctions(LocalDate today);
 	

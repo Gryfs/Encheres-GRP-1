@@ -5,6 +5,8 @@ import java.security.Principal;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -32,9 +34,29 @@ public class LoginController {
 
 	@GetMapping("/login")
 	public String login(@RequestParam(value = "error", required = false) String error, Model model) {
-		
 		if (error != null) {
-			model.addAttribute("error", "Nom d'utilisateur ou mot de passe incorrect.");
+            try {
+                Object exception = SecurityContextHolder.getContext().getAuthentication().getDetails();
+                if (exception instanceof UsernameNotFoundException && 
+                    ((UsernameNotFoundException) exception).getMessage().contains("désactivé")) {
+                    model.addAttribute("error", "Compte désactivé. Veuillez contacter l'administrateur.");
+                } else {
+                    // Vérifier si l'utilisateur est désactivé directement
+                    String username = SecurityContextHolder.getContext().getAuthentication().getName();
+                    if (username != null && !username.equals("anonymousUser")) {
+                        Utilisateur utilisateur = contexteService.charger(username);
+                        if (utilisateur != null && !utilisateur.isActif()) {
+                            model.addAttribute("error", "Compte désactivé. Veuillez contacter l'administrateur.");
+                        } else {
+                            model.addAttribute("error", "Nom d'utilisateur ou mot de passe incorrect.");
+                        }
+                    } else {
+                        model.addAttribute("error", "Nom d'utilisateur ou mot de passe incorrect.");
+                    }
+                }
+            } catch (Exception e) {
+                model.addAttribute("error", "Nom d'utilisateur ou mot de passe incorrect.");
+            }
 		}
 		// Ajout de l'objet utilisateur au modèle
 		if (!model.containsAttribute("utilisateur")) {

@@ -222,6 +222,10 @@ public class EnchereServiceImpl implements EnchereService {
 
 	}
 
+	@Override
+	public Utilisateur consulterUtilisateurParId(long id) {
+		return utilisateurDAO.read(id);
+	}
 
 	@Override
 	public List<ArticleVendu> obtenirArticlesParEncheresUtilisateur(long idUtilisateur) {

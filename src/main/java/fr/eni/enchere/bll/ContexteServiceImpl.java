@@ -11,15 +11,25 @@ import org.springframework.transaction.annotation.Transactional;
 
 import fr.eni.enchere.bo.Utilisateur;
 import fr.eni.enchere.dal.UtilisateurDAO;
+import fr.eni.enchere.dal.EnchereDAO;
+import fr.eni.enchere.dal.ArticleVenduDAO;
+import fr.eni.enchere.bo.Enchere;
+import fr.eni.enchere.bo.ArticleVendu;
+import java.time.LocalDate;
+
 @Service
 @Primary
 public class ContexteServiceImpl implements ContexteService {
 	private final UtilisateurDAO utilisateurDAO;
+    private final EnchereDAO enchereDAO;
+    private final ArticleVenduDAO articleVenduDAO;
     private static final Logger logger = LoggerFactory.getLogger(ContexteServiceImpl.class);
 
 	@Autowired
-	public ContexteServiceImpl(UtilisateurDAO utilisateurDAO) {
+	public ContexteServiceImpl(UtilisateurDAO utilisateurDAO, EnchereDAO enchereDAO, ArticleVenduDAO articleVenduDAO) {
 		this.utilisateurDAO = utilisateurDAO;
+        this.enchereDAO = enchereDAO;
+        this.articleVenduDAO = articleVenduDAO;
 	}
 
 	@Override
@@ -96,4 +106,31 @@ public class ContexteServiceImpl implements ContexteService {
 		updateUtilisateur(utilisateur);
 	}
 
+    @Override
+    @Transactional
+    public void annulerEncheresEtVentes(Utilisateur utilisateur) {
+        // Annuler toutes les enchères de l'utilisateur
+        for (Enchere enchere : utilisateur.getEncheres()) {
+            // Rembourser les crédits de l'enchère
+            utilisateur.setCredit(utilisateur.getCredit() + enchere.getMontantEnchere());
+            enchereDAO.delete(enchere.getNoEnchere());
+        }
+        
+        // Supprimer toutes les ventes de l'utilisateur
+        for (ArticleVendu article : utilisateur.getArticlesVendus()) {
+            // Rembourser les enchères sur cet article
+            List<Enchere> encheres = enchereDAO.findByArticle(article.getNoArticle());
+            for (Enchere enchere : encheres) {
+                Utilisateur encherisseur = enchere.getUtilisateur();
+                encherisseur.setCredit(encherisseur.getCredit() + enchere.getMontantEnchere());
+                utilisateurDAO.updateCredit(encherisseur);
+                enchereDAO.delete(enchere.getNoEnchere());
+            }
+            // Supprimer l'article
+            articleVenduDAO.delete(article.getNoArticle());
+        }
+        
+        // Mettre à jour les crédits de l'utilisateur
+        utilisateurDAO.updateCredit(utilisateur);
+    }
 }
