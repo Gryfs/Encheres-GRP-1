@@ -85,4 +85,5 @@ public class EnchereDAOImpl implements EnchereDAO {
 
 		return namedParameterJdbcTemplate.query(SELECT_ALL_BY_UTILISATEUR, namedParameters, new EnchereRowMapper());
 	}
+	
 }

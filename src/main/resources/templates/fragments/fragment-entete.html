@@ -17,17 +17,17 @@
 
 				<a sec:authorize="isAuthenticated()" th:href="@{/creer}"
 					class="nav-link"> <i class="fas fa-plus mr-2"></i>Créer
-				</a>
-				
-				<a sec:authorize="isAuthenticated()" th:href="@{/mes-articles}"
+				</a> <a sec:authorize="isAuthenticated()" th:href="@{/mes-articles}"
 					class="px-4 py-2 text-gray-700 bg-gray-200 rounded-lg hover:bg-gray-300 transition duration-300 flex items-center shadow-sm">
 					<i class="fas fa-gavel mr-2"></i> Mes Ventes
-				</a>
-				
-				<a sec:authorize="isAuthenticated()" th:href="@{/mes-encheres}"
+				</a> <a sec:authorize="isAuthenticated()" th:href="@{/mes-encheres}"
 					class="px-4 py-2 text-gray-700 bg-gray-200 rounded-lg hover:bg-gray-300 transition duration-300 flex items-center shadow-sm">
 					<i class="fas fa-gavel mr-2"></i> Mes Encheres
+				</a> <a sec:authorize="isAuthenticated()" th:href="@{/mes-gains}"
+					class="px-4 py-2 text-gray-700 bg-gray-200 rounded-lg hover:bg-gray-300 transition duration-300 flex items-center shadow-sm">
+					<i class="fas fa-trophy mr-2"></i> Mes Gains
 				</a>
+
 
 				<!-- Menu non connecté -->
 				<div sec:authorize="!isAuthenticated()"

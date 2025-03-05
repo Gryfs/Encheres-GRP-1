@@ -12,4 +12,6 @@ public interface EnchereDAO {
 	List<Enchere> SelectEnchereByIdArticle(long id);
 	
 	List<Enchere> findEncheresByUtilisateur(long idUtilisateur);
+
+
 }

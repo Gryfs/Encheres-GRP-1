@@ -20,6 +20,8 @@ public interface EnchereService {
 	Categories consulterCategorieparId(long id);
 
 	List<ArticleVendu> consulterArticleparCategorie(Integer id);
+	
+	List<ArticleVendu> consulterArticleparCategorieUtilisateur(Integer id, Utilisateur utilisateur);
 
 	List<ArticleVendu> rechercherArticlesParNom(String nom);
 
@@ -32,5 +34,14 @@ public interface EnchereService {
 	void deleteArticle(long id);
 	
 	List<ArticleVendu> obtenirArticlesParEncheresUtilisateur(long idUtilisateur);
+
+	List<ArticleVendu> consulterGains(Utilisateur utilisateur);
+
+	List<ArticleVendu> rechercherArticlesParNomEtUtilisateur(String nom, Utilisateur utilisateur);
+
+	List<ArticleVendu> obtenirArticlesParEncheresEtNom(long idUtilisateur, String nomRecherche);
+
+	List<ArticleVendu> consulterGainsAvecRecherche(Utilisateur utilisateur, String nomRecherche);
+
 
 }

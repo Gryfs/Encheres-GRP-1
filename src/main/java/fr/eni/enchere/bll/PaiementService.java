@@ -34,8 +34,6 @@ public class PaiementService {
 		 //Stripe.apiKey = this.secretKey;
 	}
 
-<<<<<<< HEAD
-
     public String createCheckoutSession(int amount) {
         try {
             SessionCreateParams params = SessionCreateParams.builder()

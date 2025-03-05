@@ -96,7 +96,7 @@ public class EnchereController {
 
 		return "edit-article";
 	}
-	
+
 	@PostMapping("/article/delete")
 	public String deleteArticle(@RequestParam(name = "id") Long id, Model model) {
 
@@ -104,7 +104,6 @@ public class EnchereController {
 
 		return "redirect:/encheres";
 	}
-	
 
 	@PostMapping("/article/edit")
 	public String editArticle(@Valid @ModelAttribute("article") ArticleVendu article, BindingResult bindingResult,
@@ -159,19 +158,20 @@ public class EnchereController {
 	}
 
 	@PostMapping("/creer")
-	public String creerArticle(@Valid @ModelAttribute("article") ArticleVendu article,  @RequestParam("imageFile") MultipartFile imageFile, BindingResult bindingResult,
+	public String creerArticle(@Valid @ModelAttribute("article") ArticleVendu article,
+			@RequestParam("imageFile") MultipartFile imageFile, BindingResult bindingResult,
 			@SessionAttribute(name = "utilisateurSession", required = false) Utilisateur utilisateur) {
 
 		if (!imageFile.isEmpty()) {
 			try {
 				// Convertir l'image en Base64
 				byte[] bytes = imageFile.getBytes();
-				String base64Image = "data:" + imageFile.getContentType() + ";base64," + 
-				Base64.getEncoder().encodeToString(bytes);
-				
+				String base64Image = "data:" + imageFile.getContentType() + ";base64,"
+						+ Base64.getEncoder().encodeToString(bytes);
+
 				// Sauvegarder l'image en Base64 dans l'article
 				article.setImage(base64Image);
-				
+
 			} catch (IOException e) {
 				// Gérer l'erreur
 				e.printStackTrace();
@@ -183,7 +183,7 @@ public class EnchereController {
 		} else {
 			System.out.println("Aucun utilisateur en session !");
 			return "redirect:/login";
-	 	}
+		}
 
 		System.out.println("creerarticle = " + article);
 		this.enchereService.creerArticle(article);
@@ -203,10 +203,10 @@ public class EnchereController {
 			allArticles = enchereService.consulterArticlesParUtilisateur(utilisateur.getNoUtilisateur());
 		} else if (categoryId != null && categoryId != 0) {
 			// Filtrer par catégorie
-			allArticles = enchereService.consulterArticleparCategorie(categoryId);
+			allArticles = enchereService.consulterArticleparCategorieUtilisateur(categoryId, utilisateur);
 		} else {
 			// Filtrer par nom d'article
-			allArticles = enchereService.rechercherArticlesParNom(search);
+			allArticles = enchereService.rechercherArticlesParNomEtUtilisateur(search, utilisateur);
 		}
 
 		// Calcul de la pagination
@@ -225,7 +225,7 @@ public class EnchereController {
 
 		return "mes-articles";
 	}
-	
+
 	@GetMapping("/mes-encheres")
 	public String afficherMesEncheres(Model model, @RequestParam(name = "id", required = false) Integer categoryId,
 			@RequestParam(name = "search", required = false) String search,
@@ -233,15 +233,12 @@ public class EnchereController {
 			@SessionAttribute(name = "utilisateurSession", required = false) Utilisateur utilisateur) {
 		List<ArticleVendu> allArticles;
 
-		if ((categoryId == null || categoryId == 0) && (search == null || search.isEmpty())) {
+		if ((search == null || search.isEmpty())) {
 			// Si aucun filtre n'est appliqué
 			allArticles = enchereService.obtenirArticlesParEncheresUtilisateur(utilisateur.getNoUtilisateur());
-		} else if (categoryId != null && categoryId != 0) {
-			// Filtrer par catégorie
-			allArticles = enchereService.consulterArticleparCategorie(categoryId);
 		} else {
 			// Filtrer par nom d'article
-			allArticles = enchereService.rechercherArticlesParNom(search);
+			allArticles = enchereService.obtenirArticlesParEncheresEtNom(utilisateur.getNoUtilisateur(), search);
 		}
 
 		// Calcul de la pagination
@@ -259,6 +256,42 @@ public class EnchereController {
 		model.addAttribute("search", search);
 
 		return "mes-encheres";
+	}
+
+	@GetMapping("/mes-gains")
+	public String afficherMesGains(Model model, @RequestParam(name = "id", required = false) Integer categoryId,
+			@RequestParam(name = "search", required = false) String search,
+			@RequestParam(name = "page", defaultValue = "0") int page,
+			@SessionAttribute(name = "utilisateurSession", required = false) Utilisateur utilisateur) {
+		List<ArticleVendu> allArticles;
+
+		if ((categoryId == null || categoryId == 0) && (search == null || search.isEmpty())) {
+			// Si aucun filtre n'est appliqué
+			allArticles = enchereService.consulterGains(utilisateur);
+		} else if (categoryId != null && categoryId != 0) {
+			// Filtrer par catégorie
+			//TODO
+			allArticles = enchereService.consulterArticleparCategorieUtilisateur(categoryId, utilisateur);
+		} else {
+			// Filtrer par nom d'article
+			allArticles = enchereService.consulterGainsAvecRecherche(utilisateur, search);
+		}
+
+		// Calcul de la pagination
+		int totalItems = allArticles.size();
+		int totalPages = (int) Math.ceil((double) totalItems / PAGE_SIZE);
+
+		// Extraction de la page courante
+		int startItem = page * PAGE_SIZE;
+		List<ArticleVendu> listeArticles = allArticles.subList(startItem,
+				Math.min(startItem + PAGE_SIZE, allArticles.size()));
+
+		model.addAttribute("articles", listeArticles);
+		model.addAttribute("currentPage", page);
+		model.addAttribute("totalPages", totalPages);
+		model.addAttribute("search", search);
+
+		return "mes-gains";
 	}
 
 	@ModelAttribute("categorieSession")
