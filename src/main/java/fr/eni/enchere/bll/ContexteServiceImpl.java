@@ -42,9 +42,9 @@ public class ContexteServiceImpl implements ContexteService {
 		if (validerEmailInexistant(utilisateur.getEmail())) {
 			utilisateurDAO.create(utilisateur);
 			logger.info("Utilisateur créé avec succès: {}", utilisateur.getEmail());
-		} else{
+		} else {
 			logger.warn("Tentative de création avec un email existant: {}", utilisateur.getEmail());
-
+			throw new RuntimeException("Un compte existe déjà avec cet email");
 		}
 	}
 

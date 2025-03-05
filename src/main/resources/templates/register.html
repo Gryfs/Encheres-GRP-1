@@ -16,6 +16,27 @@
             Créer un compte
           </h2>
         </div>
+
+        <!-- Messages d'erreur globaux -->
+        <div th:if="${error}" class="p-4 mb-4 text-sm text-red-700 bg-red-100 rounded-lg">
+          <div class="flex items-center">
+            <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
+            </svg>
+            <span th:text="${error}">Message d'erreur</span>
+          </div>
+        </div>
+
+        <!-- Message de succès -->
+        <div th:if="${success}" class="p-4 mb-4 text-sm text-green-700 bg-green-100 rounded-lg">
+          <div class="flex items-center">
+            <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+            </svg>
+            <span th:text="${success}">Message de succès</span>
+          </div>
+        </div>
+
         <form
           class="mt-8 space-y-6"
           th:action="@{/register}"
@@ -27,87 +48,96 @@
               <label for="pseudo" class="block text-sm font-medium text-gray-700">Pseudo *</label>
               <input type="text" 
                      th:field="*{pseudo}" 
+                     th:class="${#fields.hasErrors('pseudo')} ? 'mt-1 appearance-none rounded relative block w-full px-3 py-2 border border-red-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-red-500 focus:border-red-500 sm:text-sm' : 'mt-1 appearance-none rounded relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm'"
                      required
-                     placeholder="Entrez votre pseudo"
-                     class="mt-1 appearance-none rounded relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
+                     placeholder="Entrez votre pseudo" />
+              <p th:if="${#fields.hasErrors('pseudo')}" class="mt-1 text-sm text-red-600" th:errors="*{pseudo}">Erreur pseudo</p>
             </div>
 
             <div class="grid grid-cols-2 gap-4">
               <div>
                 <label for="nom" class="block text-sm font-medium text-gray-700">Nom *</label>
                 <input type="text" 
-                       th:field="*{nom}" 
+                       th:field="*{nom}"
+                       th:class="${#fields.hasErrors('nom')} ? 'mt-1 appearance-none rounded relative block w-full px-3 py-2 border border-red-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-red-500 focus:border-red-500 sm:text-sm' : 'mt-1 appearance-none rounded relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm'"
                        required
-                       placeholder="Votre nom"
-                       class="mt-1 appearance-none rounded relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
+                       placeholder="Votre nom" />
+                <p th:if="${#fields.hasErrors('nom')}" class="mt-1 text-sm text-red-600" th:errors="*{nom}">Erreur nom</p>
               </div>
               <div>
                 <label for="prenom" class="block text-sm font-medium text-gray-700">Prénom *</label>
                 <input type="text" 
-                       th:field="*{prenom}" 
+                       th:field="*{prenom}"
+                       th:class="${#fields.hasErrors('prenom')} ? 'mt-1 appearance-none rounded relative block w-full px-3 py-2 border border-red-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-red-500 focus:border-red-500 sm:text-sm' : 'mt-1 appearance-none rounded relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm'"
                        required
-                       placeholder="Votre prénom"
-                       class="mt-1 appearance-none rounded relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
+                       placeholder="Votre prénom" />
+                <p th:if="${#fields.hasErrors('prenom')}" class="mt-1 text-sm text-red-600" th:errors="*{prenom}">Erreur prénom</p>
               </div>
             </div>
 
             <div>
               <label for="email" class="block text-sm font-medium text-gray-700">Email *</label>
               <input type="email" 
-                     th:field="*{email}" 
+                     th:field="*{email}"
+                     th:class="${#fields.hasErrors('email')} ? 'mt-1 appearance-none rounded relative block w-full px-3 py-2 border border-red-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-red-500 focus:border-red-500 sm:text-sm' : 'mt-1 appearance-none rounded relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm'"
                      required
-                     placeholder="exemple@email.com"
-                     class="mt-1 appearance-none rounded relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
+                     placeholder="exemple@email.com" />
+              <p th:if="${#fields.hasErrors('email')}" class="mt-1 text-sm text-red-600" th:errors="*{email}">Erreur email</p>
             </div>
 
             <div>
               <label for="telephone" class="block text-sm font-medium text-gray-700">Téléphone *</label>
               <input type="tel" 
-                     th:field="*{telephone}" 
+                     th:field="*{telephone}"
+                     th:class="${#fields.hasErrors('telephone')} ? 'mt-1 appearance-none rounded relative block w-full px-3 py-2 border border-red-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-red-500 focus:border-red-500 sm:text-sm' : 'mt-1 appearance-none rounded relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm'"
                      pattern="[0-9]{2} [0-9]{2} [0-9]{2} [0-9]{2} [0-9]{2}"
                      placeholder="01 23 45 67 89"
                      maxlength="14"
-                     oninput="formatPhoneNumber(this)"
-                     class="mt-1 appearance-none rounded relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
+                     oninput="formatPhoneNumber(this)" />
+              <p th:if="${#fields.hasErrors('telephone')}" class="mt-1 text-sm text-red-600" th:errors="*{telephone}">Erreur téléphone</p>
             </div>
 
             <div>
               <label for="rue" class="block text-sm font-medium text-gray-700">Rue *</label>
               <input type="text" 
-                     th:field="*{rue}" 
+                     th:field="*{rue}"
+                     th:class="${#fields.hasErrors('rue')} ? 'mt-1 appearance-none rounded relative block w-full px-3 py-2 border border-red-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-red-500 focus:border-red-500 sm:text-sm' : 'mt-1 appearance-none rounded relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm'"
                      required
-                     placeholder="123 rue de la Paix"
-                     class="mt-1 appearance-none rounded relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
+                     placeholder="123 rue de la Paix" />
+              <p th:if="${#fields.hasErrors('rue')}" class="mt-1 text-sm text-red-600" th:errors="*{rue}">Erreur rue</p>
             </div>
 
             <div class="grid grid-cols-2 gap-4">
               <div>
                 <label for="codePostal" class="block text-sm font-medium text-gray-700">Code Postal *</label>
                 <input type="text" 
-                       th:field="*{codePostal}" 
+                       th:field="*{codePostal}"
+                       th:class="${#fields.hasErrors('codePostal')} ? 'mt-1 appearance-none rounded relative block w-full px-3 py-2 border border-red-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-red-500 focus:border-red-500 sm:text-sm' : 'mt-1 appearance-none rounded relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm'"
                        required
                        placeholder="44000"
                        pattern="[0-9]{5}"
-                       maxlength="5"
-                       class="mt-1 appearance-none rounded relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
+                       maxlength="5" />
+                <p th:if="${#fields.hasErrors('codePostal')}" class="mt-1 text-sm text-red-600" th:errors="*{codePostal}">Erreur code postal</p>
               </div>
               <div>
                 <label for="ville" class="block text-sm font-medium text-gray-700">Ville *</label>
                 <input type="text" 
-                       th:field="*{ville}" 
+                       th:field="*{ville}"
+                       th:class="${#fields.hasErrors('ville')} ? 'mt-1 appearance-none rounded relative block w-full px-3 py-2 border border-red-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-red-500 focus:border-red-500 sm:text-sm' : 'mt-1 appearance-none rounded relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm'"
                        required
-                       placeholder="Nantes"
-                       class="mt-1 appearance-none rounded relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
+                       placeholder="Nantes" />
+                <p th:if="${#fields.hasErrors('ville')}" class="mt-1 text-sm text-red-600" th:errors="*{ville}">Erreur ville</p>
               </div>
             </div>
 
             <div>
               <label for="motDePasse" class="block text-sm font-medium text-gray-700">Mot de passe *</label>
               <input type="password" 
-                     th:field="*{motDePasse}" 
+                     th:field="*{motDePasse}"
+                     th:class="${#fields.hasErrors('motDePasse')} ? 'mt-1 appearance-none rounded relative block w-full px-3 py-2 border border-red-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-red-500 focus:border-red-500 sm:text-sm' : 'mt-1 appearance-none rounded relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm'"
                      required
-                     placeholder="••••••••"
-                     class="mt-1 appearance-none rounded relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
+                     placeholder="••••••••" />
+              <p th:if="${#fields.hasErrors('motDePasse')}" class="mt-1 text-sm text-red-600" th:errors="*{motDePasse}">Erreur mot de passe</p>
             </div>
           </div>
 

@@ -52,14 +52,21 @@ public class LoginController {
 	}
 		
 	@PostMapping("/register")
-	public String registerAccount(@Valid @ModelAttribute("utilisateur") Utilisateur utilisateur, BindingResult bindingResult) {
+	public String registerAccount(@Valid @ModelAttribute("utilisateur") Utilisateur utilisateur, BindingResult bindingResult, Model model) {
 		logger.debug("Tentative d'inscription: {}", utilisateur.getEmail());
-		if (!bindingResult.hasErrors()) {
+		if (bindingResult.hasErrors()) {
+			return "register";
+		}
+		
+		try {
+			// Tentative d'inscription
 			contexteService.creerUtilisateur(utilisateur);
 			logger.info("Nouvel utilisateur créé: {}", utilisateur.getEmail());
-			return "redirect:/login";
-		} else {
-			logger.warn("Échec de la création du compte: {}", bindingResult.getAllErrors());
+			return "redirect:/login?success=true";
+		} catch (RuntimeException e) {
+			model.addAttribute("error", e.getMessage());
+			// On garde l'utilisateur dans le modèle pour conserver les données saisies
+			model.addAttribute("utilisateur", utilisateur);
 			return "register";
 		}
 	}
