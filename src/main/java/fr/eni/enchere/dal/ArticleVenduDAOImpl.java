@@ -19,6 +19,7 @@ import org.springframework.stereotype.Repository;
 import fr.eni.enchere.bo.ArticleVendu;
 import fr.eni.enchere.bo.Categories;
 import fr.eni.enchere.bo.Enchere;
+import fr.eni.enchere.bo.Retrait;
 import fr.eni.enchere.bo.Utilisateur;
 
 @Repository
@@ -54,6 +55,24 @@ public class ArticleVenduDAOImpl implements ArticleVenduDAO {
 			+ "AND e.no_utilisateur = :idUtilisateur " + "AND av.date_fin_encheres <= :today "
 			+ "AND av.no_categorie = :idCategorie " + "AND e.date_enchere = (" + "   SELECT MAX(e2.date_enchere) "
 			+ "   FROM encheres e2 " + "   WHERE e2.no_article = av.no_article)";
+	private final static String SELECT_ALL_WITH_ASSOCIATIONS = """
+		    SELECT
+		        a.no_article, a.nom_article, a.description,
+		        a.date_debut_encheres, a.date_fin_encheres,
+		        a.prix_initial, a.prix_vente, a.image, a.etat_vente,
+		        c.id AS categorie_id, c.libelle AS categorie_libelle,
+		        u.no_utilisateur, u.pseudo, u.nom, u.prenom, u.email,
+		        r.rue, r.code_postal, r.ville, r.no_article AS retrait_no_article
+		    FROM
+		        articles_vendus a
+		    JOIN
+		        categories c ON a.no_categorie = c.id
+		    JOIN
+		        utilisateurs u ON a.no_utilisateur = u.no_utilisateur
+		    LEFT JOIN
+		        retraits r ON a.no_article = r.no_article
+		""";
+
 
 	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
@@ -64,8 +83,7 @@ public class ArticleVenduDAOImpl implements ArticleVenduDAO {
 
 	@Override
 	public List<ArticleVendu> findAll() {
-
-		return namedParameterJdbcTemplate.query(SELECT_ALL, new ArticleRowMapper());
+		return namedParameterJdbcTemplate.query(SELECT_ALL_WITH_ASSOCIATIONS, new ArticleWithAssociationsRowMapper());
 	}
 
 	@Override
@@ -129,10 +147,6 @@ public class ArticleVenduDAOImpl implements ArticleVenduDAO {
 		namedParameters.addValue("search", "%" + search + "%"); // Recherche partielle avec LIKE
 
 		return namedParameterJdbcTemplate.query(SELECT_BY_NOM, namedParameters, new ArticleRowMapper());
-	}
-
-	public interface ArticleVenduDAO {
-		List<ArticleVendu> findArticlesByEncheresAndNom(long idUtilisateur, String nomRecherche);
 	}
 
 	@Override
@@ -215,12 +229,12 @@ public class ArticleVenduDAOImpl implements ArticleVenduDAO {
 
 	@Override
 	public void update(ArticleVendu article) {
-        MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue("no_article", article.getNoArticle());
-        params.addValue("etat_vente", article.getEtatVente());
-        namedParameterJdbcTemplate.update(UPDATE, params);
-    }
-	
+		MapSqlParameterSource params = new MapSqlParameterSource();
+		params.addValue("no_article", article.getNoArticle());
+		params.addValue("etat_vente", article.getEtatVente());
+		namedParameterJdbcTemplate.update(UPDATE, params);
+	}
+
 	@Override
 	public void deleteArticle(ArticleVendu article) {
 		MapSqlParameterSource params = new MapSqlParameterSource();
@@ -228,10 +242,10 @@ public class ArticleVenduDAOImpl implements ArticleVenduDAO {
 
 		// Delete associated encheres first
 		namedParameterJdbcTemplate.update(DELETE_ENCHERES, params);
-		
+
 		// Delete associated retrait
 		namedParameterJdbcTemplate.update(DELETE_RETRAIT, params);
-		
+
 		// Finally delete the article
 		namedParameterJdbcTemplate.update(DELETE_ARTICLE, params);
 	}
@@ -243,10 +257,10 @@ public class ArticleVenduDAOImpl implements ArticleVenduDAO {
 
 		// Supprimer d'abord les enchères associées
 		namedParameterJdbcTemplate.update(DELETE_ENCHERES, namedParameters);
-		
+
 		// Supprimer les retraits associés
 		namedParameterJdbcTemplate.update(DELETE_RETRAIT, namedParameters);
-		
+
 		// Supprimer l'article
 		namedParameterJdbcTemplate.update(DELETE_ARTICLE, namedParameters);
 	}
@@ -340,6 +354,47 @@ class ArticleRowMapper implements RowMapper<ArticleVendu> {
 			// Ajouter l'article à la map
 			articlesMap.put(articleId, article);
 		}
+
+		return article;
+	}
+}
+
+class ArticleWithAssociationsRowMapper implements RowMapper<ArticleVendu> {
+	@Override
+	public ArticleVendu mapRow(ResultSet rs, int rowNum) throws SQLException {
+		ArticleVendu article = new ArticleVendu();
+		article.setNoArticle(rs.getInt("no_article"));
+		article.setNomArticle(rs.getString("nom_article"));
+		article.setDescription(rs.getString("description"));
+		article.setDateDebutEncheres(rs.getObject("date_debut_encheres", LocalDate.class));
+		article.setDateFinEncheres(rs.getObject("date_fin_encheres", LocalDate.class));
+		article.setPrixInitial(rs.getFloat("prix_initial"));
+		article.setPrixVente(rs.getFloat("prix_vente"));
+		article.setImage(rs.getString("image"));
+		article.setEtatVente(rs.getString("etat_vente"));
+
+		// Mapping de la catégorie
+		Categories categorie = new Categories();
+		categorie.setId(rs.getInt("categorie_id"));
+		categorie.setLibelle(rs.getString("categorie_libelle"));
+		article.setCategorie(categorie);
+
+		// Mapping de l'utilisateur
+		Utilisateur utilisateur = new Utilisateur();
+		utilisateur.setNoUtilisateur(rs.getInt("no_utilisateur"));
+		utilisateur.setPseudo(rs.getString("pseudo"));
+		utilisateur.setNom(rs.getString("nom"));
+		utilisateur.setPrenom(rs.getString("prenom"));
+		utilisateur.setEmail(rs.getString("email"));
+		article.setUtilisateur(utilisateur);
+
+		// Mapping du retrait
+		Retrait retrait = new Retrait();
+		retrait.setRue(rs.getString("rue"));
+		retrait.setCodePostal(rs.getString("code_postal"));
+		retrait.setVille(rs.getString("ville"));
+		retrait.setNoArticle(rs.getLong("retrait_no_article"));
+		article.setRetrait(retrait);
 
 		return article;
 	}

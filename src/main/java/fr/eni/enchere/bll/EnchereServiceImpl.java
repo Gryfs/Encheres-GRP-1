@@ -40,36 +40,33 @@ public class EnchereServiceImpl implements EnchereService {
 
 	@Override
 	public List<ArticleVendu> consulterArticle() {
-
-		List<ArticleVendu> listeArticle = articleVenduDAO.findAll();
-		for (ArticleVendu article : listeArticle) {
-			article.setCategorie(categorieDAO.read(article.getCategorie().getId()));
-			article.setUtilisateur(utilisateurDAO.read(article.getUtilisateur().getNoUtilisateur()));
-
-		}
-		return listeArticle;
+	    return articleVenduDAO.findAll();
 	}
+
 
 	@Override
 	public List<ArticleVendu> consulterArticlesParUtilisateur(long id) {
+	    // Récupérer tous les articles vendus par l'utilisateur
+	    List<ArticleVendu> listeArticle = articleVenduDAO.findAllByUser(id);
 
-		List<ArticleVendu> listeArticle = articleVenduDAO.findAllByUser(id);
-		for (ArticleVendu article : listeArticle) {
-			article.setCategorie(categorieDAO.read(article.getCategorie().getId()));
-			article.setUtilisateur(utilisateurDAO.read(article.getUtilisateur().getNoUtilisateur()));
-			article.setRetrait(retraitDAO.consulterRetraitParIdarticle(article.getNoArticle()));
-			article.setEncheres(enchereDAO.SelectEnchereByIdArticle(article.getNoArticle()));
+	    LocalDate now = LocalDate.now();
 
-			if (article.getDateDebutEncheres().isBefore(LocalDate.now())
-					&& article.getDateFinEncheres().isAfter(LocalDate.now())) {
-				article.setEtatVente("OPEN");
-			} else {
-				article.setEtatVente("CLOSE");
-			}
+	    for (ArticleVendu article : listeArticle) {
+	        // Charger la catégorie et l'utilisateur associés
+	        article.setCategorie(categorieDAO.read(article.getCategorie().getId()));
+	        article.setUtilisateur(utilisateurDAO.read(article.getUtilisateur().getNoUtilisateur()));
 
-		}
-		return listeArticle;
+	        // Calculer l'état de la vente
+	        if (article.getDateDebutEncheres().isBefore(now) && article.getDateFinEncheres().isAfter(now)) {
+	            article.setEtatVente("OPEN");
+	        } else {
+	            article.setEtatVente("CLOSE");
+	        }
+	    }
+
+	    return listeArticle;
 	}
+
 
 	@Override
 	public List<ArticleVendu> consulterArticleparCategorieUtilisateur(Integer id, Utilisateur utilisateur) {

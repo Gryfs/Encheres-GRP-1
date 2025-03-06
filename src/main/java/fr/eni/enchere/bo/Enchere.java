@@ -3,9 +3,12 @@ package fr.eni.enchere.bo;
 import java.time.LocalDate;
 import java.util.Date;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 public class Enchere {
 
 	private long noEnchere;
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private LocalDate dateEnchere;
 	private float montantEnchere;
 	private Utilisateur utilisateur;

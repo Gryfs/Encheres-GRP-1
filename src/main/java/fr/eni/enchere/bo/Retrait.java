@@ -6,6 +6,7 @@ public class Retrait {
 	private String codePostal;
 	private String ville;
 	private long noArticle;
+	private ArticleVendu article;
 
 	public Retrait() {
 
